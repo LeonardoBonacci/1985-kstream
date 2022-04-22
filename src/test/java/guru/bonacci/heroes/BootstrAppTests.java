@@ -1,10 +1,10 @@
-package guru.bonacci.heroes.heroes;
+package guru.bonacci.heroes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HeroesApplicationTests {
+class BootstrAppTests {
 
 	@Test
 	void contextLoads() {
