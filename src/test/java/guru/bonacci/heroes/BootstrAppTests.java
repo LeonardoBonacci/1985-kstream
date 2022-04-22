@@ -9,5 +9,4 @@ class BootstrAppTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

@@ -1,1 +1,4 @@
-guru/bonacci/heroes/heroes/HeroesApplication.class
+guru/bonacci/heroes/transfer/TransferDto.class
+guru/bonacci/heroes/transfer/TxProducer.class
+guru/bonacci/heroes/transfer/TfMapper.class
+guru/bonacci/heroes/kafka/Transfer.class
