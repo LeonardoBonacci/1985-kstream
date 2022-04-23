@@ -16,7 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import guru.bonacci.heroes.account.AccService;
+import guru.bonacci.heroes.dto.TransferDto;
+import guru.bonacci.heroes.service.AccService;
  
 @WebMvcTest(value = TfController.class)
 public class TfControllerTest {

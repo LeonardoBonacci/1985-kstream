@@ -1,7 +1,10 @@
-spring:
-  application.name: do-not-forget-to-change-me
+spring.application.name: do-not-forget-to-change-me
 
-  kafka:
+#spring.profiles.active: stream
+
+---
+spring.config.activate.on-profile: stream
+spring.kafka:
     bootstrap-servers: localhost:9092
 
     producer:

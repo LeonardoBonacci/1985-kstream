@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.kafka;
+package guru.bonacci.heroes.domain;
 
 import java.math.BigDecimal;
 

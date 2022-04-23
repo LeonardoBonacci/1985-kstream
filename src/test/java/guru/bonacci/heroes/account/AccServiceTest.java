@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import guru.bonacci.heroes.kafka.Transfer;
+import guru.bonacci.heroes.service.AccService;
 
 
 @SpringBootTest
@@ -30,15 +31,15 @@ class AccServiceTest {
 
     var accountA = service.showMeTheAccount("a", "heroes").get();
     assertThat(accountA.getTransactions()).hasSize(2);
-    assertThat(service.getBalance("a", "heroes").get()).isEqualTo(valueOf(-80));
+    assertThat(service.showMeTheBalance("a", "heroes").get()).isEqualTo(valueOf(-80));
     
     var accountB = service.showMeTheAccount("b", "heroes").get();
     assertThat(accountB.getTransactions()).hasSize(2);
-    assertThat(service.getBalance("b", "heroes").get()).isEqualTo(valueOf(50));
+    assertThat(service.showMeTheBalance("b", "heroes").get()).isEqualTo(valueOf(50));
 
     var accountC = service.showMeTheAccount("c", "heroes").get();
     assertThat(accountC.getTransactions()).hasSize(2);
-    assertThat(service.getBalance("c", "heroes").get()).isEqualTo(valueOf(30));
+    assertThat(service.showMeTheBalance("c", "heroes").get()).isEqualTo(valueOf(30));
 
     var accountD = service.showMeTheAccount("d", "heroes");
     assertThat(accountD.isEmpty()).isTrue();

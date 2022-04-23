@@ -10,6 +10,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import org.junit.jupiter.api.Test;
+
+import guru.bonacci.heroes.dto.TransferDto;
  
 public class TransferDtoTest {
  

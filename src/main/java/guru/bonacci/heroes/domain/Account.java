@@ -1,9 +1,8 @@
-package guru.bonacci.heroes.account;
+package guru.bonacci.heroes.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import guru.bonacci.heroes.kafka.Transfer;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

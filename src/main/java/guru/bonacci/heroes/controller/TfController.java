@@ -1,17 +1,16 @@
-package guru.bonacci.heroes.transfer;
-
-import java.util.concurrent.ExecutionException;
+package guru.bonacci.heroes.controller;
 
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import guru.bonacci.heroes.kafka.Transfer;
+import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.dto.TransferDto;
+import guru.bonacci.heroes.service.TfService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,12 +22,13 @@ public class TfController {
   
 
   @PostMapping("/{poolId}")
-  public ResponseEntity<Void> transfer(@PathVariable String poolId, @Valid @RequestBody TransferDto dto) throws ExecutionException {
-    service.transfer(toTf(dto, poolId));
+  public ResponseEntity<Void> transfer(@Valid @RequestBody TransferDto dto) {
+    service.transfer(toTf(dto));
     return ResponseEntity.noContent().<Void>build();
   }
   
-  private Transfer toTf(TransferDto dto, String poolId) {
-    return new Transfer(poolId, dto.getFrom(), dto.getTo(), dto.getAmount(), System.currentTimeMillis());
+  // public for demo ingestion
+  public static Transfer toTf(TransferDto dto) {
+    return new Transfer(dto.getPoolId(), dto.getFrom(), dto.getTo(), dto.getAmount(), System.currentTimeMillis());
   }
 }

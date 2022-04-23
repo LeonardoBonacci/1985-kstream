@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transfer;
+package guru.bonacci.heroes.dto;
 
 import java.math.BigDecimal;
 
@@ -8,11 +8,12 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 
-import guru.bonacci.heroes.transfer.validate.AdvancedCheck;
-import guru.bonacci.heroes.transfer.validate.BasicCheck;
-import guru.bonacci.heroes.transfer.validate.IntermediateCheck;
-import guru.bonacci.heroes.transfer.validate.PoolExistsConstraint;
-import guru.bonacci.heroes.transfer.validate.SufficientFundsConstraint;
+import guru.bonacci.heroes.dto.validate.AccountExistsConstraint;
+import guru.bonacci.heroes.dto.validate.AdvancedCheck;
+import guru.bonacci.heroes.dto.validate.BasicCheck;
+import guru.bonacci.heroes.dto.validate.IntermediateCheck;
+import guru.bonacci.heroes.dto.validate.PoolExistsConstraint;
+import guru.bonacci.heroes.dto.validate.SufficientFundsConstraint;
 import lombok.Value;
 
 @Value
@@ -22,6 +23,20 @@ import lombok.Value;
     account = "from", 
     amount = "amount"
   )
+@AccountExistsConstraint.List({ 
+  @AccountExistsConstraint(
+    groups = AdvancedCheck.class,
+    pool = "poolId", 
+    account = "from", 
+    message = "'from' not in pool"
+  ), 
+  @AccountExistsConstraint(
+    groups = AdvancedCheck.class,
+    pool = "poolId", 
+    account = "to", 
+    message = "'to' not in pool"
+  )
+})
 @GroupSequence({BasicCheck.class, IntermediateCheck.class, AdvancedCheck.class, TransferDto.class})
 public class TransferDto {
 

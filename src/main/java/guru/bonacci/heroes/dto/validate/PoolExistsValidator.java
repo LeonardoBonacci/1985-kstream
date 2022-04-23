@@ -1,11 +1,11 @@
-package guru.bonacci.heroes.transfer.validate;
+package guru.bonacci.heroes.dto.validate;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.stereotype.Component;
 
-import guru.bonacci.heroes.pool.PoolService;
+import guru.bonacci.heroes.service.PoolService;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -21,6 +21,6 @@ public class PoolExistsValidator implements ConstraintValidator<PoolExistsConstr
 
   @Override
   public boolean isValid(String poolId, ConstraintValidatorContext cxt) {
-      return poolService.contains(poolId);
+      return poolService.exists(poolId);
   }
 }

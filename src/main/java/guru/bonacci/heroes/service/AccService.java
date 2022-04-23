@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.account;
+package guru.bonacci.heroes.service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -8,7 +8,8 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import guru.bonacci.heroes.kafka.Transfer;
+import guru.bonacci.heroes.domain.Account;
+import guru.bonacci.heroes.domain.Transfer;
 
 @Service
 public class AccService {
@@ -38,7 +39,7 @@ public class AccService {
     return true;
   }
   
-  public Optional<BigDecimal> getBalance(String accountId, String poolId) {
+  public Optional<BigDecimal> showMeTheBalance(String accountId, String poolId) {
     var accOpt = showMeTheAccount(accountId, poolId);
     return accOpt.map(acc -> addUpTxs(acc).reduce(BigDecimal.ZERO, BigDecimal::add));
   }

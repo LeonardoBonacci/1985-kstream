@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.account;
+package guru.bonacci.heroes.controller;
 
 import java.math.BigDecimal;
 
@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import guru.bonacci.heroes.domain.Account;
+import guru.bonacci.heroes.service.AccService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -28,7 +30,7 @@ public class AccController {
   
   @GetMapping("/balance/{accountId}/{poolId}")
   public ResponseEntity<BigDecimal> getBalance(@PathVariable String accountId, @PathVariable String poolId) {
-      var balanceOpt = accountService.getBalance(accountId, poolId);
+      var balanceOpt = accountService.showMeTheBalance(accountId, poolId);
       return balanceOpt.map(bal -> ResponseEntity.ok().body(bal))
           .orElse(ResponseEntity.notFound().build());
   }

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import guru.bonacci.heroes.service.AccService;
  
 @WebMvcTest(value = AccController.class)
 public class AccControllerTest {
@@ -45,7 +47,7 @@ public class AccControllerTest {
     
     @Test
     public void showAccountBalance() throws Exception {
-      when(service.getBalance(eq("foo"), eq("heroes"))).thenReturn(Optional.of(BigDecimal.TEN));
+      when(service.showMeTheBalance(eq("foo"), eq("heroes"))).thenReturn(Optional.of(BigDecimal.TEN));
       
       mvc.perform(get("/accounts/balance/{accountId}/{poolId}", "foo", "heroes"))
               .andExpect(status().isOk());

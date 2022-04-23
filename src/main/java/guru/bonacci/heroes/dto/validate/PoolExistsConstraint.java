@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transfer.validate;
+package guru.bonacci.heroes.dto.validate;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

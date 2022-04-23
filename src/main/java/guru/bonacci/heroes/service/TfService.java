@@ -1,26 +1,24 @@
-package guru.bonacci.heroes.transfer;
+package guru.bonacci.heroes.service;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import guru.bonacci.heroes.kafka.Transfer;
+import guru.bonacci.heroes.Transferer;
+import guru.bonacci.heroes.domain.Transfer;
 import lombok.RequiredArgsConstructor;
 
-@RestController
-@RequestMapping("transfers")
+@Service
 @RequiredArgsConstructor
 public class TfService {
 
-  private final TfProducer tfProducer;
+  private final Transferer trans;
 
   private LoadingCache<String, String> cache = CacheBuilder.newBuilder()
       .maximumSize(Integer.MAX_VALUE)
@@ -31,16 +29,16 @@ public class TfService {
               return response;
           }
       });
-
   
-  public boolean transfer(Transfer tf) throws ExecutionException {
+
+  public boolean transfer(Transfer tf) {
     var accKey = tf.getPoolId() + "." + tf.getFrom();
     if (cache.asMap().containsKey(accKey)) {
       throw new TooManyRequestsException("Take a break..");
     }
     cache.put(accKey, "");
 
-    return tfProducer.transfer(tf);
+    return trans.fer(tf);
   }
   
   @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
