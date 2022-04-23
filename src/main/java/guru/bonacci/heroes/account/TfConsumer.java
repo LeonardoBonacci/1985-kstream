@@ -7,23 +7,23 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import guru.bonacci.heroes.kafka.KafkaConfig;
 import guru.bonacci.heroes.kafka.Transfer;
-import guru.bonacci.heroes.transfer.TxProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-//@Slf4j
-//@Component
-//@RequiredArgsConstructor
-public class TxConsumer {
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class TfConsumer {
 
-//  private final AccountService accountService;
-//  
-//
-//  @KafkaListener(topics = {TxProducer.TOPIC})
-//  public void listen(@Payload Transaction tx, 
-//                     @Header(name = RECEIVED_MESSAGE_KEY, required = false) String poolId) {
-//    log.info("Received a message: {} at {}", poolId, tx);
-//    accountService.processTx(tx);
-//  }
+  private final AccService accountService;
+  
+
+  @KafkaListener(topics = KafkaConfig.TOPIC, groupId = "us")
+  public void listen(@Payload Transfer tf, 
+                     @Header(name = RECEIVED_MESSAGE_KEY, required = false) String poolId) {
+    log.info("Received : {} at {}", poolId, tf);
+    accountService.process(tf);
+  }
 }
