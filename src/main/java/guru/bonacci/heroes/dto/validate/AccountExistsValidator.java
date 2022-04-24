@@ -26,9 +26,9 @@ public class AccountExistsValidator implements ConstraintValidator<AccountExists
 
   @Override
   public boolean isValid(Object value, ConstraintValidatorContext context) {
-      var poolId = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(poolField));
-      var accountId = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(accountField));
+    var poolId = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(poolField));
+    var accId = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(accountField));
 
-      return poolService.containsAccount(poolId, accountId);
+    return poolService.containsAccount(poolId, accId);
   }
 }

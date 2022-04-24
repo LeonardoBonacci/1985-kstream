@@ -21,7 +21,7 @@ public class TfController {
   private final TfService service;
   
 
-  @PostMapping("/{poolId}")
+  @PostMapping
   public ResponseEntity<Void> transfer(@Valid @RequestBody TransferDto dto) {
     service.transfer(toTf(dto));
     return ResponseEntity.noContent().<Void>build();

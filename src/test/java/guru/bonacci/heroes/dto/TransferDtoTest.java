@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transfer;
+package guru.bonacci.heroes.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,8 +10,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import org.junit.jupiter.api.Test;
-
-import guru.bonacci.heroes.dto.TransferDto;
  
 public class TransferDtoTest {
  
@@ -19,7 +17,7 @@ public class TransferDtoTest {
 
   @Test
   void creditCardNumberMustNotBeNull() {
-    var dto = new TransferDto("foo", "bar", BigDecimal.valueOf(10.220022));
+    var dto = new TransferDto("heroes", "foo", "bar", BigDecimal.valueOf(10.220022));
     
     Set<ConstraintViolation<TransferDto>> violations = validator.validate(dto);
     assertThat(violations).isNotEmpty();

@@ -28,7 +28,7 @@ public class BootstrApp {
 		SpringApplication.run(BootstrApp.class, args);
 	}
 
-  @Bean
+//  @Bean
   CommandLineRunner demo(TfService tfService) {
 	  return args -> {
 	    var tfs = Arrays.asList(

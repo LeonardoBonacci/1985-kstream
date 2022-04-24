@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.account;
+package guru.bonacci.heroes.service;
 
 import static java.math.BigDecimal.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import guru.bonacci.heroes.kafka.Transfer;
-import guru.bonacci.heroes.service.AccService;
+import guru.bonacci.heroes.domain.Transfer;
 
 
 @SpringBootTest

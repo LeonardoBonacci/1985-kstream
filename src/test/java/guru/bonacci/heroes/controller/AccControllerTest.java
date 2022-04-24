@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.account;
+package guru.bonacci.heroes.controller;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.service.AccService;
  
 @WebMvcTest(value = AccController.class)
@@ -25,42 +26,39 @@ public class AccControllerTest {
     @Autowired
     private MockMvc mvc; 
 
+    
     @Test
     public void showAccount() throws Exception {
       var acc = new Account("foo", "heroes"); 
 
       when(service.showMeTheAccount(eq("foo"), eq("heroes"))).thenReturn(Optional.of(acc));
       
-      mvc.perform(get("/accounts/{accountId}/{poolId}", "foo", "heroes"))
+      mvc.perform(get("/pools/{poolId}/accounts/{accountId}", "heroes", "foo"))
               .andExpect(status().isOk());
-      
     }
     
     @Test
     public void showNonExistingAccount() throws Exception {
       when(service.showMeTheAccount(eq("foo"), eq("heroes"))).thenReturn(Optional.empty());
       
-      mvc.perform(get("/accounts/{accountId}/{poolId}", "foo", "heroes"))
+      mvc.perform(get("/pools/{poolId}/accounts/{accountId}", "heroes", "foo"))
               .andExpect(status().is4xxClientError());
-      
     }
     
     @Test
     public void showAccountBalance() throws Exception {
       when(service.showMeTheBalance(eq("foo"), eq("heroes"))).thenReturn(Optional.of(BigDecimal.TEN));
       
-      mvc.perform(get("/accounts/balance/{accountId}/{poolId}", "foo", "heroes"))
+      mvc.perform(get("/pools/{poolId}/accounts/{accountId}/balance", "heroes", "foo"))
               .andExpect(status().isOk());
-      
     }
     
     @Test
     public void showNonExistingAccountBalance() throws Exception {
       when(service.showMeTheAccount(eq("foo"), eq("heroes"))).thenReturn(Optional.empty());
       
-      mvc.perform(get("/accounts/balance/{accountId}/{poolId}", "foo", "heroes"))
+      mvc.perform(get("/pools/{poolId}/accounts/{accountId}/balance", "heroes", "foo"))
               .andExpect(status().is4xxClientError());
-      
     }
    
 }
