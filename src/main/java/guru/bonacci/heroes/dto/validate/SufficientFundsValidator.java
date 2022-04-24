@@ -6,12 +6,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.stereotype.Component;
 
 import guru.bonacci.heroes.service.AccService;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @RequiredArgsConstructor
 public class SufficientFundsValidator implements ConstraintValidator<SufficientFundsConstraint, Object> {
 

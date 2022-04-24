@@ -19,7 +19,7 @@ public class AccountExistsValidator implements ConstraintValidator<AccountExists
   private String accountField;
 
   
-  public void initialize(SufficientFundsConstraint constraintAnnotation) {
+  public void initialize(AccountExistsConstraint constraintAnnotation) {
     this.poolField = constraintAnnotation.pool();
     this.accountField = constraintAnnotation.account();
   }

@@ -1,4 +1,4 @@
-# Heroes - friend(ly) token exchange
+# Heroes - Token exchange service for local communities
 
 
 ```

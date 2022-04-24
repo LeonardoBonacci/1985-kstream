@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class PoolExistsValidator implements ConstraintValidator<PoolExistsConstraint, String> {
 
   private final PoolService poolService;
-  
+ 
   
   @Override
   public void initialize(PoolExistsConstraint pool) {
@@ -21,6 +21,6 @@ public class PoolExistsValidator implements ConstraintValidator<PoolExistsConstr
 
   @Override
   public boolean isValid(String poolId, ConstraintValidatorContext cxt) {
-      return poolService.exists(poolId);
+    return poolService.exists(poolId);
   }
 }
