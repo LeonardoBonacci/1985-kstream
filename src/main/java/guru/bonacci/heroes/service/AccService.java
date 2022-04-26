@@ -26,14 +26,14 @@ public class AccService {
     var from = tf.getFrom();
     var fromKey = tf.getPoolId() + "." + from;
     if (!accounts.containsKey(fromKey)) {
-      accounts.put(fromKey, new Account(from, tf.getPoolId()));
+      accounts.put(fromKey, Account.builder().accountId(from).poolId(tf.getPoolId()).build());
     }
     accounts.get(fromKey).getTransactions().add(tf);
     
     var to = tf.getTo();
     var toKey = tf.getPoolId() + "." + to;
     if (!accounts.containsKey(toKey)) {
-      accounts.put(toKey, new Account(to, tf.getPoolId()));
+      accounts.put(toKey, Account.builder().accountId(to).poolId(tf.getPoolId()).build());
     }
     accounts.get(toKey).getTransactions().add(tf);
     return true;

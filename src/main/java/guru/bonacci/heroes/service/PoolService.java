@@ -1,34 +1,34 @@
 package guru.bonacci.heroes.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import guru.bonacci.heroes.repository.AccountRepository;
+import guru.bonacci.heroes.domain.Account;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PoolService {
 
-  private final AccountRepository accountRepo;
+  public static final String ONLY_POOL_NAME = "heroes";
+
   
   // for now 
   // key is poolId
   // value is list of accountId -> represents members in a pool
   private Map<String, List<String>> pools = new HashMap<>(); 
 
-  
-  @PostConstruct
-  void init() {
-    pools.put("heroes", accountRepo.getAccounts());
+
+  public void addAccountToPool(Account acc) {
+    pools.putIfAbsent(acc.getPoolId(), new ArrayList<String>());
+    pools.get(acc.getPoolId()).add(acc.getAccountId());
   }
   
 
@@ -54,7 +54,11 @@ public class PoolService {
     return exists(poolId) && pools.get(poolId).contains(accountId);
     
   }
-  
+
+  public boolean notContainsAccount(String poolId, String accountId) {
+    return !containsAccount(poolId, accountId);
+  }
+
 
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public static class NonExistingPoolException extends RuntimeException {

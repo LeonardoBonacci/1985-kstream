@@ -3,18 +3,29 @@ package guru.bonacci.heroes.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
+@Builder
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
 
-  private final String accountId;
-  private final String poolId;
-  private List<Transfer> transactions = new ArrayList<>(); // where from == accountId or to == accountId
+  private String accountId;
+  private String poolId;
+
+  @Builder.Default
+  private final List<Transfer> transactions = new ArrayList<>(); // where from == accountId or to == accountId
+  
+  
+  public String identifier() {
+    return poolId + "." + accountId;
+  }
 }

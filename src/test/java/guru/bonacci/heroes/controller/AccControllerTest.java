@@ -29,7 +29,7 @@ public class AccControllerTest {
     
     @Test
     public void showAccount() throws Exception {
-      var acc = new Account("foo", "heroes"); 
+      var acc = Account.builder().accountId("foo").poolId("heroes").build(); 
 
       when(service.showMeTheAccount(eq("foo"), eq("heroes"))).thenReturn(Optional.of(acc));
       

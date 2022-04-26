@@ -22,7 +22,7 @@ public class TfConsumer {
   private final AccService accService;
   
 
-  @KafkaListener(topics = KafkaConfig.TOPIC, groupId = "us")
+  @KafkaListener(topics = KafkaConfig.TRANSFERS, groupId = "us")
   public void listen(@Payload Transfer tf, 
                      @Header(name = RECEIVED_MESSAGE_KEY, required = false) String poolId) {
     log.info("Received : {} at {}", poolId, tf);

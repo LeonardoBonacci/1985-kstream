@@ -9,7 +9,7 @@ account:
   accounts[4]: b
   accounts[5]: c
 
-#spring.profiles.active: stream
+spring.profiles.active: stream
 ---
 spring.config.activate.on-profile: stream
 spring.kafka:

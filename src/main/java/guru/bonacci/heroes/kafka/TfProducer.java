@@ -15,9 +15,10 @@ public class TfProducer implements Transferer {
 
   private final KafkaTemplate<String, Transfer> kafkaTemplate;
 
+  
   @Override
   public boolean fer(Transfer tf) {
-    return sendMessage(KafkaConfig.TOPIC, tf.getPoolId(), tf);
+    return sendMessage(KafkaConfig.TRANSFERS, tf.getPoolId(), tf);
   }
  
   // exposed for testing
