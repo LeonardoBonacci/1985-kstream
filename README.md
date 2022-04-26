@@ -1,5 +1,12 @@
-# Heroes - Token exchange service for local communities
+# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
 
+Community currencies need some more thought in practice
+
+So why do they flop? Some don’t survive the loss of activist leadership. Others fail to scale for a different reason. “People don’t understand money,”
+
+https://monneta.org/en/sardex/
+
+Sardex - The credits are denominated in Euro but cannot be exchanged for Euro or bought with Euro
 
 ```
 curl localhost:8080/accounts/a/heroes
@@ -12,11 +19,9 @@ curl -d '{"from":"b", "to":"a", "amount":100.10}' -H "Content-Type: application/
 ```
 
 ## TODO
-fix the input validation
-
-fix the unit-tests
-
 create mechanism to read pool-members from yml
+
+separate kstream app to do book keeping and expose rest GET accounts
 
 
 ## Basic concepts
