@@ -19,8 +19,6 @@ curl -d '{"from":"b", "to":"a", "amount":100.10}' -H "Content-Type: application/
 ```
 
 ## TODO
-create mechanism to read pool-members from yml
-
 separate kstream app to do book keeping and expose rest GET accounts
 
 

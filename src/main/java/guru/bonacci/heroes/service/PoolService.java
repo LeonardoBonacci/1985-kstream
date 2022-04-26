@@ -1,6 +1,5 @@
 package guru.bonacci.heroes.service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import guru.bonacci.heroes.repository.AccountRepository;
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PoolService {
 
+  private final AccountRepository accountRepo;
+  
   // for now 
   // key is poolId
   // value is list of accountId -> represents members in a pool
@@ -23,7 +28,7 @@ public class PoolService {
   
   @PostConstruct
   void init() {
-    pools.put("heroes", Arrays.asList("a", "aa", "ab", "ac", "b", "c"));
+    pools.put("heroes", accountRepo.getAccounts());
   }
   
 

@@ -1,7 +1,15 @@
 spring.application.name: do-not-forget-to-change-me
 
-#spring.profiles.active: stream
+#temporary list of accounts for the heroes-pool
+account:
+  accounts[0]: a
+  accounts[1]: aa
+  accounts[2]: ab
+  accounts[3]: ac
+  accounts[4]: b
+  accounts[5]: c
 
+#spring.profiles.active: stream
 ---
 spring.config.activate.on-profile: stream
 spring.kafka:
