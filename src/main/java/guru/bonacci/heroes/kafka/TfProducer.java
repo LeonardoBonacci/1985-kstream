@@ -1,23 +1,19 @@
 package guru.bonacci.heroes.kafka;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import guru.bonacci.heroes.Transferer;
 import guru.bonacci.heroes.domain.Transfer;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-@Profile("stream")
-public class TfProducer implements Transferer {
+public class TfProducer {
 
   private final KafkaTemplate<String, Transfer> kafkaTemplate;
 
   
-  @Override
-  public boolean fer(Transfer tf) {
+  public boolean send(Transfer tf) {
     return sendMessage(KafkaConfig.TRANSFERS, tf.getPoolId(), tf);
   }
  

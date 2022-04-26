@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import guru.bonacci.heroes.domain.Account;
+import guru.bonacci.heroes.service.AccService;
 import guru.bonacci.heroes.service.PoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-//TODO @Profile("stream")
 public class AccountConsumer {
 
   private final PoolService poolService;
+  private final AccService accService;
   
 
   @KafkaListener(topics = KafkaConfig.ACCOUNTS, 
@@ -24,5 +25,6 @@ public class AccountConsumer {
   public void listen(@Payload Account acc) {
     log.info("Received : {} at {}", acc);
     poolService.addAccountToPool(acc);
+    accService.addAccountToPool(acc);
   }
 }

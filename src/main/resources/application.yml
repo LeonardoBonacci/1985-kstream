@@ -9,19 +9,16 @@ account:
   accounts[4]: b
   accounts[5]: c
 
-spring.profiles.active: stream
----
-spring.config.activate.on-profile: stream
 spring.kafka:
     bootstrap-servers: localhost:9092
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaJsonSerializer
 
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaJsonDeserializer
       properties:
-        auto-offset-reset: earliest
-        spring.json.trusted.packages: '*'
+        json.fail.unknown.properties: false
+        json.value.type: guru.bonacci.heroes.domain.Account

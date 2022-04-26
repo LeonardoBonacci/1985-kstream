@@ -17,6 +17,10 @@ public class AccService {
   // ledger cache - key is poolId.accountId
   private Map<String, Account> accounts = new HashMap<>();
 
+  public void addAccountToPool(Account acc) {
+    accounts.put(acc.identifier(), acc);
+  }
+  
   
   public Optional<Account> showMeTheAccount(String accountId, String poolId) {
     return Optional.ofNullable(accounts.get(poolId + "." + accountId));

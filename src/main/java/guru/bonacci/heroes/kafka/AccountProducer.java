@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-//TODO @Profile("stream")
 public class AccountProducer {
 
   private final KafkaTemplate<String, Account> kafkaTemplate;

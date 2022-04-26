@@ -10,15 +10,15 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import guru.bonacci.heroes.Transferer;
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.kafka.TfProducer;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TfService {
 
-  private final Transferer trans;
+  private final TfProducer tfProducer;
 
   private LoadingCache<String, String> cache = CacheBuilder.newBuilder()
       .maximumSize(Integer.MAX_VALUE)
@@ -38,7 +38,7 @@ public class TfService {
     }
     cache.put(accKey, "");
 
-    return trans.fer(tf);
+    return tfProducer.send(tf);
   }
   
   @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)

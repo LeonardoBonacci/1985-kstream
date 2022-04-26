@@ -4,13 +4,11 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.TopicBuilder;
 
 @EnableKafka
 @Configuration
-@Profile("stream")
 public class KafkaConfig {
 
   public static final String TRANSFERS = "transfers";
@@ -21,6 +19,7 @@ public class KafkaConfig {
   public NewTopic transfers() {
     return TopicBuilder.name(TRANSFERS)
       .partitions(1)
+      .config(TopicConfig.RETENTION_MS_CONFIG, "-1")
       .build();
   }
   

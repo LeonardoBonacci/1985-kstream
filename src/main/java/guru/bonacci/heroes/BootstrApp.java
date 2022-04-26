@@ -36,7 +36,7 @@ public class BootstrApp {
 	        .forEach(accProducer::send);
 
 //	    var tfs = Arrays.asList(
-//	        new TransferDto("heroes", "a", "b", valueOf(100))
+//	        new TransferDto("heroes", "a", "b", BigDecimal.valueOf(100))
 //	        );
 //	    
 //	    Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
