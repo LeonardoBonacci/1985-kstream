@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transfers.cache;
+package guru.bonacci.heroes.transfers.tip;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class TransferInProgress {
 
   @Id
-  private String account; //poolId.accountId or poolId.fromId
+  private String account; //poolId.fromId
   private String transferId;
 }

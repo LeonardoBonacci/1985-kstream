@@ -4,10 +4,11 @@ import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import guru.bonacci.heroes.domain.Transfer;
-import guru.bonacci.heroes.transfers.cache.TIPService;
+import guru.bonacci.heroes.transfers.tip.TIPService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,7 +18,7 @@ public class TransferService {
   private final TIPService tipService;
   private final TransferProducer transferProducer;
 
-// Transactional
+//  @Transactional
   public Transfer transfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
 
