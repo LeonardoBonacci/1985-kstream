@@ -8,3 +8,10 @@ no pool - invalid
 curl -d '{"from":"b", "to":"a", "amount":100.10}' -H "Content-Type: application/json" -X POST localhost:8080/transfers
 
 ```
+
+```
+./bin/kafka-console-consumer \
+	 --bootstrap-server localhost:9092 \
+	 --topic transfers \
+	 --from-beginning
+ ```

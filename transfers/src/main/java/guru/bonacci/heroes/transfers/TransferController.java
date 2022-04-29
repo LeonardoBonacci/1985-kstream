@@ -1,14 +1,16 @@
 package guru.bonacci.heroes.transfers;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.domain.TransferDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -20,12 +22,21 @@ public class TransferController {
   
 
   @PostMapping
-  public ResponseEntity<Void> transfer(@Valid @RequestBody TransferDto dto) {
-    service.transfer(toTf(dto));
-    return ResponseEntity.noContent().<Void>build();
+  public String transfer(@Valid @RequestBody TransferDto dto) {
+    var transfer = toTf(dto);
+    service.transfer(transfer);
+    return transfer.getTransferId();
   }
   
   static Transfer toTf(TransferDto dto) {
-    return new Transfer(dto.getPoolId(), dto.getFrom(), dto.getTo(), dto.getAmount(), System.currentTimeMillis());
+    final String id = UUID.randomUUID().toString();
+    return Transfer.builder()
+            .transferId(id)
+            .poolId(dto.getPoolId())
+            .from(dto.getFrom())
+            .to(dto.getTo())
+            .amount(dto.getAmount())
+            .when(System.currentTimeMillis())
+            .build();
   }
 }

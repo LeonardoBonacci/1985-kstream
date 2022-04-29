@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.BeanWrapperImpl;
 
-import guru.bonacci.heroes.transfers.TransferDto;
+import guru.bonacci.heroes.domain.TransferDto;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

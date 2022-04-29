@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import guru.bonacci.heroes.transfers.TransferDto;
+import guru.bonacci.heroes.domain.TransferDto;
 
 @FeignClient(value = "placeholder", url = "localhost:8082")
 public interface AccountServiceClient {

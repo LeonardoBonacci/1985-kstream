@@ -1,43 +1,31 @@
 package guru.bonacci.heroes.transfers;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.transfers.cache.TIPService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TransferService {
 
-  private final TransferProducer tfProducer;
+  private final TIPService tipService;
+  private final TransferProducer transferProducer;
 
-  private LoadingCache<String, String> cache = CacheBuilder.newBuilder()
-      .maximumSize(Integer.MAX_VALUE)
-      .expireAfterWrite(1, TimeUnit.MINUTES)
-      .build(new CacheLoader<String, String>() {
-          @Override
-          public String load(final String response) throws Exception {
-              return response;
-          }
-      });
-  
+// Transactional
+  public Transfer transfer(Transfer transfer) {
+    Objects.requireNonNull(transfer.getTransferId(), "cheating..");
 
-  public boolean transfer(Transfer tf) {
-    var accKey = tf.getPoolId() + "." + tf.getFrom();
-    if (cache.asMap().containsKey(accKey)) {
-      throw new TooManyRequestsException("Take a break..");
+    if (!tipService.proceed(transfer)) {
+      throw new TooManyRequestsException("the reward of patience..");
     }
-    cache.put(accKey, "");
-
-    return tfProducer.send(tf);
+    transferProducer.send(transfer);
+    return transfer;
   }
   
   @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
