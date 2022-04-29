@@ -9,10 +9,9 @@ https://monneta.org/en/sardex/
 Sardex - The credits are denominated in Euro but cannot be exchanged for Euro or bought with Euro
 
 ## TODO
-kstream app to do book keeping and expose rest GET accounts
 implement sardex
 exactly once semantics
-k8s
+k8s + scaling accounts
 graalvm
 
 ## Basic concepts

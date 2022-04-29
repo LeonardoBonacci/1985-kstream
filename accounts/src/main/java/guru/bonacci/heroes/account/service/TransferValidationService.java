@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import guru.bonacci.heroes.account.domain.TransferValidationRequest;
-import guru.bonacci.heroes.account.dto.TransferValidationResult;
+import guru.bonacci.heroes.domain.TransferValidationRequest;
+import guru.bonacci.heroes.domain.TransferValidationResult;
 import lombok.RequiredArgsConstructor;
 
 @Service

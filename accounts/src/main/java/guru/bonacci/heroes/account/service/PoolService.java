@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import guru.bonacci.heroes.account.domain.Account;
 import guru.bonacci.heroes.account.kafka.KafkaAccountsConfig;
+import guru.bonacci.heroes.domain.Account;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

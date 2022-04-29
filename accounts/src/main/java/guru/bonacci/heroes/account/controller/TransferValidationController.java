@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import guru.bonacci.heroes.account.domain.TransferValidationRequest;
-import guru.bonacci.heroes.account.dto.TransferDto;
-import guru.bonacci.heroes.account.dto.TransferValidationResult;
 import guru.bonacci.heroes.account.service.TransferValidationService;
+import guru.bonacci.heroes.domain.TransferDto;
+import guru.bonacci.heroes.domain.TransferValidationRequest;
+import guru.bonacci.heroes.domain.TransferValidationResult;
 import lombok.RequiredArgsConstructor;
 
 @RestController

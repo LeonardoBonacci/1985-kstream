@@ -11,8 +11,8 @@ import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.stereotype.Service;
 
-import guru.bonacci.heroes.account.AccountBootstrApp;
-import guru.bonacci.heroes.account.domain.Account;
+import guru.bonacci.heroes.account.BootstrAppAccounts;
+import guru.bonacci.heroes.domain.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,7 @@ public class AccountService {
   
   private ReadOnlyKeyValueStore<String, Account> accountStore() {
     final var streams = streamsBuilder.getKafkaStreams();
-    return streams.store(StoreQueryParameters.fromNameAndType(AccountBootstrApp.ACCOUNTS_STORE_NAME, ACCOUNT_STORE_TYPE).enableStaleStores());
+    return streams.store(StoreQueryParameters.fromNameAndType(BootstrAppAccounts.ACCOUNTS_STORE_NAME, ACCOUNT_STORE_TYPE).enableStaleStores());
   }
   
   public Optional<Account> getAccount(String accountId, String poolId) {

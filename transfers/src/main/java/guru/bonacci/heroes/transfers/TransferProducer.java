@@ -3,6 +3,7 @@ package guru.bonacci.heroes.transfers;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import guru.bonacci.heroes.domain.Transfer;
 import lombok.RequiredArgsConstructor;
 
 @Component

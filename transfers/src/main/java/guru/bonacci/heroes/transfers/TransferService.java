@@ -10,6 +10,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import guru.bonacci.heroes.domain.Transfer;
 import lombok.RequiredArgsConstructor;
 
 @Service
