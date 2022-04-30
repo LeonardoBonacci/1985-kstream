@@ -5,8 +5,5 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 
 @Configuration
 @EnableKafkaStreams
-public class KafkaTupleTransfersConfig {
-
-  public static final String TRANSFERS_TOPIC = "transfers";
-  public static final String TRANSFER_TUPLES_TOPIC = "transfer-tuples";
+public class KafkaTransferTuplerConfig {
 }

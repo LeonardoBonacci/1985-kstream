@@ -22,15 +22,13 @@ import guru.bonacci.heroes.domain.Transfer;
 
 @EnableKafka
 @Configuration
-//@EnableTransactionManagement  
+@EnableTransactionManagement  
 public class KafkaTransfersConfig {
 
-  public static final String TRANSFERS_TOPIC = "transfers";
-  
   @Bean
   public ProducerFactory<String, Transfer> producerFactory() {
     DefaultKafkaProducerFactory<String, Transfer> f = new DefaultKafkaProducerFactory<>(senderProps());
-//    f.setTransactionIdPrefix("tx-");
+    f.setTransactionIdPrefix("tx-");
     return f;
   }
 
@@ -39,7 +37,7 @@ public class KafkaTransfersConfig {
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-//    props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "me-again");
+    props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "me-again");
     return props;
   }
   
@@ -48,18 +46,18 @@ public class KafkaTransfersConfig {
     return new KafkaTemplate<String, Transfer>(producerFactory());
   }
 
-//  @Bean
-//  public KafkaTransactionManager<String, Transfer> kafkaTransactionManager() {
-//    KafkaTransactionManager<String, Transfer> ktm = new KafkaTransactionManager<>(producerFactory());
-//    ktm.setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
-//    return ktm;
-//  }
+  @Bean
+  public KafkaTransactionManager<String, Transfer> kafkaTransactionManager() {
+    KafkaTransactionManager<String, Transfer> ktm = new KafkaTransactionManager<>(producerFactory());
+    ktm.setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
+    return ktm;
+  }
 
   @Bean
   public StringRedisTemplate redisTemplate() {
     StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
     // explicitly enable transaction support
-//    template.setEnableTransactionSupport(true);              
+    template.setEnableTransactionSupport(true);              
     return template;
   }
 

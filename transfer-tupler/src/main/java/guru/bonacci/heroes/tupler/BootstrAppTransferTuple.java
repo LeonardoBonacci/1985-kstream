@@ -1,5 +1,6 @@
 package guru.bonacci.heroes.tupler;
 
+import static guru.bonacci.heroes.domain.Transfer.identifier;
 import static java.util.Arrays.asList;
 
 import org.apache.kafka.common.serialization.Serdes;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.kafka.KafkaTopicNames;
 import guru.bonacci.kafka.serialization.JacksonSerde;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +30,7 @@ public class BootstrAppTransferTuple {
 	@Bean
 	public KStream<String, Transfer> tuple(StreamsBuilder builder) {
 	  KStream<String, Transfer> stream = 
-	      builder.stream(KafkaTupleTransfersConfig.TRANSFERS_TOPIC, Consumed.with(Serdes.String(), JacksonSerde.of(Transfer.class)));
+	      builder.stream(KafkaTopicNames.TRANSFERS_TOPIC, Consumed.with(Serdes.String(), JacksonSerde.of(Transfer.class)));
 	  
 	  KStream<String, Transfer> rekeyed = 
 	      stream.flatMap((key, value) -> 
@@ -36,11 +38,7 @@ public class BootstrAppTransferTuple {
 	                 KeyValue.pair(identifier(value.getPoolId(), value.getTo()), value)));
 
 	  rekeyed.peek((k,v) -> log.info(">>> " + k + " <> " + v));
-	  rekeyed.to(KafkaTupleTransfersConfig.TRANSFER_TUPLES_TOPIC, Produced.with(Serdes.String(), JacksonSerde.of(Transfer.class)));
+	  rekeyed.to(KafkaTopicNames.TRANSFER_TUPLES_TOPIC, Produced.with(Serdes.String(), JacksonSerde.of(Transfer.class)));
   	return stream;
 	}
-	
-  private static String identifier(String poolId, String accountId) {
-    return poolId + "." + accountId;
-  }
 }

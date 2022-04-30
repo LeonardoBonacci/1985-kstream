@@ -4,6 +4,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.kafka.KafkaTopicNames;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -14,7 +15,7 @@ public class TransferProducer {
 
   
   public boolean send(Transfer tf) {
-    return sendMessage(KafkaTransfersConfig.TRANSFERS_TOPIC, tf.getPoolId(), tf);
+    return sendMessage(KafkaTopicNames.TRANSFERS_TOPIC, tf.getPoolId(), tf);
   }
  
   // exposed for testing

@@ -3,6 +3,8 @@ package guru.bonacci.heroes.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Iterables;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,5 +34,9 @@ public class Account {
   public Account addTransfer(Transfer transfer) {
     transfers.add(transfer);
     return this;
+  }
+  
+  public Transfer getLatestTransfer() {
+    return Iterables.getLast(transfers);
   }
 }

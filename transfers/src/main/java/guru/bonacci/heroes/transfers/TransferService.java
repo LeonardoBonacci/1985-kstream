@@ -18,7 +18,7 @@ public class TransferService {
   private final TIPService tipService;
   private final TransferProducer transferProducer;
 
-//  @Transactional
+  @Transactional
   public Transfer transfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
 

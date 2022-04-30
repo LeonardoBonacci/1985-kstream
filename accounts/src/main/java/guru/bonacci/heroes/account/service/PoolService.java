@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import guru.bonacci.heroes.account.kafka.KafkaAccountsConfig;
 import guru.bonacci.heroes.domain.Account;
+import guru.bonacci.heroes.kafka.KafkaTopicNames;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,7 +29,7 @@ public class PoolService {
   private Map<String, List<String>> pools = new HashMap<>(); 
 
   
-  @KafkaListener(topics = KafkaAccountsConfig.ACCOUNTS_TOPIC, groupId = "#{T(java.util.UUID).randomUUID().toString()}")
+  @KafkaListener(topics = KafkaTopicNames.ACCOUNTS_TOPIC, groupId = "#{T(java.util.UUID).randomUUID().toString()}")
   public void listen(@Payload String data) throws IOException {
     //TODO use JsonDeserializer
     var account = new ObjectMapper().readValue(data, Account.class);
