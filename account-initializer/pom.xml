@@ -7,8 +7,8 @@
 		<artifactId>parent</artifactId>
 		<version>4.2</version>
 	</parent>
-	<artifactId>account-transfers-initializer</artifactId>
-	<name>heroes-account-transfer-initializer</name>
+	<artifactId>account-initializer</artifactId>
+	<name>heroes-account-initializer</name>
 	<description>Back in business</description>
 
 	<properties>
@@ -59,6 +59,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<finalName>app</finalName>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accounttransfers;
+package guru.bonacci.heroes.accounts;
 
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNTS_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC;

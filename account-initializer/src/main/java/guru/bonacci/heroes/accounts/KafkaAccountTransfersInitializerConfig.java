@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accounttransfers;
+package guru.bonacci.heroes.accounts;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafkaStreams;

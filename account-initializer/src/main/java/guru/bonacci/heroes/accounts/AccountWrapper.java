@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accounttransfers;
+package guru.bonacci.heroes.accounts;
 
 import guru.bonacci.heroes.domain.Account;
 import lombok.Value;
