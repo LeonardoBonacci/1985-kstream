@@ -1,22 +1,22 @@
 package guru.bonacci.heroes.accounttransfers;
 
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNTS_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC;
+
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.ValueTransformerWithKey;
-import org.apache.kafka.streams.processor.api.Record;
-import org.apache.kafka.streams.state.KeyValueStore;
-import org.apache.kafka.streams.state.StoreBuilder;
-import org.apache.kafka.streams.state.Stores;
+import org.apache.kafka.streams.kstream.ValueJoiner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.support.serializer.JsonSerde;
 
 import guru.bonacci.heroes.domain.Account;
-import guru.bonacci.heroes.kafka.KafkaTopicNames;
-import guru.bonacci.kafka.serialization.JacksonSerde;
+import guru.bonacci.heroes.domain.AccountCDC;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,89 +28,31 @@ public class BootstrAppAccountTransfersInitializer {
 	}
 
 	@Bean
-	public KStream<String, Account> topology(StreamsBuilder builder) {
-	  KStream<String, Account> accountStream = 
-	      builder.stream(KafkaTopicNames.ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), JacksonSerde.of(Account.class)));
+	public KStream<String, AccountCDC> topology(StreamsBuilder builder) {
+	  final var accountCDCSerde = new JsonSerde<AccountCDC>(AccountCDC.class);
+	  final var accountSerde = new JsonSerde<Account>(Account.class);
 
-	  final String storeName = "accountStore";
-	  StoreBuilder<KeyValueStore<String, Account>> storeBuilder = Stores.keyValueStoreBuilder(
-        Stores.persistentKeyValueStore(storeName),
-        Serdes.String(),
-        JacksonSerde.of(Account.class));
+	  KStream<String, AccountCDC> accountStream = // key: poolId.accountId
+	      builder.stream(ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde));
 
-	  builder.addStateStore(storeBuilder);
-
-	  KStream<String, Account> accountTransferStream = 
-	      builder.stream(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), JacksonSerde.of(Account.class)));
-	  accountTransferStream.process(() -> new AccountStoreFillingProcessor(storeName), storeName); //FIXME this solution takes way too long and does not work during rebalance
+	  KTable<String, Account> accountTransferTable = // key: poolId.accountId
+	      builder.table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
 	  
     accountStream
-      .transformValues(() -> new AccountFilteringTransformer(storeName), storeName)
-      .selectKey((none, account) -> account.identifier())
-      .to(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC, Produced.with(Serdes.String(), JacksonSerde.of(Account.class)));
+      .leftJoin(accountTransferTable, new AccountJoiner())
+      .filter((identifier, wrapper) -> wrapper.isInsert())
+      .mapValues(AccountWrapper::getAccount)
+      .peek((identifier, account) -> log.info("inserting {} <> {}", identifier, account))
+      .to(ACCOUNT_TRANSFERS_TOPIC, Produced.with(Serdes.String(), accountSerde));
   	return accountStream;
 	}
 	
-	
-	static class AccountStoreFillingProcessor implements org.apache.kafka.streams.processor.api.Processor<String, Account, Void, Void> {
-    
-	  private String storeName;
-	  private KeyValueStore<String, Account> store;
+	static class AccountJoiner implements ValueJoiner<AccountCDC, Account, AccountWrapper> {
 
-	  public AccountStoreFillingProcessor(String storeName) {
-      this.storeName = storeName;
+	  public AccountWrapper apply(AccountCDC cdc, Account account) {
+	    return account != null 
+	       ? new AccountWrapper(false, account)
+	       : new AccountWrapper(true, Account.builder().poolId(cdc.getPoolId()).accountId(cdc.getAccountId()).build());
 	  }
-	  
-    @Override
-    public void init(final org.apache.kafka.streams.processor.api.ProcessorContext<Void, Void> context) {
-      store = context.getStateStore(storeName);
-    }
-
-    @Override
-    public void process(final Record<String, Account> record) {
-      var account = store.get(record.key());
-      if (account == null) {
-        store.put(record.value().identifier(), record.value());
-      } 
-    }
-
-    @Override
-    public void close() {
-        // close any resources managed by this processor
-        // Note: Do not close any StateStores as these are managed by the library
-    }
 	}
-	
-	
-	static class AccountFilteringTransformer implements ValueTransformerWithKey<String, Account, Account> {
-
-     private String storeName;
-     private KeyValueStore<String, Account> store;
-
-     public AccountFilteringTransformer(String storeName) {
-         this.storeName = storeName;
-     }
-
-     @Override
-     public void init(final org.apache.kafka.streams.processor.ProcessorContext context) {
-          store = (KeyValueStore) context.getStateStore(storeName);
-     }
-
-     @Override
-     public Account transform(final String unused, final Account account) {
-         var persistedValue = store.get(account.identifier());
-
-         if (persistedValue == null) {
-           store.put(account.identifier(), account);
-         }
-
-         return persistedValue;
-     }
-
-     @Override
-     public void close() {
-     }
- }
-	
-	
 }

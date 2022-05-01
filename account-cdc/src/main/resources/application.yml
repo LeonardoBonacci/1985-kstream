@@ -1,4 +1,4 @@
-spring.application.name: heroes-account-initializer
+spring.application.name: heroes-account-cdc
        
 spring.kafka:
     bootstrap-servers: localhost:9092
@@ -9,9 +9,9 @@ spring.kafka:
 
 #temporary list of accounts for the coro-pool
 account:
-  accounts[0]: a
-  accounts[1]: aa
-  accounts[2]: ab
-  accounts[3]: ac
-  accounts[4]: b
-  accounts[5]: c
+  accounts[0]: foo
+  accounts[1]: goo
+  accounts[2]: bar
+  accounts[3]: baz
+  accounts[4]: dumm
+  

@@ -6,5 +6,4 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 @Configuration
 @EnableKafkaStreams
 public class KafkaAccountTransfersInitializerConfig {
-
 }

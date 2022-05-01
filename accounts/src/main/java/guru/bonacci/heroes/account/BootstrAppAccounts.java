@@ -39,7 +39,7 @@ public class BootstrAppAccounts {
     KTable<String, Account> accounts = builder.table(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC, materializedAccounts);
     accounts
       .toStream()
-      .map((key, account) -> KeyValue.pair(account.getLatestTransfer().getTransferId(), account.getLatestTransfer()))
+      .map((key, account) -> KeyValue.pair(account.latestTransfer().getTransferId(), account.latestTransfer()))
       .to(KafkaTopicNames.TRANSFERS_EVENTUAL_TOPIC);
     
     transfers

@@ -2,7 +2,7 @@ package guru.bonacci.heroes.kafka;
 
 public class KafkaTopicNames {
 
-  public static final String ACCOUNTS_TOPIC = "accounts"; // no key
+  public static final String ACCOUNTS_TOPIC = "accounts"; // key: poolId.accountId
   public static final String ACCOUNT_TRANSFERS_TOPIC = "account-transfers"; // key: poolId.accountId
   public static final String TRANSFERS_TOPIC = "transfers"; // key: poolId
   public static final String TRANSFER_TUPLES_TOPIC = "transfer-tuples"; // key: poolId.fromId / poolId.accountId

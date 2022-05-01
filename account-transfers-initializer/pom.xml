@@ -31,11 +31,6 @@
 
 		<dependency>
 			<groupId>guru.bonacci.heroes</groupId>
-			<artifactId>serialization</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>guru.bonacci.heroes</groupId>
 			<artifactId>domain</artifactId>
 			<version>${project.version}</version>
 		</dependency>
