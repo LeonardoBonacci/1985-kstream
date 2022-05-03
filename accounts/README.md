@@ -10,6 +10,9 @@
 coro.a:{"accountId":"a", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"init", "to":"a", "amount":100}]}
 coro.b:{"accountId":"b", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"init", "to":"b", "amount":100}]}
 
+
+a:{"accountId":"a", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"init", "to":"a", "amount":100}]}
+
 ./bin/kafka-console-consumer \
  --bootstrap-server localhost:9092 \
  --topic accounts \

@@ -1,6 +1,6 @@
 spring.application.name: heroes-account-transfers-initializer
 
-spring.profiles.active: docker
+#spring.profiles.active: docker
     
 spring:
   kafka:

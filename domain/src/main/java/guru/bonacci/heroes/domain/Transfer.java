@@ -19,8 +19,4 @@ public class Transfer {
   private String to;
   private BigDecimal amount;
   private long when;
-  
-  public static String identifier(String poolId, String accountId) {
-    return poolId + "." + accountId;
-  }
 }

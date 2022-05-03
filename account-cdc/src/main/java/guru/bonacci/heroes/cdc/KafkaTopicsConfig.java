@@ -16,15 +16,23 @@ public class KafkaTopicsConfig {
   @Bean
   public NewTopic accountCDC() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNTS_TOPIC)
-      .partitions(1)
+      .partitions(2)
       .build();
   }
   
   @Bean
   public NewTopic accounts() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC)
-      .partitions(1)
+      .partitions(2)
       .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT)
       .build();
   }
+  
+  @Bean
+  public NewTopic transferTuples() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_TUPLES_TOPIC)
+      .partitions(2)
+      .build();
+  }
+
 }

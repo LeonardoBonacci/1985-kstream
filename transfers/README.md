@@ -1,4 +1,6 @@
-coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
+coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
+
+# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
 
 ```
 
@@ -15,3 +17,10 @@ curl -d '{"from":"b", "to":"a", "amount":100.10}' -H "Content-Type: application/
 	 --topic transfers \
 	 --from-beginning
  ```
+ 
+ ## TODO 
+ 
+move most of the transfer validation to the transfers-service
+key on pool/from
+redis transactions
+  

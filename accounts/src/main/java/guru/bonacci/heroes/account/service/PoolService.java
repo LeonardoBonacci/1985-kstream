@@ -29,7 +29,7 @@ public class PoolService {
   private Map<String, List<String>> pools = new HashMap<>(); 
 
   
-  @KafkaListener(topics = KafkaTopicNames.ACCOUNTS_TOPIC, groupId = "#{T(java.util.UUID).randomUUID().toString()}")
+//  @KafkaListener(topics = KafkaTopicNames.ACCOUNTS_TOPIC, groupId = "#{T(java.util.UUID).randomUUID().toString()}")
   public void listen(@Payload String data) throws IOException {
     //TODO use JsonDeserializer
     var account = new ObjectMapper().readValue(data, Account.class);

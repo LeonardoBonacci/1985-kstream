@@ -9,4 +9,9 @@ public class TransferValidationResult {
   private boolean fromIsValid;
   private boolean toIsValid;
   private boolean hasSufficientFunds;
+  
+
+  public static TransferValidationResult from(Account account) {
+      return new TransferValidationResult(true, true, true, true);
+  }
 }
