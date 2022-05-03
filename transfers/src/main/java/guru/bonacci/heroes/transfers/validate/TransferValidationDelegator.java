@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 
 import guru.bonacci.heroes.domain.TransferDto;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TransferValidationDelegator implements ConstraintValidator<TransferConstraint, Object> {
 
-  private final AccountServiceClient client;
+  //TODO pool-type rules are executed here - infinitely scalable
+  //TODO ReplyingKafkaTemplate<String, String, String> template
   
   private String poolField;
   private String fromField;
@@ -34,7 +36,8 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
       var to = String.valueOf(new BeanWrapperImpl(value).getPropertyValue(toField));
       var amount = new BigDecimal(String.valueOf(new BeanWrapperImpl(value).getPropertyValue(amountField)));
 
-      var info = client.validateTransfer(new TransferDto(poolId, from, to, amount));
-      return info.isPoolIsValid() && info.isFromIsValid() && info.isToIsValid() && info.isHasSufficientFunds();
+//      var info = client.validateTransfer(new TransferDto(poolId, from, to, amount));
+//      return info.isPoolIsValid() && info.isFromIsValid() && info.isToIsValid() && info.isHasSufficientFunds();
+      return true;
   }
 }

@@ -19,4 +19,9 @@ public class Transfer {
   private String to;
   private BigDecimal amount;
   private long when;
+  
+  
+  public String identifier() {
+    return this.poolId + "." + this.from;
+  }
 }

@@ -18,12 +18,15 @@
 	</properties>
 
 	<modules>
+		<module>account-cdc</module>
 		<module>account-initializer</module>
-		<module>accounts</module>
+		<module>account-storage</module>
+		<module>account-transfer</module>
 		<module>domain</module>
-		<module>json-serde</module>
+		<module>tip-purger</module>
 		<module>transfers</module>
 		<module>transfer-tupler</module>
+		<module>transfer-tuple-joiner</module>
 	</modules>
 
 	<dependencies>

@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class TransferInProgress {
 
   @Id
-  private String account; //poolId.fromId
+  private String account; //poolId.from
   private String transferId;
 }

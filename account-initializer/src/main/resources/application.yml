@@ -1,4 +1,4 @@
-spring.application.name: heroes-account-transfers-initializer
+spring.application.name: heroes-account-initializer-app
 
 #spring.profiles.active: docker
     

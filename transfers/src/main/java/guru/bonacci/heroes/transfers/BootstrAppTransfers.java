@@ -5,12 +5,10 @@ import java.math.BigDecimal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 import guru.bonacci.heroes.domain.Transfer;
 
-@EnableFeignClients
 @SpringBootApplication
 public class BootstrAppTransfers {
 
