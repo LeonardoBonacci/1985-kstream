@@ -8,8 +8,3 @@ spring.kafka:
     default:
       key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-#                
-#  consumer:
-#    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#    auto-offset-reset: earliest 

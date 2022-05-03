@@ -20,7 +20,6 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import guru.bonacci.heroes.accountinitializer.BootstrAppAccountInitializer;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.AccountCDC;
 import guru.bonacci.heroes.kafka.KafkaTopicNames;

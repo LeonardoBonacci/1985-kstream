@@ -1,4 +1,4 @@
-# Inserts new accounts
+## Activates accounts coming from another datastore
 
 
 ```

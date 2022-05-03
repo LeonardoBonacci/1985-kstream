@@ -1,9 +1,10 @@
 package guru.bonacci.heroes.accounttransfer;
 
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.*;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_TUPLES_TOPIC;
 
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;

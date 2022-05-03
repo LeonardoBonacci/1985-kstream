@@ -1,4 +1,4 @@
-# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
+# Transfer processing service
 
 ```
 ./bin/kafka-console-producer \

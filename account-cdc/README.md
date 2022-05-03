@@ -1,4 +1,6 @@
-# Change capture data mock/stub
+# Change capture data mock/stub from account datastore
+
+Also creates all the topics
 
 ```
 ./bin/kafka-console-consumer \
