@@ -16,14 +16,14 @@ public class KafkaTopicConfig {
   @Bean
   public NewTopic accounts() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNTS_TOPIC)
-      .partitions(2)
+      .partitions(1)
       .build();
   }
   
   @Bean
   public NewTopic accountTransfers() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC)
-      .partitions(2)
+      .partitions(1)
       .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT)
       .build();
   }
@@ -31,7 +31,7 @@ public class KafkaTopicConfig {
   @Bean
   public NewTopic accountStorage() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC)
-      .partitions(2)
+      .partitions(1)
       .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT)
       .build();
   }
@@ -39,7 +39,7 @@ public class KafkaTopicConfig {
   @Bean
   public NewTopic transferValidationRequest() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC)
-      .partitions(2)
+      .partitions(1)
       .config(TopicConfig.RETENTION_MS_CONFIG, "3600000")
       .build();
   }
@@ -47,15 +47,22 @@ public class KafkaTopicConfig {
   @Bean
   public NewTopic transferValidationResponse() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_VALIDATION_REPLIES_TOPIC)
-      .partitions(2)
+      .partitions(1)
       .config(TopicConfig.RETENTION_MS_CONFIG, "3600000")
       .build();
   }
-  
+
+  @Bean
+  public NewTopic transfers() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFERS_TOPIC)
+      .partitions(1)
+      .build();
+  }
+
   @Bean
   public NewTopic transferTuples() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_TUPLES_TOPIC)
-      .partitions(2)
+      .partitions(1)
       .build();
   }
 

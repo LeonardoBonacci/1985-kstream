@@ -12,7 +12,7 @@ public class TransferValidationResponse {
   private Boolean poolIsValid;
   private Boolean fromIsValid;
   private Boolean toIsValid;
-  private Account from;
+  private Account fromAccount;
   
   private String errorMessage; // could become error code?
   
