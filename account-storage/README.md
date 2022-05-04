@@ -26,6 +26,3 @@ coro.a:{"from":"a", "poolId":"coro", "to":"c"}
  --from-beginning
 
 ```
-
-TODO
-fix poolservice deserializer

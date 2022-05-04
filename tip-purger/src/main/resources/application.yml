@@ -1,4 +1,4 @@
-spring.application.name: heroes-tip-purger
+spring.application.name: heroes-tip-purger-app
 
 spring:
   kafka:
@@ -14,5 +14,3 @@ spring:
     port: 16379
     password: mypass
     timeout: 10000
-
-# manual commit TODO

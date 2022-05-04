@@ -20,7 +20,5 @@ curl -d '{"from":"b", "to":"a", "amount":100.10}' -H "Content-Type: application/
  
  ## TODO 
  
-move most of the transfer validation to the transfers-service
-key on pool/from
-redis transactions
+redis 
   
