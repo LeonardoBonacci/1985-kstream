@@ -1,4 +1,4 @@
-spring.application.name: heroes-account-transfer-app
+spring.application.name: heroes-account-transfer-apps
        
 spring.kafka:
   bootstrap-servers: localhost:9092

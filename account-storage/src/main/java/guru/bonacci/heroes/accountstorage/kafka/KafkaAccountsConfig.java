@@ -28,7 +28,7 @@ public class KafkaAccountsConfig {
   
   @Bean
   public NewTopic transfersProcessed() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFERS_EVENTUAL_TOPIC)
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC)
       .partitions(1)
       .build();
   }

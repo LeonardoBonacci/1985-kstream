@@ -2,9 +2,11 @@ package guru.bonacci.heroes.accounttransfer;
 
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_TUPLES_TOPIC;
 
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
@@ -17,7 +19,9 @@ import org.springframework.kafka.support.serializer.JsonSerde;
 
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.Transfer;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @SpringBootApplication
 public class BootstrAppAccountTransfer {
 
@@ -37,11 +41,23 @@ public class BootstrAppAccountTransfer {
         builder.table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
     KStream<String, Account> accountStream = accountTable.toStream();
      
-    // first, stream to the eventual consistency mechanism, and then to account-storage
-    // order is important to guarantee that transfers 'have been processed' before they can be 'queried'
-//    accountStream 
-//      .map((key, account) -> KeyValue.pair(account.latestTransfer().getTransferId(), account.latestTransfer()));
-//      .to(TRANSFERS_EVENTUAL_TOPIC);
+    // stream to the eventual consistency mechanism..
+    accountStream.mapValues((poolAccountId, account)-> {
+        var latestTransfer = account.latestTransfer();
+        log.info("before filtering transfer {}", latestTransfer);
+        
+        return new TransferWrapper(latestTransfer != null, latestTransfer);
+      }) // filter out the accounts without transfers
+      .filter((poolAccountId, wrapper) -> wrapper.isContains())
+      .map((poolAccountId, wrapper) -> { // rekey to transferId
+        var latestTransfer = wrapper.getTransfer();
+        log.info("after filtering transfer {}", latestTransfer);
+
+        return KeyValue.pair(latestTransfer.getTransferId(), latestTransfer);
+      })
+      .to(TRANSFER_EVENTUAL_TOPIC, Produced.with(Serdes.String(), transferSerde));
+
+    //., and then to account-storage   
     accountStream.to(ACCOUNT_STORAGE_SINK_TOPIC, Produced.with(Serdes.String(), accountSerde));
     
     transferStream // raison d'être: add transfer to account

@@ -1,6 +1,6 @@
 package guru.bonacci.heroes.accountcdc;
 
-import static guru.bonacci.heroes.kafka.HeroesConstants.*;
+import static guru.bonacci.heroes.kafka.Constants.*;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -36,7 +36,7 @@ public class Account {
     return this;
   }
   
-  public Transfer latestTransfer() { //FIXME
+  public Transfer latestTransfer() {
     return transfers.isEmpty() ? null : Iterables.getLast(transfers);
   }
 }

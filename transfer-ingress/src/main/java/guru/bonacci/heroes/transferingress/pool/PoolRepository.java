@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Repository;
 
+import guru.bonacci.heroes.kafka.Constants;
+
 @Repository
 public class PoolRepository {
 
@@ -16,7 +18,7 @@ public class PoolRepository {
   @PostConstruct
   void init() {
     pools = new HashMap<>();
-    pools.put("coro", PoolType.SARDEX);
+    pools.put(Constants.ONLY_POOL, PoolType.SARDEX);
   }
   
   public PoolType getType(String poolId) {

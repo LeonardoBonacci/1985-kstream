@@ -21,7 +21,7 @@ public class Transfer {
   private long when;
   
   
-  public String identifier() {
+  public String poolAccountId() {
     return this.poolId + "." + this.from;
   }
 }

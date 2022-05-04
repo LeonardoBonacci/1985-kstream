@@ -29,7 +29,7 @@ public class BootstrAppTransferTupleJoiner {
 	@Bean
 	public KStream<String, Transfer> tuple(StreamsBuilder builder) {
 	  KStream<String, Transfer> stream = // keyed on transferId
-	      builder.stream(KafkaTopicNames.TRANSFERS_EVENTUAL_TOPIC, Consumed.with(Serdes.String(), JacksonSerde.of(Transfer.class)));
+	      builder.stream(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC, Consumed.with(Serdes.String(), JacksonSerde.of(Transfer.class)));
 
 	  
     stream.peek((k,v) -> log.info(">>> " + k + " <> " + v));
@@ -47,7 +47,7 @@ public class BootstrAppTransferTupleJoiner {
     windowed
 	    .filter((transferId, aggr) -> aggr.isPaired()) // only pass when tuple is paired
       .mapValues(Aggregation::getTransfer) 
-      .to(KafkaTopicNames.TRANSFERS_CONSISTENT_TOPIC);
+      .to(KafkaTopicNames.TRANSFER_CONSISTENT_TOPIC);
   	return stream;
 	}
 }

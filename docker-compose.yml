@@ -64,43 +64,43 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  account-transfer:
-    image: leonardobonacci/heroes-account-transfer
-    build: account-transfer
-    container_name: account-transfer
-    depends_on:
-      - broker
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
+#  account-transfer:
+#    image: leonardobonacci/heroes-account-transfer
+#    build: account-transfer
+#    container_name: account-transfer
+#    depends_on:
+#      - broker
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
 
-  account-storage:
-    image: leonardobonacci/heroes-account-storage
-    build: account-storage
-    container_name: account-storage
-    depends_on:
-      - broker
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
+#  account-storage:
+#    image: leonardobonacci/heroes-account-storage
+#    build: account-storage
+#    container_name: account-storage
+#    depends_on:
+#      - broker
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
 
-  transfer-ingress:
-    image: leonardobonacci/heroes-transfer-ingress
-    build: transfer-ingress
-    container_name: transfer-ingress
-    depends_on:
-      - broker
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
+#  transfer-ingress:
+#    image: leonardobonacci/heroes-transfer-ingress
+#    build: transfer-ingress
+#    container_name: transfer-ingress
+#    depends_on:
+#      - broker
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
 
-  transfer-tupler:
-    image: leonardobonacci/heroes-transfer-tupler
-    build: transfer-tupler
-    container_name: transfer-tupler
-    depends_on:
-      - broker
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
+#  transfer-tupler:
+#    image: leonardobonacci/heroes-transfer-tupler
+#    build: transfer-tupler
+#    container_name: transfer-tupler
+#    depends_on:
+#      - broker
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
       
   cache:
     image: redis:6.2-alpine
