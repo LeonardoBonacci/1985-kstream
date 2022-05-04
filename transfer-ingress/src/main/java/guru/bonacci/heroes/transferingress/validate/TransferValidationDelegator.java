@@ -19,7 +19,6 @@ import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
 import guru.bonacci.heroes.transferingress.pool.PoolRepository;
-import guru.bonacci.heroes.transferingress.pool.PoolTypeBasedValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,8 +64,7 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
 
       var poolType = poolRepo.getType(poolId).getName();
       var validator = appContext.getBean(poolType, PoolTypeBasedValidator.class);
-      var response = consumerRecord.value();
-      return validator.validate(response, amount).isValid();
+      return validator.validate(consumerRecord.value(), amount).isValid();
     } catch (TimeoutException | InterruptedException | ExecutionException e) {
       e.printStackTrace();
       return false;

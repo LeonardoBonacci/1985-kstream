@@ -1,4 +1,15 @@
-# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
+# Heroes - Anonymous token exchange service that aims to aid local communities in experimenting with alternative forms of value exchange
+
+
+
+```
+docker stop account-initializer && docker rm account-initializer
+docker stop account-transfer && docker rm account-transfer
+docker stop account-storage && docker rm account-storage
+docker stop transfer-ingress && docker rm transfer-ingress
+docker stop transfer-tupler && docker rm transfer-tupler
+```
+
 
 Community currencies need some more thought in practice
 

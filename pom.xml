@@ -23,8 +23,8 @@
 		<module>account-storage</module>
 		<module>account-transfer</module>
 		<module>domain</module>
-		<module>tip-purger</module>
-		<module>transfers</module>
+<!--		<module>tip-purger</module> -->
+		<module>transfer-ingress</module>
 		<module>transfer-tupler</module>
 		<module>transfer-tuple-joiner</module>
 	</modules>

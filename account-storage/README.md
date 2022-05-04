@@ -1,5 +1,13 @@
 # Account admin service
 
+```
+mvn clean install -pl :account-storage
+
+docker-compose build && docker-compose up -d && docker-compose logs -f account-storage
+
+docker stop account-storage && docker rm account-storage
+```
+
 
 ```
 ./bin/kafka-console-producer \

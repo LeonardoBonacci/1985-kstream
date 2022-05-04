@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress;
+package guru.bonacci.heroes.transferingress.transfer;
 
 import java.util.Objects;
 

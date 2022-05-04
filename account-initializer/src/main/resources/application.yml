@@ -1,7 +1,5 @@
 spring.application.name: heroes-account-initializer-app
 
-#spring.profiles.active: docker
-    
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -11,18 +9,3 @@ spring:
         key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         auto-offset-reset: earliest           
-
----
-
-spring:
-  profiles: docker
-
-  kafka:
-    bootstrap-servers: broker:29092
-
-    streams.properties:
-      default:
-        key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-        value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-        auto-offset-reset: earliest           
-      

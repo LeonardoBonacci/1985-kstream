@@ -11,6 +11,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -33,6 +34,9 @@ import guru.bonacci.heroes.domain.TransferValidationResponse;
 //@EnableTransactionManagement  
 public class KafkaTransferIngressConfig {
 
+  @Value("${spring.kafka.bootstrap-servers}") String bootstrapServer;
+  
+  
   @Bean("transfer")
   public ProducerFactory<String, Transfer> producerFactory() {
     DefaultKafkaProducerFactory<String, Transfer> f = new DefaultKafkaProducerFactory<>(senderProps());
@@ -42,7 +46,7 @@ public class KafkaTransferIngressConfig {
 
   private Map<String, Object> senderProps() {
     Map<String, Object> props = new HashMap<>();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 //    props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "me-again");
@@ -90,7 +94,7 @@ public class KafkaTransferIngressConfig {
 
   private Map<String, Object> validationSenderProps() {
     Map<String, Object> props = new HashMap<>();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
     return props;

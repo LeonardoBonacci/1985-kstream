@@ -1,4 +1,12 @@
-# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
+# Splits transfers in a from and a to - to be processed and joined again later
+
+```
+mvn clean install -pl :transfer-tupler
+
+docker-compose build && docker-compose up -d && docker-compose logs -f transfer-tupler
+
+docker stop transfer-tupler && docker rm transfer-tupler
+```
 
 
 ```

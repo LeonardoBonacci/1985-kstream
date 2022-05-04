@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress.controller;
+package guru.bonacci.heroes.transferingress.transfer;
 
 import java.math.BigDecimal;
 

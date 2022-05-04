@@ -1,6 +1,14 @@
 # Transfer processing service
 
 ```
+mvn clean install -pl :account-transfer
+
+docker-compose build && docker-compose up -d && docker-compose logs -f account-transfer
+
+docker stop account-transfer && docker rm account-transfer
+```
+
+```
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
 	--topic accounts \

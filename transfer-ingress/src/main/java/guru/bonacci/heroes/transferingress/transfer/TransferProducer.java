@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress;
+package guru.bonacci.heroes.transferingress.transfer;
 
 import static guru.bonacci.heroes.domain.Account.*;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFERS_TOPIC;

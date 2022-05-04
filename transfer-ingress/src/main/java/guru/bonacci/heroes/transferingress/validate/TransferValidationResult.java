@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress.pool;
+package guru.bonacci.heroes.transferingress.validate;
 
 import lombok.Value;
 
