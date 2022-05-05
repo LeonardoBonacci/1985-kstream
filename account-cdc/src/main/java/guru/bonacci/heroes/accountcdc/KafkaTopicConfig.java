@@ -66,4 +66,17 @@ public class KafkaTopicConfig {
       .build();
   }
 
+  @Bean
+  public NewTopic transferEventual() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC)
+      .partitions(1)
+      .build();
+  }
+
+  @Bean
+  public NewTopic transferConsistent() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_CONSISTENT_TOPIC)
+      .partitions(1)
+      .build();
+  }
 }

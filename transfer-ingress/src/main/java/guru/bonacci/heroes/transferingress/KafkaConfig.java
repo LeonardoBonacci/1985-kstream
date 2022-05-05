@@ -32,7 +32,7 @@ import guru.bonacci.heroes.domain.TransferValidationResponse;
 @EnableKafka
 @Configuration
 //@EnableTransactionManagement  
-public class KafkaTransferIngressConfig {
+public class KafkaConfig {
 
   @Value("${spring.kafka.bootstrap-servers}") String bootstrapServer;
   

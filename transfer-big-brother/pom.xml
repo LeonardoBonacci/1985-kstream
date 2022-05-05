@@ -7,8 +7,8 @@
 		<artifactId>parent</artifactId>
 		<version>4.2</version>
 	</parent>
-	<artifactId>transfer-tuple-joiner</artifactId>
-	<name>heroes-transfer-tuple-joiner</name>
+	<artifactId>transfer-big-brother</artifactId>
+	<name>heroes-transfer-big-brother</name>
 	<description>Back in business</description>
 
 	<properties>

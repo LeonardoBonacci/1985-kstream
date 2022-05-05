@@ -14,6 +14,7 @@ import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 import guru.bonacci.heroes.accountstorage.service.TransferValidationService;
@@ -22,6 +23,7 @@ import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
 import lombok.RequiredArgsConstructor;
 
+@EnableKafkaStreams
 @SpringBootApplication
 @RequiredArgsConstructor
 public class BootstrAppAccountStorage {
