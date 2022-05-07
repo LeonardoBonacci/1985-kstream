@@ -15,7 +15,8 @@ import org.apache.kafka.streams.TestOutputTopic;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -73,8 +74,8 @@ public class AccountTransferTest {
     testDriver.close();
   }
 
-  @Test
-  void shouldWork() throws Exception {
+  @RepeatedTest(100)
+  void shouldWork(TestInfo info) throws Exception {
     var accountWrite = Account.builder().poolId("foo").accountId("foo").build();
     this.accountTransfersTopicIn.pipeInput(accountWrite.identifier(), accountWrite);
     

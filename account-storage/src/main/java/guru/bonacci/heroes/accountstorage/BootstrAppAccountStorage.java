@@ -43,17 +43,20 @@ public class BootstrAppAccountStorage {
     
     KStream<String, TransferValidationRequest> requestStream = // key: poolId.from
       builder
-      .stream(TRANSFER_VALIDATION_REQUEST_TOPIC, Consumed.with(Serdes.String(), transferValidationRequestSerde));
+        .stream(TRANSFER_VALIDATION_REQUEST_TOPIC, Consumed.with(Serdes.String(), transferValidationRequestSerde));
 
     KTable<String, Account> accountTable = // key: poolId.accountId
-      builder.table(ACCOUNT_STORAGE_SINK_TOPIC, Consumed.with(Serdes.String(), accountSerde));
+      builder
+        .table(ACCOUNT_STORAGE_SINK_TOPIC, Consumed.with(Serdes.String(), accountSerde));
+    
     accountTable
       .toStream()
-      .print(Printed.toSysOut());
+      .print(Printed.toSysOut()); // TODO remove
     
     requestStream 
       .leftJoin(accountTable, (request, account) -> validator.getTransferValidationInfo(request, account))
       .to(TRANSFER_VALIDATION_REPLIES_TOPIC, Produced.with(Serdes.String(), transferValidationResponseSerde));
+
     return requestStream;
   }
 }

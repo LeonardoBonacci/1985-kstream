@@ -34,6 +34,7 @@ services:
     container_name: simulator
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - FIXED_RATE=10000
 
   transfer-ingress:
     image: leonardobonacci/heroes-transfer-ingress

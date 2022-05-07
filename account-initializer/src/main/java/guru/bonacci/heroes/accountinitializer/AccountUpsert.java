@@ -4,7 +4,7 @@ import guru.bonacci.heroes.domain.Account;
 import lombok.Value;
 
 @Value
-public class AccountWrapper {
+public class AccountUpsert {
 
   private boolean insert;
   private Account account;

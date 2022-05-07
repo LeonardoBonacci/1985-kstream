@@ -35,27 +35,30 @@ public class BootstrAppAccountInitializer {
 	  final var accountSerde = new JsonSerde<Account>(Account.class);
 
 	  KStream<String, AccountCDC> accountStream = // key: poolId.accountId
-	      builder.stream(ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde))
+	    builder
+	      .stream(ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde))
 	      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
 
 	  KTable<String, Account> accountTransferTable = // key: poolId.accountId
-	      builder.table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
+	    builder
+	      .table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
 	  
     accountStream
       .leftJoin(accountTransferTable, new AccountJoiner())
       .filter((identifier, wrapper) -> wrapper.isInsert())
-      .mapValues(AccountWrapper::getAccount)
-      .peek((identifier, account) -> log.info("inserting {} <> {}", identifier, account))
+      .mapValues(AccountUpsert::getAccount)
+      .peek((poolAccountId, account) -> log.info("inserting {} <> {}", poolAccountId, account))
       .to(ACCOUNT_TRANSFERS_TOPIC, Produced.with(Serdes.String(), accountSerde));
-  	return accountStream;
+
+    return accountStream;
 	}
 	
-	static class AccountJoiner implements ValueJoiner<AccountCDC, Account, AccountWrapper> {
+	static class AccountJoiner implements ValueJoiner<AccountCDC, Account, AccountUpsert> {
 
-	  public AccountWrapper apply(AccountCDC cdc, Account account) {
+	  public AccountUpsert apply(AccountCDC cdc, Account account) {
 	    return account != null 
-	       ? new AccountWrapper(false, account)
-	       : new AccountWrapper(true, Account.builder().poolId(cdc.getPoolId()).accountId(cdc.getAccountId()).build());
+	       ? new AccountUpsert(false, account)
+	       : new AccountUpsert(true, Account.builder().poolId(cdc.getPoolId()).accountId(cdc.getAccountId()).build());
 	  }
 	}
 }

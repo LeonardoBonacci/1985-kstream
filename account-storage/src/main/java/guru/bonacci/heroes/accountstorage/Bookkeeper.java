@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accounttransfer;
+package guru.bonacci.heroes.accountstorage;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
@@ -41,7 +41,7 @@ public class Bookkeeper {
             .map(tf -> tf.getTo().equals(account.getAccountId()) ? tf.getAmount() : tf.getAmount().multiply(BigDecimal.valueOf(-1)));
   }
   
-  @Scheduled(fixedRate = 5000)
+//  @Scheduled(fixedRate = 5000)
   public void account() {
     log.info(">>>> account..");
     BigDecimal totalBalance = BigDecimal.ZERO;

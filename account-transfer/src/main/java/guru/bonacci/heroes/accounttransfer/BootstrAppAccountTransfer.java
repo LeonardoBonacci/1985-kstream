@@ -11,7 +11,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,42 +38,40 @@ public class BootstrAppAccountTransfer {
     final var transferSerde = new JsonSerde<Transfer>(Transfer.class);
     
     KStream<String, Transfer> transferStream = // key: poolId.from or poolId.to
-     builder
+      builder
        .stream(TRANSFER_TUPLES_TOPIC, Consumed.with(Serdes.String(), transferSerde))
-       .peek((k,v) -> log.info("incoming transfers {}<>{}", k, v));
+       .peek((k,v) -> log.info("in transfer {}<>{}", k, v));
 
     KTable<String, Account> accountTable = // key: poolId.accountId
-        builder.table(ACCOUNT_TRANSFERS_TOPIC, 
-            Consumed.with(Serdes.String(), accountSerde), 
-            Materialized.as("AccountStore"));
+      builder
+       .table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
+
     KStream<String, Account> accountStream = 
       accountTable
         .toStream()
-        .peek((k,v) -> log.info("outgoing accounts {}<>{}", k, v));
+        .peek((k,v) -> log.info("out account {}<>{}", k, v));
      
-    // stream to the eventual consistency mechanism..
-    accountStream.mapValues((poolAccountId, account)-> {
-        var latestTransfer = account.latestTransfer();
-        log.info("before filtering transfer {}", latestTransfer);
+    // stream the transfer to the eventual consistency mechanism..
+      accountStream
+        .peek((k,v) -> log.info("hastransfer {} filter {}<>{}", v.hasTransfer(), k, v))
+        .filter((poolAccountId, account) -> account.hasTransfer())
+        .map((poolAccountId, account) -> { // rekey to transferId
         
-        return new TransferWrapper(latestTransfer != null, latestTransfer);
-      }) // filter out the accounts without transfers
-      .filter((poolAccountId, wrapper) -> wrapper.isContains())
-      .map((poolAccountId, wrapper) -> { // rekey to transferId
-        var latestTransfer = wrapper.getTransfer();
-        log.info("after filtering transfer {}", latestTransfer);
+          var latestTransfer = account.latestTransfer();
+          return KeyValue.pair(latestTransfer.getTransferId(), latestTransfer);
+        })
+        .peek((k,v) -> log.info("out eventual {}<>{}", k, v))
+        .to(TRANSFER_EVENTUAL_TOPIC, Produced.with(Serdes.String(), transferSerde));
 
-        return KeyValue.pair(latestTransfer.getTransferId(), latestTransfer);
-      })
-      .to(TRANSFER_EVENTUAL_TOPIC, Produced.with(Serdes.String(), transferSerde));
-
-    //., and then to account-storage   
-    accountStream.to(ACCOUNT_STORAGE_SINK_TOPIC, Produced.with(Serdes.String(), accountSerde));
+    //.. and also to account-storage   
+    accountStream
+      .to(ACCOUNT_STORAGE_SINK_TOPIC, Produced.with(Serdes.String(), accountSerde));
     
     transferStream // raison d'être: add transfer to account
       .join(accountTable, (transfer, account) -> account.addTransfer(transfer))
-      .peek((k,v) -> log.info("outgoing transfer account {}<>{}", k, v))
+      .peek((k,v) -> log.info("out transfer account {}<>{}", k, v))
       .to(ACCOUNT_TRANSFERS_TOPIC, Produced.with(Serdes.String(), accountSerde));
+   
     return transferStream;
   }
 }

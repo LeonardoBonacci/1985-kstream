@@ -35,8 +35,12 @@ public class Account {
     transfers.add(transfer);
     return this;
   }
-  
+
+  public boolean hasTransfer() {
+    return !transfers.isEmpty();
+  }
+
   public Transfer latestTransfer() {
-    return transfers.isEmpty() ? null : Iterables.getLast(transfers);
+    return hasTransfer() ? Iterables.getLast(transfers) : null;
   }
 }

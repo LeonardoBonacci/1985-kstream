@@ -30,7 +30,7 @@ public class BootstrAppIntegrationTest {
 	}
 	
 
-	@Scheduled(fixedRate = 1000)
+	@Scheduled(fixedRateString =  "${fixed.rate}")
 	public void showMeTheMoney() {
 	  WebClient client = WebClient.builder()
 	      .baseUrl(clientHostAndPort)

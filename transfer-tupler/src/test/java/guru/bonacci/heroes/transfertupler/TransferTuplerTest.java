@@ -70,11 +70,14 @@ public class TransferTuplerTest {
     Thread.sleep(1000);
     
     var from = transferTuplesTopicOut.readKeyValue();
-    assertThat(from.value).isEqualTo(transfer);
+    assertThat(from.value).isNotEqualTo(transfer);
     assertThat(from.key).isEqualTo(Account.identifier(transfer.getPoolId(), transfer.getFrom()));
+    assertThat(from.value.getAmount()).isLessThan(BigDecimal.ZERO);
+
     var to = transferTuplesTopicOut.readKeyValue();
     assertThat(to.value).isEqualTo(transfer);
     assertThat(to.key).isEqualTo(Account.identifier(transfer.getPoolId(), transfer.getTo()));
     assertThat(transferTuplesTopicOut.isEmpty()).isTrue();
+    assertThat(to.value.getAmount()).isGreaterThan(BigDecimal.ZERO);
   }
 }

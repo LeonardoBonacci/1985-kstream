@@ -34,19 +34,19 @@ public class BootstrAppTransferTupler {
 	public KStream<String, Transfer> topology(StreamsBuilder builder) {
     final var transferSerde = new JsonSerde<Transfer>(Transfer.class);
 
-	  KStream<String, Transfer> stream = 
-     builder
+	  KStream<String, Transfer> transferStream = // key: poolId.from
+     builder 
       .stream(TRANSFERS_TOPIC, Consumed.with(Serdes.String(), transferSerde))
       .peek((k,v) -> log.info("incoming {}<>{}", k, v));
 	  
 	  KStream<String, Transfer> rekeyed = 
-      stream.flatMap((key, value) -> 
-          asList(KeyValue.pair(identifier(value.getPoolId(), value.getFrom()), value), 
-                 KeyValue.pair(identifier(value.getPoolId(), value.getTo()), value)));
+      transferStream.flatMap((key, value) ->  // split in..
+          asList(KeyValue.pair(identifier(value.getPoolId(), value.getFrom()), value.negativeClone()), // from
+                 KeyValue.pair(identifier(value.getPoolId(), value.getTo()), value))); // to
 
 	  rekeyed
-     .peek((k,v) -> log.info("outgoing {}<>{}", k, v))
+	    .peek((k,v) -> log.info("outgoing {}<>{}", k, v))
 	    .to(TRANSFER_TUPLES_TOPIC, Produced.with(Serdes.String(), transferSerde));
-  	return stream;
+  	return transferStream;
 	}
 }

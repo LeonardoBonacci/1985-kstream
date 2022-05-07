@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transfer {
+public class Transfer implements Cloneable {
 
   private String transferId;
   private String poolId;
@@ -23,5 +23,19 @@ public class Transfer {
   
   public String poolAccountId() {
     return this.poolId + "." + this.from;
+  }
+  
+  public Transfer negativeClone() {
+    try {
+      return ((Transfer)this.clone()).negate();
+    } catch (CloneNotSupportedException e) {
+      e.printStackTrace();
+      throw new RuntimeException("cloning...");
+    }
+  }
+  
+  private Transfer negate() {
+    this.setAmount(this.getAmount().negate());
+    return this;
   }
 }

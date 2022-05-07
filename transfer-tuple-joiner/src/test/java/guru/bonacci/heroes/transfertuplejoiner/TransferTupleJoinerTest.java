@@ -15,7 +15,8 @@ import org.apache.kafka.streams.TestOutputTopic;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -59,19 +60,73 @@ public class TransferTupleJoinerTest {
     testDriver.close();
   }
 
-//  @Test //TODO
-  void shouldWork() throws Exception {
+  @RepeatedTest(10)
+  void shouldWorkPositiveFirstFast(TestInfo test) throws Exception {
     var now = System.currentTimeMillis();
-    var t1 = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).when(now).build();
-    this.transferEventualTopicIn.pipeInput(t1.getTransferId(), t1); 
-    
-    Thread.sleep(3000);
+    var tpos = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).when(now).build();
+    var tneg = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN.negate()).when(now).build();
 
-    this.transferEventualTopicIn.pipeInput(t1.getTransferId(), t1); 
+    this.transferEventualTopicIn.pipeInput(tpos.getTransferId(), tpos); 
+    this.transferEventualTopicIn.pipeInput(tneg.getTransferId(), tneg); 
 
-    Thread.sleep(3000);
+    Thread.sleep(1000);
 
     var actual = transferConsistentTopicOut.readValue();
-    assertThat(actual).isEqualTo(t1);
+    assertThat(actual).isEqualTo(tpos);
+
+    assertThat(transferConsistentTopicOut.isEmpty()).isTrue();
+  }
+  
+  @RepeatedTest(10)
+  void shouldWorkPositiveFirstSlow(TestInfo test) throws Exception {
+    var now = System.currentTimeMillis();
+    var tpos = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).when(now).build();
+    var tneg = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN.negate()).when(now).build();
+
+    this.transferEventualTopicIn.pipeInput(tpos.getTransferId(), tpos); 
+    Thread.sleep(3000);
+    this.transferEventualTopicIn.pipeInput(tneg.getTransferId(), tneg); 
+
+    Thread.sleep(1000);
+
+    var actual = transferConsistentTopicOut.readValue();
+    assertThat(actual).isEqualTo(tpos);
+
+    assertThat(transferConsistentTopicOut.isEmpty()).isTrue();
+  }
+
+  @RepeatedTest(10)
+  void shouldWorkPositiveNegativeFast(TestInfo test) throws Exception {
+    var now = System.currentTimeMillis();
+    var tpos = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).when(now).build();
+    var tneg = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN.negate()).when(now).build();
+
+    this.transferEventualTopicIn.pipeInput(tneg.getTransferId(), tneg); 
+    this.transferEventualTopicIn.pipeInput(tpos.getTransferId(), tpos); 
+
+    Thread.sleep(1000);
+
+    var actual = transferConsistentTopicOut.readValue();
+    assertThat(actual).isEqualTo(tpos);
+
+    assertThat(transferConsistentTopicOut.isEmpty()).isTrue();
+  }
+  
+  @RepeatedTest(10)
+  void shouldWorkNegativeFirstSlow(TestInfo test) throws Exception {
+    var now = System.currentTimeMillis();
+    var tpos = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).when(now).build();
+    var tneg = Transfer.builder().transferId("abc").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN.negate()).when(now).build();
+
+    this.transferEventualTopicIn.pipeInput(tneg.getTransferId(), tneg); 
+    Thread.sleep(3000);
+    this.transferEventualTopicIn.pipeInput(tpos.getTransferId(), tpos); 
+
+    Thread.sleep(1000);
+
+    var actual = transferConsistentTopicOut.readValue();
+    assertThat(actual).isEqualTo(tpos);
+
+    assertThat(transferConsistentTopicOut.isEmpty()).isTrue();
   }
 }
