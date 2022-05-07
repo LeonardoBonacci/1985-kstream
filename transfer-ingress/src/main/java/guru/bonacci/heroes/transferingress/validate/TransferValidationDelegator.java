@@ -65,6 +65,7 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
       var poolType = poolRepo.getType(poolId).getName();
       var validator = appContext.getBean(poolType, PoolTypeBasedValidator.class);
       return validator.validate(consumerRecord.value(), amount).isValid();
+      
     } catch (TimeoutException | InterruptedException | ExecutionException e) {
       e.printStackTrace();
       return false;

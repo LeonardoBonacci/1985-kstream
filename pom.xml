@@ -24,6 +24,7 @@
 		<module>account-transfer</module>
 		<module>domain</module>
 <!--		<module>tip-purger</module> -->
+		<module>simulator</module>
 		<module>transfer-ingress</module>
 		<module>transfer-tupler</module>
 		<module>transfer-tuple-joiner</module>

@@ -5,26 +5,21 @@ import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC;
 
 import java.time.Duration;
 
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.JoinWindows;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.SessionWindows;
-import org.apache.kafka.streams.kstream.Windowed;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.kafka.streams.kstream.StreamJoined;
+import org.apache.kafka.streams.kstream.ValueJoiner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
-import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 import guru.bonacci.heroes.domain.Transfer;
-import guru.bonacci.heroes.kafka.KafkaTopicNames;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -37,43 +32,29 @@ public class BootstrAppTransferTupleJoiner {
 	}
 
   @Bean
-  public NewTopic transferEventual() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC)
-      .partitions(1)
-      .build();
-  }
-
-  @Bean
-  public NewTopic transferConsistent() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFER_CONSISTENT_TOPIC)
-      .partitions(1)
-      .build();
-  }
-  
-	@Bean
-  public KStream<String, Transfer> topology(StreamsBuilder builder, @Value("${max.time.difference.sec:42}") Long sessionDuration) {
+  public KStream<String, Transfer> topology(StreamsBuilder builder) {
     final var transferSerde = new JsonSerde<Transfer>(Transfer.class);
-    final var transferCounterSerde = new JsonSerde<TransferCounter>(TransferCounter.class);
+    
+    KStream<String, Transfer> eventualStream = 
+     builder
+      .stream(TRANSFER_EVENTUAL_TOPIC, Consumed.with(Serdes.String(), transferSerde))
+      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
+
+    ValueJoiner<Transfer, Transfer, TransferTuple> transferJoiner = (first, second) -> {
+      return new TransferTuple(first, second);
+    };
   
-    KStream<String, Transfer> transferStream = // keyed on transferId
-        builder.stream(TRANSFER_EVENTUAL_TOPIC, Consumed.with(Serdes.String(), transferSerde));
-
-    KStream<Windowed<String>, TransferCounter> windowed = 
-      transferStream
-      .peek((k,v) -> log.info("incoming {}<>{}", k, v))
-      .mapValues(TransferCounter::from)
-      .groupByKey()
-      .windowedBy(
-          SessionWindows.ofInactivityGapWithNoGrace(Duration.ofSeconds(sessionDuration)))
-      .reduce(
-          (aggrTransfer, currTransfer) -> new TransferCounter(aggrTransfer, currTransfer),
-          Materialized.with(Serdes.String(), transferCounterSerde))
-      .toStream();
-
-    windowed
-      .filter((transferId, aggrTransfer) -> aggrTransfer != null && aggrTransfer.getCounter() >= 2) // we deal with >2 case elsewhere
-      .map((windowedKey, aggr) ->  KeyValue.pair(windowedKey.key(), aggr.getTransfer())) // unwindow
+    eventualStream
+      .leftJoin(eventualStream,
+        transferJoiner,
+        JoinWindows.of(Duration.ofSeconds(42)).before(Duration.ofMillis(-1)),
+        StreamJoined.with(Serdes.String(), transferSerde, transferSerde)
+        )
+      .peek((k,v) -> log.info("joined {}<>{}", k, v))
+      .filter((transferId, tuple) -> tuple.getT2() != null) // left join
+      .mapValues((transferId, tuple) -> tuple.getT1())
       .to(TRANSFER_CONSISTENT_TOPIC, Produced.with(Serdes.String(), transferSerde));
-    return transferStream;
+    
+    return eventualStream;
   }
 }

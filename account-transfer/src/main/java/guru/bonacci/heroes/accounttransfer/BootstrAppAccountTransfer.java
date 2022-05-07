@@ -11,6 +11,7 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,11 +39,18 @@ public class BootstrAppAccountTransfer {
     final var transferSerde = new JsonSerde<Transfer>(Transfer.class);
     
     KStream<String, Transfer> transferStream = // key: poolId.from or poolId.to
-        builder.stream(TRANSFER_TUPLES_TOPIC, Consumed.with(Serdes.String(), transferSerde));
+     builder
+       .stream(TRANSFER_TUPLES_TOPIC, Consumed.with(Serdes.String(), transferSerde))
+       .peek((k,v) -> log.info("incoming transfers {}<>{}", k, v));
 
     KTable<String, Account> accountTable = // key: poolId.accountId
-        builder.table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
-    KStream<String, Account> accountStream = accountTable.toStream();
+        builder.table(ACCOUNT_TRANSFERS_TOPIC, 
+            Consumed.with(Serdes.String(), accountSerde), 
+            Materialized.as("AccountStore"));
+    KStream<String, Account> accountStream = 
+      accountTable
+        .toStream()
+        .peek((k,v) -> log.info("outgoing accounts {}<>{}", k, v));
      
     // stream to the eventual consistency mechanism..
     accountStream.mapValues((poolAccountId, account)-> {
@@ -65,6 +73,7 @@ public class BootstrAppAccountTransfer {
     
     transferStream // raison d'être: add transfer to account
       .join(accountTable, (transfer, account) -> account.addTransfer(transfer))
+      .peek((k,v) -> log.info("outgoing transfer account {}<>{}", k, v))
       .to(ACCOUNT_TRANSFERS_TOPIC, Produced.with(Serdes.String(), accountSerde));
     return transferStream;
   }

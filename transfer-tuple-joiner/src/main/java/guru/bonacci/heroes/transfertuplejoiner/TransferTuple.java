@@ -10,17 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransferTuple {
 
-  private boolean paired = false;
-  private Transfer transfer;
-  
-  public TransferTuple(TransferTuple one, TransferTuple two) {
-    this.paired = two.isPaired();
-    this.transfer = two.getTransfer(); // same
-  }
-  
-  public TransferTuple updateFrom(Transfer tr) {
-    this.paired = this.transfer != null;
-    this.transfer = tr;
-    return this;
-  }
+  private Transfer t1;
+  private Transfer t2;
 }

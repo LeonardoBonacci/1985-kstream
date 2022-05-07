@@ -8,4 +8,5 @@ spring:
       default:
         key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-        auto-offset-reset: earliest           
+      auto-offset-reset: earliest # consumer          
+      max.poll.records: 1 # consumer

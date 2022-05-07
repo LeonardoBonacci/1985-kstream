@@ -35,7 +35,8 @@ public class BootstrAppAccountInitializer {
 	  final var accountSerde = new JsonSerde<Account>(Account.class);
 
 	  KStream<String, AccountCDC> accountStream = // key: poolId.accountId
-	      builder.stream(ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde));
+	      builder.stream(ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde))
+	      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
 
 	  KTable<String, Account> accountTransferTable = // key: poolId.accountId
 	      builder.table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));

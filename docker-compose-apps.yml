@@ -10,6 +10,15 @@ services:
    environment:
      - SPRING_PROFILES_ACTIVE=docker
 
+  account-storage:
+    image: leonardobonacci/heroes-account-storage
+    build: account-storage
+    container_name: account-storage
+    depends_on:
+      - broker
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
   account-transfer:
     image: leonardobonacci/heroes-account-transfer
     build: account-transfer
@@ -19,12 +28,10 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  account-storage:
-    image: leonardobonacci/heroes-account-storage
-    build: account-storage
-    container_name: account-storage
-    depends_on:
-      - broker
+  simulator:
+    image: leonardobonacci/heroes-simulator
+    build: simulator
+    container_name: simulator
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
@@ -48,9 +55,11 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - "6379:6379"
-    command: redis-server --requirepass mypass
+  transfer-tuple-joiner:
+    image: leonardobonacci/heroes-transfer-tupler-joiner
+    build: transfer-tuple-joiner
+    container_name: transfer-tuple-joiner
+    depends_on:
+      - broker
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker

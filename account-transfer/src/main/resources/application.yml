@@ -8,3 +8,4 @@ spring.kafka:
     default:
       key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+    max.poll.records: 1 # consumer

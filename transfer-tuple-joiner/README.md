@@ -8,8 +8,14 @@
 	--property parse.key=true \
  	--property key.separator=":"
 
-bzw:{"transferId":"abc","poolId": "coro", "from":"foo", "to":"bar", "amount":10.10, "when":1651078126344}
-bb:{"transferId":"abc","poolId": "coro", "from":"foo", "to":"bar", "amount":10.10, "when":1651078126344}
-bzw:{"transferId":"abc","poolId": "coro", "from":"foo", "to":"bar", "amount":10.10, "when":1651078126344}
+abc:{"transferId":"abc","poolId": "coro", "from":"foo", "to":"bar", "amount":10.10, "when":1651078126344}
+
+
+./kafka-console-consumer \
+ --bootstrap-server localhost:9092 \
+ --topic transfer-consistent \
+ --property print.key=true \
+--from-beginning
 ```
+
 
