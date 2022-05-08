@@ -5,7 +5,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 
 @EnableKafka
 @Configuration
-public class KafkaTIPPurgerConfig {
+public class Config {
   
   
 //  @Bean

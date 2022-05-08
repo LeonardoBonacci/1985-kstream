@@ -1,13 +1,12 @@
 package guru.bonacci.heroes.tippurger;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.TopicPartition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.Transfer;
@@ -19,6 +18,27 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class BootstrAppTIPPurger {
+  
+  private final TIPRepository tipRepo;
+  
+  public static void main(String[] args) {
+    SpringApplication.run(BootstrAppTIPPurger.class, args);
+  }
+  
+  
+  @KafkaListener(topics = KafkaTopicNames.TRANSFER_TOPIC, groupId = "us")
+  public void listen(ConsumerRecord<String, Transfer> record) {
+    var transfer = record.value();
+    log.info("in {}", transfer);
+  
+    tipRepo.deleteByIds(getTIPKeys(transfer));
+  }
+
+  private List<String> getTIPKeys(Transfer transfer) {
+    return Arrays.asList(
+        Account.identifier(transfer.getPoolId(), transfer.getFrom()),
+        Account.identifier(transfer.getPoolId(), transfer.getTo()));
+  }
 
 //  private final TIPCache tipCache;
 //  private final KafkaOffsetCache offsets;

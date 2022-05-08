@@ -16,4 +16,3 @@ spring.kafka:
     properties:
       spring.json.value.default.type: guru.bonacci.heroes.domain.Account
     auto-offset-reset: earliest # consumer
-    max.poll.records: 1 
