@@ -22,12 +22,13 @@ public class TransferService {
   public Transfer transfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
 
-//    if (!tipService.proceed(transfer)) {
-//      throw new TooManyRequestsException("the reward of patience..");
-//    }
+    if (!tipService.proceed(transfer)) {
+      throw new TooManyRequestsException("the reward of patience..");
+    }
     transferProducer.send(transfer);
     return transfer;
   }
+  
   
   @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
   public static class TooManyRequestsException extends RuntimeException {

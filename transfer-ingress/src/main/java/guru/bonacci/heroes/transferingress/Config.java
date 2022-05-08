@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -32,7 +34,7 @@ import guru.bonacci.heroes.domain.TransferValidationResponse;
 @EnableKafka
 @Configuration
 //@EnableTransactionManagement  
-public class KafkaConfig {
+public class Config {
 
   @Value("${spring.kafka.bootstrap-servers}") String bootstrapServer;
   
@@ -68,24 +70,33 @@ public class KafkaConfig {
 //    return ktm;
 //  }
 //
-//  @Bean
-//  public StringRedisTemplate redisTemplate() {
-//    StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
-//    // explicitly enable transaction support
+  @Bean("writer")
+  public StringRedisTemplate redisWriteTemplate() {
+    StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
+    // explicitly enable transaction support
 //    template.setEnableTransactionSupport(true);              
-//    return template;
-//  }
-//
-//  @Bean
-//  public LettuceConnectionFactory redisConnectionFactory() {
-//    LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
-//    connectionFactory.setDatabase(0);
-//    connectionFactory.setHostName("localhost");
-//    connectionFactory.setPort(6379);
-//    connectionFactory.setPassword("mypass");
-//    connectionFactory.setTimeout(60000);
-//    return connectionFactory;
-//  }
+    return template;
+  }
+
+  @Bean("reader")
+  public StringRedisTemplate redisReadTemplate() {
+    StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
+    // explicitly enable transaction support
+//    template.setEnableTransactionSupport(true);              
+    return template;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Bean
+  public LettuceConnectionFactory redisConnectionFactory() {
+    LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
+    connectionFactory.setDatabase(0);
+    connectionFactory.setHostName("localhost");
+    connectionFactory.setPort(6379);
+    connectionFactory.setPassword("mypass");
+    connectionFactory.setTimeout(60000);
+    return connectionFactory;
+  }
   
   @Bean("validation")
   public ProducerFactory<String, TransferValidationRequest> validationProducerFactory() {

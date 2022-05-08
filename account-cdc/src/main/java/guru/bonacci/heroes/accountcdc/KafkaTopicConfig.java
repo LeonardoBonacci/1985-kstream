@@ -18,7 +18,7 @@ public class KafkaTopicConfig {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TOPIC)
       .partitions(1)
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime") // TODO really?
-      .build();
+      .build(); // TODO infinite retention
   }
   
   @Bean
@@ -53,7 +53,7 @@ public class KafkaTopicConfig {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_TOPIC)
       .partitions(1)
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
-      .build();
+      .build(); // TODO infinite retention
   }
 
   @Bean
