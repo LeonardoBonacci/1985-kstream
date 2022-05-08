@@ -1,6 +1,6 @@
 package guru.bonacci.heroes.transferingress;
 
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_REPLIES_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_RESPONSE_TOPIC;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -113,7 +113,7 @@ public class KafkaConfig {
       ConcurrentKafkaListenerContainerFactory<String, TransferValidationResponse> containerFactory) {
 
     ConcurrentMessageListenerContainer<String, TransferValidationResponse> repliesContainer = 
-        containerFactory.createContainer(TRANSFER_VALIDATION_REPLIES_TOPIC);
+        containerFactory.createContainer(TRANSFER_VALIDATION_RESPONSE_TOPIC);
     repliesContainer.getContainerProperties().setGroupId(UUID.randomUUID().toString()); // unique
     repliesContainer.setAutoStartup(false);
 

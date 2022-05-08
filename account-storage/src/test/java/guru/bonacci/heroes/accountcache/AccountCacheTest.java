@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountstorage;
+package guru.bonacci.heroes.accountcache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,19 +21,20 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import guru.bonacci.heroes.accountstorage.service.TransferValidationService;
+import guru.bonacci.heroes.accountcache.BootstrAppAccountCache;
+import guru.bonacci.heroes.accountcache.service.TransferValidationService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
 import guru.bonacci.heroes.kafka.KafkaTopicNames;
 
 @ExtendWith(SpringExtension.class)
-public class AccountStorageTest {
+public class AccountCacheTest {
 
   private TopologyTestDriver testDriver;
 
   private TestInputTopic<String, TransferValidationRequest> transferValidationRequestsTopicIn;
-  private TestInputTopic<String, Account> accountStorageSinkTopicIn;
+  private TestInputTopic<String, Account> accountTransferTopicIn;
 
   private TestOutputTopic<String, TransferValidationResponse> transferValidationRepliesTopicOut;
 
@@ -44,7 +45,7 @@ public class AccountStorageTest {
     var builder = new StreamsBuilder();
     
     validator = Mockito.mock(TransferValidationService.class);
-    var app = new BootstrAppAccountStorage(validator);
+    var app = new BootstrAppAccountCache(validator);
     app.topology(builder);
     var topology = builder.build();
 
@@ -59,11 +60,11 @@ public class AccountStorageTest {
     transferValidationRequestsTopicIn = 
         testDriver.createInputTopic(KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC, new StringSerializer(), new JsonSerializer<TransferValidationRequest>());
 
-    accountStorageSinkTopicIn = 
-        testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
+    accountTransferTopicIn = 
+        testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
 
     transferValidationRepliesTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_VALIDATION_REPLIES_TOPIC, new StringDeserializer(), new JsonDeserializer<TransferValidationResponse>(TransferValidationResponse.class));
+        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_VALIDATION_RESPONSE_TOPIC, new StringDeserializer(), new JsonDeserializer<TransferValidationResponse>(TransferValidationResponse.class));
   }
   
   @AfterEach
@@ -78,7 +79,7 @@ public class AccountStorageTest {
     Mockito.when(validator.getTransferValidationInfo(Mockito.any(TransferValidationRequest.class), Mockito.any(Account.class)))
            .thenReturn(expected);
     
-    this.accountStorageSinkTopicIn.pipeInput(account.identifier(), account);
+    this.accountTransferTopicIn.pipeInput(account.identifier(), account);
     
     Thread.sleep(1000);
     

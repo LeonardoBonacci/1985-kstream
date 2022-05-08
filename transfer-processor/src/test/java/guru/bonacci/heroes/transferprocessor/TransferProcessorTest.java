@@ -1,7 +1,8 @@
-package guru.bonacci.heroes.accountinitializer;
+package guru.bonacci.heroes.transferprocessor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.apache.kafka.common.serialization.Serdes.StringSerde;
@@ -21,21 +22,21 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import guru.bonacci.heroes.domain.Account;
-import guru.bonacci.heroes.domain.AccountCDC;
+import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.kafka.KafkaTopicNames;
 
 @ExtendWith(SpringExtension.class)
-public class AccountInitializerTest {
+public class TransferProcessorTest {
 
   private TopologyTestDriver testDriver;
 
-  private TestInputTopic<String, AccountCDC> accountTopicIn;
-  private TestOutputTopic<String, Account> accountTransferTopicOut;
+  private TestInputTopic<String, Account> accountTransfersTopicIn;
+  private TestOutputTopic<String, Transfer> transferEventualTopicOut;
 
   @BeforeEach
   void init() throws Exception {
     var builder = new StreamsBuilder();
-    var app = new BootstrAppAccountInitializer();
+    var app = new BootstrAppTransferProcessor();
     app.topology(builder);
     var topology = builder.build();
 
@@ -47,11 +48,11 @@ public class AccountInitializerTest {
 
     testDriver = new TopologyTestDriver(topology, props);
 
-    accountTopicIn = 
-        testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TOPIC, new StringSerializer(), new JsonSerializer<AccountCDC>());
-    
-    accountTransferTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringDeserializer(), new JsonDeserializer<Account>(Account.class));
+    accountTransfersTopicIn = 
+        testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
+
+    transferEventualTopicOut = 
+        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC, new StringDeserializer(), new JsonDeserializer<Transfer>(Transfer.class));
   }
   
   @AfterEach
@@ -60,33 +61,29 @@ public class AccountInitializerTest {
   }
 
   @Test
-  void shouldInsert() throws Exception {
-    var cdc = AccountCDC.builder().poolId("foo").accountId("foo").accountName("foo").build();
-    this.accountTopicIn.pipeInput(cdc.identifier(), cdc); // insert
+  void shouldPickLast() throws Exception {
+    var account = Account.builder().poolId("foo").accountId("foo").build();
+    var transfer = Transfer.builder().transferId("tid").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).build();
+    account.addTransfer(transfer);
+    var transfer2 = Transfer.builder().transferId("tid2").poolId("foo").from("foo").to("bar").amount(BigDecimal.ONE).build();
+    account.addTransfer(transfer2);
     
-    var expected = Account.builder().poolId(cdc.getPoolId()).accountId(cdc.getAccountId()).build();
-
+    this.accountTransfersTopicIn.pipeInput(account.identifier(), account);
+    
     Thread.sleep(1000);
-    
-    var actual = accountTransferTopicOut.readValue();
-    assertThat(actual.identifier()).isEqualTo(expected.identifier());
+
+    var transferProcessed = transferEventualTopicOut.readValue();
+    assertThat(transferProcessed).isEqualTo(transfer2);
   }
-
+  
   @Test
-  void shouldNotUpdateInsert() throws Exception {
-    var cdc = AccountCDC.builder().poolId("foo").accountId("foo").accountName("foo").build();
-    this.accountTopicIn.pipeInput(cdc.identifier(), cdc); // insert
+  void shouldPickNone() throws Exception {
+    var account = Account.builder().poolId("foo").accountId("foo").build();
+    
+    this.accountTransfersTopicIn.pipeInput(account.identifier(), account);
     
     Thread.sleep(1000);
-    
-    assertThat(accountTransferTopicOut.isEmpty()).isFalse();
-    accountTransferTopicOut.readValue();
 
-    Thread.sleep(1000);
-
-    cdc.setAccountName("foo2");
-    this.accountTopicIn.pipeInput(cdc.identifier(), cdc); // update
-    
-    assertThat(accountTransferTopicOut.isEmpty()).isTrue();
+    assertThat(transferEventualTopicOut.isEmpty()).isTrue();
   }
 }

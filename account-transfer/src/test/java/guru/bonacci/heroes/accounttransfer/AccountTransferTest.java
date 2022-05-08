@@ -35,8 +35,6 @@ public class AccountTransferTest {
   private TestInputTopic<String, Account> accountTransfersTopicIn;
 
   private TestOutputTopic<String, Account> accountTransferTopicOut;
-  private TestOutputTopic<String, Account> accountStorageSinkTopicOut;
-  private TestOutputTopic<String, Transfer> transferEventualTopicOut;
 
   @BeforeEach
   void init() throws Exception {
@@ -54,19 +52,13 @@ public class AccountTransferTest {
     testDriver = new TopologyTestDriver(topology, props);
 
     transferTuplesTopicIn = 
-        testDriver.createInputTopic(KafkaTopicNames.TRANSFER_TUPLES_TOPIC, new StringSerializer(), new JsonSerializer<Transfer>());
+        testDriver.createInputTopic(KafkaTopicNames.TRANSFER_TUPLE_TOPIC, new StringSerializer(), new JsonSerializer<Transfer>());
 
     accountTransfersTopicIn = 
-        testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
+        testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
 
     accountTransferTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC, new StringDeserializer(), new JsonDeserializer<Account>(Account.class));
-
-    accountStorageSinkTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC, new StringDeserializer(), new JsonDeserializer<Account>(Account.class));
-
-    transferEventualTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC, new StringDeserializer(), new JsonDeserializer<Transfer>(Transfer.class));
+        testDriver.createOutputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringDeserializer(), new JsonDeserializer<Account>(Account.class));
   }
   
   @AfterEach
@@ -74,18 +66,12 @@ public class AccountTransferTest {
     testDriver.close();
   }
 
-  @RepeatedTest(100)
+  @RepeatedTest(1)
   void shouldWork(TestInfo info) throws Exception {
     var accountWrite = Account.builder().poolId("foo").accountId("foo").build();
     this.accountTransfersTopicIn.pipeInput(accountWrite.identifier(), accountWrite);
     
     Thread.sleep(1000);
-
-    var sink1 = accountStorageSinkTopicOut.readValue();
-    assertThat(sink1.identifier()).isEqualTo(accountWrite.identifier());
-    assertThat(sink1.getTransfers().size()).isEqualTo(0);
-
-    assertThat(transferEventualTopicOut.isEmpty()).isTrue();
 
     var transferWrite = Transfer.builder().transferId("tid").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).build();
     this.transferTuplesTopicIn.pipeInput(transferWrite.poolAccountId(), transferWrite);
@@ -97,13 +83,6 @@ public class AccountTransferTest {
     assertThat(accountRead.getTransfers().size()).isEqualTo(1);
     assertThat(accountRead.latestTransfer()).isEqualTo(transferWrite);
 
-    var sink2 = accountStorageSinkTopicOut.readValue();
-    assertThat(sink2.identifier()).isEqualTo(accountWrite.identifier());
-    assertThat(sink2.getTransfers().size()).isEqualTo(1);
-
-    var transferRead = transferEventualTopicOut.readValue();
-    assertThat(transferRead).isEqualTo(transferWrite);
-
     var transfer2Write = Transfer.builder().transferId("tid").poolId("foo").from("foo").to("baz").amount(BigDecimal.ONE).build();
     this.transferTuplesTopicIn.pipeInput(transfer2Write.poolAccountId(), transfer2Write);
     
@@ -113,13 +92,5 @@ public class AccountTransferTest {
     assertThat(account2Read.identifier()).isEqualTo(accountWrite.identifier());
     assertThat(account2Read.getTransfers().size()).isEqualTo(2);
     assertThat(account2Read.latestTransfer()).isEqualTo(transfer2Write);
-    
-    var sink3 = accountStorageSinkTopicOut.readValue();
-    assertThat(sink3.identifier()).isEqualTo(accountWrite.identifier());
-    assertThat(sink3.getTransfers().size()).isEqualTo(2);
-    
-    var transfer2Read = transferEventualTopicOut.readValue();
-    assertThat(transfer2Read).isEqualTo(transfer2Write);
-
   }
 }

@@ -7,8 +7,8 @@
 		<artifactId>parent</artifactId>
 		<version>4.2</version>
 	</parent>
-	<artifactId>account-stream-cache</artifactId>
-	<name>heroes-account-stream-cache</name>
+	<artifactId>transfer-processor</artifactId>
+	<name>heroes-transfer-processor</name>
 	<description>Back in business</description>
 
 	<properties>
@@ -40,6 +40,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -49,11 +50,6 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		    <scope>test</scope>
 		</dependency>
 	</dependencies>
 

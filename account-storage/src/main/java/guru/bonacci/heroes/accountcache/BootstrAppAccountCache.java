@@ -1,7 +1,7 @@
-package guru.bonacci.heroes.accountstorage;
+package guru.bonacci.heroes.accountcache;
 
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC;
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_REPLIES_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_RESPONSE_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC;
 
 import org.apache.kafka.common.serialization.Serdes;
@@ -9,7 +9,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
-import guru.bonacci.heroes.accountstorage.service.TransferValidationService;
+import guru.bonacci.heroes.accountcache.service.TransferValidationService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
@@ -26,10 +25,10 @@ import lombok.RequiredArgsConstructor;
 @EnableKafkaStreams
 @SpringBootApplication
 @RequiredArgsConstructor
-public class BootstrAppAccountStorage {
+public class BootstrAppAccountCache {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BootstrAppAccountStorage.class, args);
+		SpringApplication.run(BootstrAppAccountCache.class, args);
 	}
 
 	private final TransferValidationService validator;
@@ -47,15 +46,11 @@ public class BootstrAppAccountStorage {
 
     KTable<String, Account> accountTable = // key: poolId.accountId
       builder
-        .table(ACCOUNT_STORAGE_SINK_TOPIC, Consumed.with(Serdes.String(), accountSerde));
-    
-    accountTable
-      .toStream()
-      .print(Printed.toSysOut()); // TODO remove
+        .table(ACCOUNT_TRANSFER_TOPIC, Consumed.with(Serdes.String(), accountSerde));
     
     requestStream 
       .leftJoin(accountTable, (request, account) -> validator.getTransferValidationInfo(request, account))
-      .to(TRANSFER_VALIDATION_REPLIES_TOPIC, Produced.with(Serdes.String(), transferValidationResponseSerde));
+      .to(TRANSFER_VALIDATION_RESPONSE_TOPIC, Produced.with(Serdes.String(), transferValidationResponseSerde));
 
     return requestStream;
   }

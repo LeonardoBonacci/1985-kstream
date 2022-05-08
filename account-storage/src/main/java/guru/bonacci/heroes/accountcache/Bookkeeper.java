@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountstorage;
+package guru.bonacci.heroes.accountcache;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;

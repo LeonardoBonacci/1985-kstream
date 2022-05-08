@@ -54,8 +54,6 @@ public class BootstrAppTransferTupleJoiner {
     return eventualStream;
   }
   
-  int counter = 0;
-
   /**
    * Arbitrarily, we're taking the positive left and the negative right
    * This excludes 4 out of 5.

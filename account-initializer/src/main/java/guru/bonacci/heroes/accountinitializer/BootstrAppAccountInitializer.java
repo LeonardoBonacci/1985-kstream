@@ -1,7 +1,7 @@
 package guru.bonacci.heroes.accountinitializer;
 
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNTS_TOPIC;
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -36,19 +36,19 @@ public class BootstrAppAccountInitializer {
 
 	  KStream<String, AccountCDC> accountStream = // key: poolId.accountId
 	    builder
-	      .stream(ACCOUNTS_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde))
+	      .stream(ACCOUNT_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde))
 	      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
 
 	  KTable<String, Account> accountTransferTable = // key: poolId.accountId
 	    builder
-	      .table(ACCOUNT_TRANSFERS_TOPIC, Consumed.with(Serdes.String(), accountSerde));
+	      .table(ACCOUNT_TRANSFER_TOPIC, Consumed.with(Serdes.String(), accountSerde));
 	  
     accountStream
       .leftJoin(accountTransferTable, new AccountJoiner())
       .filter((identifier, wrapper) -> wrapper.isInsert())
       .mapValues(AccountUpsert::getAccount)
       .peek((poolAccountId, account) -> log.info("inserting {} <> {}", poolAccountId, account))
-      .to(ACCOUNT_TRANSFERS_TOPIC, Produced.with(Serdes.String(), accountSerde));
+      .to(ACCOUNT_TRANSFER_TOPIC, Produced.with(Serdes.String(), accountSerde));
 
     return accountStream;
 	}

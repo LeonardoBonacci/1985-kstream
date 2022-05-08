@@ -18,8 +18,7 @@ docker stop transfer-ingress && docker rm transfer-ingress
 ```
 valid
 curl -d '{"poolId": "coro", "from":"foo", "to":"bar", "amount":10.10}' -H "Content-Type: application/json" -X POST localhost:8080/transfers
-curl -d '{"poolId": "coro", "from":"bar", "to":"goo", "amount":99.99}' -H "Content-Type: application/json" -X POST localhost:8080/transfers
-curl -d '{"poolId": "coro", "from":"bar", "to":"goo", "amount":100.10}' -H "Content-Type: application/json" -X POST localhost:8080/transfers
+curl -d '{"poolId": "coro", "from":"baz", "to":"goo", "amount":100.10}' -H "Content-Type: application/json" -X POST localhost:8080/transfers
 
 invalid
 curl -d '{"from":"b", "to":"a", "amount":100.10}' -H "Content-Type: application/json" -X POST localhost:8080/transfers

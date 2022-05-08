@@ -50,10 +50,10 @@ public class TransferTuplerTest {
     testDriver = new TopologyTestDriver(topology, props);
 
     transfersTopicIn = 
-        testDriver.createInputTopic(KafkaTopicNames.TRANSFERS_TOPIC, new StringSerializer(), new JsonSerializer<Transfer>());
+        testDriver.createInputTopic(KafkaTopicNames.TRANSFER_TOPIC, new StringSerializer(), new JsonSerializer<Transfer>());
 
     transferTuplesTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_TUPLES_TOPIC, new StringDeserializer(), new JsonDeserializer<Transfer>(Transfer.class));
+        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_TUPLE_TOPIC, new StringDeserializer(), new JsonDeserializer<Transfer>(Transfer.class));
   }
   
   @AfterEach

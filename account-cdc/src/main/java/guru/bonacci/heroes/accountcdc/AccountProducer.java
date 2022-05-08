@@ -15,7 +15,7 @@ public class AccountProducer {
 
   
   public boolean send(AccountCDC account) {
-    return sendMessage(KafkaTopicNames.ACCOUNTS_TOPIC, account.identifier(), account);
+    return sendMessage(KafkaTopicNames.ACCOUNT_TOPIC, account.identifier(), account);
   }
  
   private boolean sendMessage(String topic, String key, AccountCDC message) {

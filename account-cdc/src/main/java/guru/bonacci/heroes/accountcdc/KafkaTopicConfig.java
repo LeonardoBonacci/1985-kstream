@@ -15,30 +15,21 @@ public class KafkaTopicConfig {
 
   @Bean
   public NewTopic accounts() {
-    return TopicBuilder.name(KafkaTopicNames.ACCOUNTS_TOPIC)
+    return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TOPIC)
       .partitions(1)
-      .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
+      .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime") // TODO really?
       .build();
   }
   
   @Bean
   public NewTopic accountTransfers() {
-    return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TRANSFERS_TOPIC)
+    return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC)
       .partitions(1)
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
       .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT)
       .build();
   }
   
-  @Bean
-  public NewTopic accountStorage() {
-    return TopicBuilder.name(KafkaTopicNames.ACCOUNT_STORAGE_SINK_TOPIC)
-      .partitions(1)
-      .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
-      .config(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT)
-      .build();
-  }
-
   @Bean
   public NewTopic transferValidationRequest() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC)
@@ -50,7 +41,7 @@ public class KafkaTopicConfig {
   
   @Bean
   public NewTopic transferValidationResponse() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFER_VALIDATION_REPLIES_TOPIC)
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_VALIDATION_RESPONSE_TOPIC)
       .partitions(1)
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
       .config(TopicConfig.RETENTION_MS_CONFIG, "3600000")
@@ -59,7 +50,7 @@ public class KafkaTopicConfig {
 
   @Bean
   public NewTopic transfers() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFERS_TOPIC)
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_TOPIC)
       .partitions(1)
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
       .build();
@@ -67,7 +58,7 @@ public class KafkaTopicConfig {
 
   @Bean
   public NewTopic transferTuples() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFER_TUPLES_TOPIC)
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_TUPLE_TOPIC)
       .partitions(1)
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
       .build();

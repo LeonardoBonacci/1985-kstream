@@ -1,4 +1,4 @@
-spring.application.name: heroes-account-storage-app
+spring.application.name: heroes-account-stream-cache-app
        
 spring.kafka:
   bootstrap-servers: localhost:9092
