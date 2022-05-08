@@ -22,7 +22,7 @@ public class TransferController {
 //  public String transfer(@Valid @RequestBody TransferDto dto) {
   public String transfer(@RequestBody TransferDto dto) {
     var transfer = toTf(dto);
-    service.transfer(transfer);
+    service.saveTransfer(transfer);
     return transfer.getTransferId();
   }
   

@@ -70,11 +70,17 @@ public class Config {
 //    return ktm;
 //  }
 //
+  @Bean("locker")
+  public StringRedisTemplate redisLockTemplate() {
+    StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
+    return template;
+  }
+
   @Bean("writer")
   public StringRedisTemplate redisWriteTemplate() {
     StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
     // explicitly enable transaction support
-//    template.setEnableTransactionSupport(true);              
+//    template.setEnableTransactionSupport(true);        
     return template;
   }
 

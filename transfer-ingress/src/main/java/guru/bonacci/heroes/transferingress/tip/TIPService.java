@@ -8,7 +8,9 @@ import com.google.common.collect.ImmutableMap;
 
 import guru.bonacci.heroes.domain.Transfer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TIPService {
@@ -31,6 +33,21 @@ public class TIPService {
                     fromTip, toTip.getPoolAccountId(), toTip));
     return true;
   }
+  
+  
+  public Boolean isBlocked(Transfer transfer) {
+    return isBlocked(identifier(transfer.getPoolId(), transfer.getFrom())) || 
+           isBlocked(identifier(transfer.getPoolId(), transfer.getTo()));
+  }
+
+  private Boolean isBlocked(String identifier) {
+    if (!repo.lock(identifier)) {
+      log.warn("attempt to override lock {}", identifier);
+      return true;
+    }
+    return false;
+  }
+  
   
   private TransferInProgress toFromTIP(Transfer transfer) {
     return new TransferInProgress(identifier(transfer.getPoolId(), transfer.getFrom()), transfer.getTransferId());  

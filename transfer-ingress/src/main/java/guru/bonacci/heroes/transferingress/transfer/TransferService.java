@@ -18,6 +18,16 @@ public class TransferService {
   private final TIPService tipService;
   private final TransferProducer transferProducer;
 
+  public void saveTransfer(Transfer transfer) {
+    Objects.requireNonNull(transfer.getTransferId(), "cheating..");
+
+    if (tipService.isBlocked(transfer)) {
+      throw new TooManyRequestsException("try again in a second..");
+    }
+
+    transfer(transfer);
+  }
+
   @Transactional
   public Transfer transfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");

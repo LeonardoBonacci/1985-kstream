@@ -1,5 +1,6 @@
 package guru.bonacci.heroes.transferingress.tip;
 
+import java.time.Duration;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,20 @@ import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Maps;
 
+import lombok.extern.slf4j.Slf4j;
+
 // https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#tx
+@Slf4j
 @Repository
 public class TIPRepository {
   
+  private static final Long TTL_IN_SEC = 10l;
+  private static final String LOCK_PREFIX = "aaaaa-";
+  
+
+  @Autowired @Qualifier("locker")
+  private StringRedisTemplate lockTemplate;
+
   @Autowired @Qualifier("writer")
   private StringRedisTemplate writeTemplate;
 
@@ -33,5 +44,12 @@ public class TIPRepository {
     var tipsAsString = Maps.transformValues(tips, tip -> tip.getTransferId());
     writeTemplate.opsForValue().multiSet(tipsAsString);
     return tips;
+  }
+  
+  Boolean lock(String lockId) {
+    boolean newKey = lockTemplate.opsForValue()
+                          .setIfAbsent(LOCK_PREFIX + lockId, lockId, Duration.ofSeconds(TTL_IN_SEC));
+    log.info("new lock {}: {}", lockId, newKey);
+    return newKey;
   }
 }
