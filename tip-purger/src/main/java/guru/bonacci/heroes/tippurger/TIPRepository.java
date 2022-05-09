@@ -3,8 +3,10 @@ package guru.bonacci.heroes.tippurger;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Repository;
 
 import guru.bonacci.heroes.domain.TransferInProgress;
@@ -28,7 +30,11 @@ public class TIPRepository {
         })
         .collect(Collectors.toList());
   }
-  
+
+  private String getById(String key) {
+    return redisTemplate.opsForValue().get(key);
+  }
+
   public Long delete(Collection<TransferInProgress> tips) {
     return deleteByIds(
         tips.stream()
@@ -39,5 +45,11 @@ public class TIPRepository {
   public Long deleteByIds(Collection<String> ids) {
     log.info("actually deleting keys {}", ids);
     return redisTemplate.delete(ids);
+  }
+  
+  public Stream<Pair<String, String>> getAll() {
+    var allKeys = redisTemplate.keys("*");
+    return allKeys.stream()
+        .map(key -> Pair.of(key, getById(key)));
   }
 }

@@ -38,11 +38,14 @@ public class BootstrAppTIPPurger {
     log.info("in {}", transfer);
     
     var tipKeys = tipKeys(transfer);
-    log.info(tipKeys.toString());
-
     var tips = tipRepo.getByIds(tipKeys);
     // remove from redis only if transfer id corresponds
     tips.removeIf(tipTransferId -> !transfer.getTransferId().equals(tipTransferId.getTransferId()));
+    
+    if (tips.size() != 2) {
+      log.error("BIG ERROR!!");
+      System.exit(1);
+    }
     
     tipRepo.delete(tips);
   }

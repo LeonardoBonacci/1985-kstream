@@ -51,7 +51,10 @@ public class Bookkeeper {
         totalBalance = totalBalance.add(balance);
       };
       log.warn("TOTAL BALANCE IS {}", totalBalance);
-       } catch(RuntimeException e) {
+      if (!totalBalance.equals(BigDecimal.ZERO)) {
+        System.exit(1);
+      }
+    } catch(RuntimeException e) {
       e.printStackTrace();
     }
   }    
