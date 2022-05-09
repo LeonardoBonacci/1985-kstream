@@ -37,7 +37,7 @@ public class BootstrAppAccountInitializer {
 	  KStream<String, AccountCDC> accountStream = // key: poolId.accountId
 	    builder
 	      .stream(ACCOUNT_TOPIC, Consumed.with(Serdes.String(), accountCDCSerde))
-	      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
+	      .peek((k,v) -> log.info("in {}<>{}", k, v));
 
 	  KTable<String, Account> accountTransferTable = // key: poolId.accountId
 	    builder
@@ -47,7 +47,7 @@ public class BootstrAppAccountInitializer {
       .leftJoin(accountTransferTable, new AccountJoiner())
       .filter((identifier, wrapper) -> wrapper.isInsert())
       .mapValues(AccountUpsert::getAccount)
-      .peek((poolAccountId, account) -> log.info("inserting {} <> {}", poolAccountId, account))
+      .peek((poolAccountId, account) -> log.info("out {} <> {}", poolAccountId, account))
       .to(ACCOUNT_TRANSFER_TOPIC, Produced.with(Serdes.String(), accountSerde));
 
     return accountStream;

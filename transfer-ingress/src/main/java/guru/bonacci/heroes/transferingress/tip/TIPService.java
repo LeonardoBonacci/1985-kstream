@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.ImmutableMap;
 
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.domain.TransferInProgress;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,21 +16,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TIPService {
 
-  private final TIPRepository repo;
+  private final TIPCache cache;
 
   
   public boolean proceed(Transfer transfer) {
     var fromTip = toFromTIP(transfer);
-    if (repo.existsById(fromTip.getPoolAccountId())) {
+    if (cache.existsById(fromTip.getPoolAccountId())) {
       return false;
     }
 
     var toTip = toToTIP(transfer);
-    if (repo.existsById(toTip.getPoolAccountId())) {
+    if (cache.existsById(toTip.getPoolAccountId())) {
       return false;
     }
 
-    repo.saveAll(ImmutableMap.of(
+    cache.saveAll(ImmutableMap.of(
                     fromTip.getPoolAccountId(), 
                     fromTip, toTip.getPoolAccountId(), toTip));
     return true;
@@ -42,7 +43,7 @@ public class TIPService {
   }
 
   private Boolean isBlocked(String identifier) {
-    if (!repo.lock(identifier)) {
+    if (!cache.lock(identifier)) {
       log.warn("attempt to override lock {}", identifier);
       return true;
     }

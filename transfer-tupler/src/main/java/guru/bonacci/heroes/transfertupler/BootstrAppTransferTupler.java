@@ -37,7 +37,7 @@ public class BootstrAppTransferTupler {
 	  KStream<String, Transfer> transferStream = // key: poolId.from
      builder 
       .stream(TRANSFER_TOPIC, Consumed.with(Serdes.String(), transferSerde))
-      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
+      .peek((k,v) -> log.info("in {}<>{}", k, v));
 	  
 	  KStream<String, Transfer> rekeyed = 
       transferStream.flatMap((key, value) ->  // split in..
@@ -45,7 +45,7 @@ public class BootstrAppTransferTupler {
                  KeyValue.pair(identifier(value.getPoolId(), value.getTo()), value))); // to
 
 	  rekeyed
-	    .peek((k,v) -> log.info("outgoing {}<>{}", k, v))
+	    .peek((k,v) -> log.info("out {}<>{}", k, v))
 	    .to(TRANSFER_TUPLE_TOPIC, Produced.with(Serdes.String(), transferSerde));
   	return transferStream;
 	}

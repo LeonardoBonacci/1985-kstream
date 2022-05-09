@@ -38,17 +38,18 @@ public class BootstrAppTransferTupleJoiner {
     KStream<String, Transfer> eventualStream = 
      builder
       .stream(TRANSFER_EVENTUAL_TOPIC, Consumed.with(Serdes.String(), transferSerde))
-      .peek((k,v) -> log.info("incoming {}<>{}", k, v));
+      .peek((k,v) -> log.info("in {}<>{}", k, v));
 
     eventualStream
       .leftJoin(eventualStream, (t1, t2) -> new TransferTuple(t1, t2), // order unknown 
         JoinWindows.of(Duration.ofSeconds(42)).before(Duration.ofMillis(0)),
         StreamJoined.with(Serdes.String(), transferSerde, transferSerde)
       )
-      .peek((k,v) -> log.info("4 joined {}<>{}", k, v))
+      .peek((k,v) -> log.info("joined {}<>{}", k, v))
       .filter((transferId, tuple) -> theOne(tuple))
-      .peek((k,v) -> log.info("1 filtered {}<>{}", k, v))
+      .peek((k,v) -> log.debug("filtered {}<>{}", k, v))
       .mapValues((transferId, tuple) -> tuple.getT1())
+      .peek((k,v) -> log.info("out {}<>{}", k, v))
       .to(TRANSFER_CONSISTENT_TOPIC, Produced.with(Serdes.String(), transferSerde));
     
     return eventualStream;

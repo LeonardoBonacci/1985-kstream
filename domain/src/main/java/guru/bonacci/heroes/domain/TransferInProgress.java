@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress.tip;
+package guru.bonacci.heroes.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

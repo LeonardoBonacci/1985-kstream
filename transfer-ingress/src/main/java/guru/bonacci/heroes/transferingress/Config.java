@@ -72,16 +72,15 @@ public class Config {
     return ktm;
   }
 
-  @Bean("no-trans")
+  @Bean("no-tx")
   public StringRedisTemplate redisReadTemplate() {
     StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
     return template;
   }
 
-  @Bean("trans")
+  @Bean("tx")
   public StringRedisTemplate redisWriteTemplate() {
     StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
-    // explicitly enable transaction support
     template.setEnableTransactionSupport(true);        
     return template;
   }

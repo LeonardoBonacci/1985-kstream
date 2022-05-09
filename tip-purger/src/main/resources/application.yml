@@ -10,4 +10,9 @@ spring:
       properties:
         spring.json.value.default.type: guru.bonacci.heroes.domain.Transfer  
         
-redis.host: localhost
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: mypass
+    timeout: 10000
