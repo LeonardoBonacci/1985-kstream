@@ -37,6 +37,7 @@ import guru.bonacci.heroes.domain.TransferValidationResponse;
 public class Config {
 
   @Value("${spring.kafka.bootstrap-servers}") String bootstrapServer;
+  @Value("${redis.host}") String redisHost;
   
   
   @Bean("transfer")
@@ -97,7 +98,7 @@ public class Config {
   public LettuceConnectionFactory redisConnectionFactory() {
     LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory();
     connectionFactory.setDatabase(0);
-    connectionFactory.setHostName("localhost");
+    connectionFactory.setHostName(redisHost);
     connectionFactory.setPort(6379);
     connectionFactory.setPassword("mypass");
     connectionFactory.setTimeout(60000);

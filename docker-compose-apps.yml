@@ -10,10 +10,10 @@ services:
    environment:
      - SPRING_PROFILES_ACTIVE=docker
 
-  account-storage:
-    image: leonardobonacci/heroes-account-storage
-    build: account-storage
-    container_name: account-storage
+  account-cache:
+    image: leonardobonacci/heroes-account-cache
+    build: account-cache
+    container_name: account-cache
     depends_on:
       - broker
     environment:
@@ -34,7 +34,17 @@ services:
     container_name: simulator
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - FIXED_RATE=10000
+      - FIXED_RATE=1000
+
+  tip-purger:
+    image: leonardobonacci/heroes-tip-purger
+    build: tip-purger
+    container_name: tip-purger
+    depends_on:
+      - broker
+      - cache
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 
   transfer-ingress:
     image: leonardobonacci/heroes-transfer-ingress
@@ -42,8 +52,18 @@ services:
     container_name: transfer-ingress
     depends_on:
       - broker
+      - cache
     ports:
       - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  transfer-processor:
+    image: leonardobonacci/heroes-transfer-processor
+    build: transfer-processor
+    container_name: transfer-processor
+    depends_on:
+      - broker
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 

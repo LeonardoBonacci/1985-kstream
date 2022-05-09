@@ -20,11 +20,11 @@
 	<modules>
 		<module>account-cdc</module>
 		<module>account-initializer</module>
-		<module>account-stream-cache</module>
+		<module>account-cache</module>
 		<module>account-transfer</module>
 		<module>domain</module>
 		<module>simulator</module>
-<!--		<module>tip-purger</module> -->
+		<module>tip-purger</module>
 		<module>transfer-ingress</module>
 		<module>transfer-processor</module>
 		<module>transfer-tupler</module>

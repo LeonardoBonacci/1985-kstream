@@ -7,8 +7,8 @@
 		<artifactId>parent</artifactId>
 		<version>4.2</version>
 	</parent>
-	<artifactId>account-stream-cache</artifactId>
-	<name>heroes-account-stream-cache</name>
+	<artifactId>account-cache</artifactId>
+	<name>heroes-account-cache</name>
 	<description>Back in business</description>
 
 	<properties>

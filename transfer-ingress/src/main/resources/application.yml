@@ -3,3 +3,10 @@ spring.application.name: heroes-transfer-ingress
 spring:
   kafka:
     bootstrap-servers: localhost:9092
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password: mypass
+    timeout: 10000

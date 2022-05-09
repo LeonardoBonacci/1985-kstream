@@ -41,9 +41,8 @@ public class Bookkeeper {
             .map(tf -> tf.getTo().equals(account.getAccountId()) ? tf.getAmount() : tf.getAmount().multiply(BigDecimal.valueOf(-1)));
   }
   
-//  @Scheduled(fixedRate = 5000)
+  @Scheduled(fixedRate = 10000)
   public void account() {
-    log.info(">>>> account..");
     BigDecimal totalBalance = BigDecimal.ZERO;
     
     try {
