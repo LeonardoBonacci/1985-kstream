@@ -17,6 +17,7 @@ public class TIPService {
 
   private final TIPRepository repo;
 
+  
   public boolean proceed(Transfer transfer) {
     var fromTip = toFromTIP(transfer);
     if (repo.existsById(fromTip.getPoolAccountId())) {

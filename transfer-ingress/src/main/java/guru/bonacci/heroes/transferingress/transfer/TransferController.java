@@ -2,6 +2,8 @@ package guru.bonacci.heroes.transferingress.transfer;
 
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +21,9 @@ public class TransferController {
   
 
   @PostMapping
-//  public String transfer(@Valid @RequestBody TransferDto dto) {
-  public String transfer(@RequestBody TransferDto dto) {
+  public String transfer(@Valid @RequestBody TransferDto dto) {
     var transfer = toTf(dto);
-    service.saveTransfer(transfer);
-    return transfer.getTransferId();
+    return service.transfer(transfer).getTransferId();
   }
   
   static Transfer toTf(TransferDto dto) {
@@ -34,7 +34,6 @@ public class TransferController {
             .from(dto.getFrom())
             .to(dto.getTo())
             .amount(dto.getAmount())
-            .when(System.currentTimeMillis())
             .build();
   }
 }

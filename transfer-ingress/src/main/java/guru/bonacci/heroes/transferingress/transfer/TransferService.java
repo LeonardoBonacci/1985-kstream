@@ -18,23 +18,27 @@ public class TransferService {
   private final TIPService tipService;
   private final TransferProducer transferProducer;
 
-  public void saveTransfer(Transfer transfer) {
+  
+  @Transactional
+  public Transfer transfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
-
+    
+    transfer.setWhen(System.currentTimeMillis());
+    
     if (tipService.isBlocked(transfer)) {
       throw new TooManyRequestsException("try again in a second..");
     }
 
-    transfer(transfer);
+    return doTransfer(transfer);
   }
 
-  @Transactional
-  public Transfer transfer(Transfer transfer) {
+  private Transfer doTransfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
 
     if (!tipService.proceed(transfer)) {
       throw new TooManyRequestsException("the reward of patience..");
     }
+    
     transferProducer.send(transfer);
     return transfer;
   }

@@ -5,6 +5,7 @@ spring:
     bootstrap-servers: localhost:9092
 
     streams.properties:
+      processing.guarantee: exactly_once
       default:
         key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde

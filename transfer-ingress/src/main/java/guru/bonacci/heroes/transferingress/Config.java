@@ -25,6 +25,9 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.Transfer;
@@ -33,7 +36,7 @@ import guru.bonacci.heroes.domain.TransferValidationResponse;
 
 @EnableKafka
 @Configuration
-//@EnableTransactionManagement  
+@EnableTransactionManagement  
 public class Config {
 
   @Value("${spring.kafka.bootstrap-servers}") String bootstrapServer;
@@ -43,7 +46,7 @@ public class Config {
   @Bean("transfer")
   public ProducerFactory<String, Transfer> producerFactory() {
     DefaultKafkaProducerFactory<String, Transfer> f = new DefaultKafkaProducerFactory<>(senderProps());
-//    f.setTransactionIdPrefix("tx-");
+    f.setTransactionIdPrefix("tx-");
     return f;
   }
 
@@ -52,7 +55,7 @@ public class Config {
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-//    props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "me-again");
+    props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "i-should-be-unique-when-scaling");
     return props;
   }
   
@@ -62,34 +65,24 @@ public class Config {
     return new KafkaTemplate<String, Transfer>(pf);
   }
   
-  
+  @Bean
+  public KafkaTransactionManager<String, Transfer> kafkaTransactionManager() {
+    KafkaTransactionManager<String, Transfer> ktm = new KafkaTransactionManager<>(producerFactory());
+    ktm.setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
+    return ktm;
+  }
 
-//  @Bean
-//  public KafkaTransactionManager<String, Transfer> kafkaTransactionManager() {
-//    KafkaTransactionManager<String, Transfer> ktm = new KafkaTransactionManager<>(producerFactory());
-//    ktm.setTransactionSynchronization(AbstractPlatformTransactionManager.SYNCHRONIZATION_ON_ACTUAL_TRANSACTION);
-//    return ktm;
-//  }
-//
-  @Bean("locker")
-  public StringRedisTemplate redisLockTemplate() {
+  @Bean("no-trans")
+  public StringRedisTemplate redisReadTemplate() {
     StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
     return template;
   }
 
-  @Bean("writer")
+  @Bean("trans")
   public StringRedisTemplate redisWriteTemplate() {
     StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
     // explicitly enable transaction support
-//    template.setEnableTransactionSupport(true);        
-    return template;
-  }
-
-  @Bean("reader")
-  public StringRedisTemplate redisReadTemplate() {
-    StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
-    // explicitly enable transaction support
-//    template.setEnableTransactionSupport(true);              
+    template.setEnableTransactionSupport(true);        
     return template;
   }
 

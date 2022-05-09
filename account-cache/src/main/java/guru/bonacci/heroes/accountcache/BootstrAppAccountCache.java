@@ -1,14 +1,15 @@
 package guru.bonacci.heroes.accountcache;
 
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC;
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_RESPONSE_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_RESPONSE_TOPIC;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,8 +47,10 @@ public class BootstrAppAccountCache {
 
     KTable<String, Account> accountTable = // key: poolId.accountId
       builder
-        .table(ACCOUNT_TRANSFER_TOPIC, Consumed.with(Serdes.String(), accountSerde));
-    
+      .table(ACCOUNT_TRANSFER_TOPIC, 
+          Consumed.with(Serdes.String(), accountSerde),
+          Materialized.as("AccountStore"));
+
     requestStream 
       .leftJoin(accountTable, (request, account) -> validator.getTransferValidationInfo(request, account))
       .to(TRANSFER_VALIDATION_RESPONSE_TOPIC, Produced.with(Serdes.String(), transferValidationResponseSerde));

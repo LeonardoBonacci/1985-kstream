@@ -40,7 +40,7 @@ public class BootstrAppIntegrationTest {
 	  var pool = MockOrStub.ONLY_BUT_NOT_LONELY_TEST_POOL;
     var from = mockOrStub.getRandomAccount();
     var to = mockOrStub.getRandomAccount();
-    var amount = mockOrStub.getRandomAmount(500);
+    var amount = mockOrStub.getRandomAmount(100);
 
     var transfer = new TransferDto(pool, from, to, amount);
     client.post()
