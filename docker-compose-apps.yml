@@ -67,19 +67,19 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  transfer-tupler:
-    image: leonardobonacci/heroes-transfer-tupler
-    build: transfer-tupler
-    container_name: transfer-tupler
+  transfer-pairer:
+    image: leonardobonacci/heroes-transfer-pairer
+    build: transfer-pairer
+    container_name: transfer-pairer
     depends_on:
       - broker
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
-  transfer-tuple-joiner:
-    image: leonardobonacci/heroes-transfer-tupler-joiner
-    build: transfer-tuple-joiner
-    container_name: transfer-tuple-joiner
+  transfer-repairer:
+    image: leonardobonacci/heroes-transfer-repairer
+    build: transfer-repairer
+    container_name: transfer-repairer
     depends_on:
       - broker
     environment:

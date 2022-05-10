@@ -7,7 +7,7 @@ docker stop account-initializer && docker rm account-initializer
 docker stop account-transfer && docker rm account-transfer
 docker stop account-storage && docker rm account-storage
 docker stop transfer-ingress && docker rm transfer-ingress
-docker stop transfer-tupler && docker rm transfer-tupler
+docker stop transfer-pairer && docker rm transfer-pairer
 ```
 
 

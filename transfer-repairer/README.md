@@ -1,4 +1,4 @@
-# Combines the previously split transfer pairs
+# Re-joins the previously split transfer pairs
 
 
 ```

@@ -9,7 +9,7 @@ public class KafkaTopicNames {
   public static final String TRANSFER_VALIDATION_RESPONSE_TOPIC = "transfer-validation-response"; // key: poolId.from
 
   public static final String TRANSFER_TOPIC = "transfer"; // key: poolId.from
-  public static final String TRANSFER_TUPLE_TOPIC = "transfer-tuple"; // key: poolId.from / poolId.to
+  public static final String TRANSFER_PAIR_TOPIC = "transfer-pair"; // key: poolId.from / poolId.to
   public static final String TRANSFER_EVENTUAL_TOPIC = "transfer-eventual"; // key: transferId
   public static final String TRANSFER_CONSISTENT_TOPIC = "transfer-consistent"; // key: transferId
 

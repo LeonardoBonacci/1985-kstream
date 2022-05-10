@@ -1,7 +1,7 @@
 package guru.bonacci.heroes.accounttransfer;
 
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC;
-import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_TUPLE_TOPIC;
+import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_PAIR_TOPIC;
 
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -36,7 +36,7 @@ public class BootstrAppAccountTransfer {
     
     KStream<String, Transfer> transferStream = // key: poolId.from or poolId.to
       builder
-       .stream(TRANSFER_TUPLE_TOPIC, Consumed.with(Serdes.String(), transferSerde))
+       .stream(TRANSFER_PAIR_TOPIC, Consumed.with(Serdes.String(), transferSerde))
        .peek((k,v) -> log.info("in transfer {}<>{}", k, v));
 
     KTable<String, Account> accountTable = // key: poolId.accountId

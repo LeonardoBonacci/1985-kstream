@@ -31,8 +31,8 @@ public class AccountTransferTest {
 
   private TopologyTestDriver testDriver;
 
-  private TestInputTopic<String, Transfer> transferTuplesTopicIn;
-  private TestInputTopic<String, Account> accountTransfersTopicIn;
+  private TestInputTopic<String, Transfer> transferPairTopicIn;
+  private TestInputTopic<String, Account> accountTransferTopicIn;
 
   private TestOutputTopic<String, Account> accountTransferTopicOut;
 
@@ -51,10 +51,10 @@ public class AccountTransferTest {
 
     testDriver = new TopologyTestDriver(topology, props);
 
-    transferTuplesTopicIn = 
-        testDriver.createInputTopic(KafkaTopicNames.TRANSFER_TUPLE_TOPIC, new StringSerializer(), new JsonSerializer<Transfer>());
+    transferPairTopicIn = 
+        testDriver.createInputTopic(KafkaTopicNames.TRANSFER_PAIR_TOPIC, new StringSerializer(), new JsonSerializer<Transfer>());
 
-    accountTransfersTopicIn = 
+    accountTransferTopicIn = 
         testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
 
     accountTransferTopicOut = 
@@ -69,12 +69,12 @@ public class AccountTransferTest {
   @RepeatedTest(1)
   void shouldWork(TestInfo info) throws Exception {
     var accountWrite = Account.builder().poolId("foo").accountId("foo").build();
-    this.accountTransfersTopicIn.pipeInput(accountWrite.identifier(), accountWrite);
+    this.accountTransferTopicIn.pipeInput(accountWrite.identifier(), accountWrite);
     
     Thread.sleep(1000);
 
     var transferWrite = Transfer.builder().transferId("tid").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).build();
-    this.transferTuplesTopicIn.pipeInput(transferWrite.poolAccountId(), transferWrite);
+    this.transferPairTopicIn.pipeInput(transferWrite.poolAccountId(), transferWrite);
     
     Thread.sleep(1000);
     
@@ -84,7 +84,7 @@ public class AccountTransferTest {
     assertThat(accountRead.latestTransfer()).isEqualTo(transferWrite);
 
     var transfer2Write = Transfer.builder().transferId("tid").poolId("foo").from("foo").to("baz").amount(BigDecimal.ONE).build();
-    this.transferTuplesTopicIn.pipeInput(transfer2Write.poolAccountId(), transfer2Write);
+    this.transferPairTopicIn.pipeInput(transfer2Write.poolAccountId(), transfer2Write);
     
     Thread.sleep(1000);
     
