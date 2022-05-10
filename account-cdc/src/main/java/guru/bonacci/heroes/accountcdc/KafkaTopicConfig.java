@@ -79,4 +79,12 @@ public class KafkaTopicConfig {
       .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
       .build();
   }
+  
+  @Bean
+  public NewTopic transferHouston() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_HOUSTON_TOPIC)
+      .partitions(1)
+      .config(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG, "LogAppendTime")
+      .build();
+  }
 }

@@ -2,6 +2,7 @@ package guru.bonacci.heroes.transfertuplejoiner;
 
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_CONSISTENT_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC;
+import static guru.bonacci.heroes.kafka.Constants.MAX_TRANSFER_PROCESSING_TIME_SEC;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -42,7 +43,7 @@ public class BootstrAppTransferTupleJoiner {
 
     eventualStream
       .leftJoin(eventualStream, (t1, t2) -> new TransferTuple(t1, t2), // order unknown 
-        JoinWindows.of(Duration.ofSeconds(42)).before(Duration.ofMillis(0)),
+        JoinWindows.of(Duration.ofSeconds(MAX_TRANSFER_PROCESSING_TIME_SEC)).before(Duration.ofMillis(0)),
         StreamJoined.with(Serdes.String(), transferSerde, transferSerde)
       )
       .peek((k,v) -> log.info("joined {}<>{}", k, v))

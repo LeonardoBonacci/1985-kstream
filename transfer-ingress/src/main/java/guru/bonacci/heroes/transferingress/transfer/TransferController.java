@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import guru.bonacci.heroes.domain.Transfer;
-import guru.bonacci.heroes.transferingress.tip.TIPCache;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,16 +30,11 @@ public class TransferController {
   
   private static Transfer toTf(TransferDto dto) {
     return Transfer.builder()
-            .transferId(generateUUID())
+            .transferId(UUID.randomUUID().toString())
             .poolId(dto.getPoolId())
             .from(dto.getFrom())
             .to(dto.getTo())
             .amount(dto.getAmount())
             .build();
-  }
-  
-  private static String generateUUID() {
-    var id = UUID.randomUUID().toString();
-    return id.startsWith(TIPCache.LOCK_PREFIX) ? generateUUID() : id;
   }
 }

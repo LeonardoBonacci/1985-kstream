@@ -25,6 +25,8 @@
 		<module>domain</module>
 		<module>simulator</module>
 		<module>tip-purger</module>
+		<module>transfer-big-brother-is-pair</module>
+		<module>transfer-big-brother-is-processed</module>
 		<module>transfer-ingress</module>
 		<module>transfer-processor</module>
 		<module>transfer-tupler</module>

@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class TIPCache {
   
-  public static final String LOCK_PREFIX = "aaaaa-";
+  public static final String LOCK_KEY_PREFIX = "###-";
 
   @Value("${spring.mvc.async.request-timeout}")
   private Long ttlInMs;
@@ -48,7 +48,7 @@ public class TIPCache {
   
   Boolean lock(String lockId) {
     boolean newKey = readTemplate.opsForValue()
-                          .setIfAbsent(LOCK_PREFIX + lockId, lockId, Duration.ofMillis(ttlInMs));
+                          .setIfAbsent(LOCK_KEY_PREFIX + lockId, lockId, Duration.ofMillis(ttlInMs));
     log.info("new lock {}: {}", lockId, newKey);
     return newKey;
   }
