@@ -16,17 +16,17 @@ public class TransferProducer {
   private final KafkaTemplate<String, Transfer> kafkaTemplate;
 
   
-  public boolean send(Transfer transfer) {
+  public long send(Transfer transfer) {
     return sendMessage(TRANSFER_TOPIC, identifier(transfer.getPoolId(), transfer.getFrom()), transfer);
   }
  
   // exposed for testing
-  boolean sendMessage(String topic, String key, Transfer message) {
+  long sendMessage(String topic, String key, Transfer message) {
     try {
-      return kafkaTemplate.send(topic, key, message).get().getRecordMetadata().hasOffset();
+      return kafkaTemplate.send(topic, key, message).get().getRecordMetadata().timestamp();
     } catch (Throwable t) {
       t.printStackTrace();
-      return false;
+      return -1;
     }
   }
 }
