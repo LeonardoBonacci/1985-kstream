@@ -22,7 +22,8 @@ public class TransferController {
   
 
   @PostMapping
-  public Callable<Transfer> transfer(@Valid @RequestBody TransferDto dto) {
+  public Callable<Transfer> transfer( @Valid 
+                                      @RequestBody TransferDto dto) {
     var transfer = toTf(dto);
     return () -> service.transfer(transfer);
   }

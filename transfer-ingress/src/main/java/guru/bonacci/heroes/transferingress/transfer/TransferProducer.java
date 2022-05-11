@@ -16,8 +16,10 @@ public class TransferProducer {
   private final KafkaTemplate<String, Transfer> kafkaTemplate;
 
   
-  public long send(Transfer transfer) {
-    return sendMessage(TRANSFER_TOPIC, identifier(transfer.getPoolId(), transfer.getFrom()), transfer);
+  public Transfer send(Transfer transfer) {
+    long timestamp = sendMessage(TRANSFER_TOPIC, identifier(transfer.getPoolId(), transfer.getFrom()), transfer);
+    transfer.setWhen(timestamp);
+    return transfer;
   }
  
   // exposed for testing

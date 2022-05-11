@@ -23,8 +23,6 @@ public class TransferService {
   public Transfer transfer(Transfer transfer) {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
     
-    transfer.setWhen(System.currentTimeMillis());
-    
     if (tipService.isBlocked(transfer)) {
       throw new TooManyRequestsException("try again in a second..");
     }
@@ -39,8 +37,7 @@ public class TransferService {
       throw new TooManyRequestsException("the reward of patience..");
     }
     
-    transferProducer.send(transfer);
-    return transfer;
+    return transferProducer.send(transfer);
   }
   
   
