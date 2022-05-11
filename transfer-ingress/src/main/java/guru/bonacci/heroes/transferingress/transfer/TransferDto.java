@@ -24,17 +24,17 @@ import lombok.Value;
 @GroupSequence({InitialCheck.class, FinalCheck.class, TransferDto.class})
 public class TransferDto {
 
-  @NotBlank(groups = InitialCheck.class, message = "poolId is mandatory")
+  @NotBlank(groups = InitialCheck.class, message = "poolId has to be present")
   private String poolId;
 
-  @NotBlank(groups = InitialCheck.class, message = "from is mandatory")
+  @NotBlank(groups = InitialCheck.class, message = "from has to be present")
   private String from;
 
-  @NotBlank(groups = InitialCheck.class, message = "to is mandatory")
+  @NotBlank(groups = InitialCheck.class, message = "to has to be present")
   private String to;
 
   @Nonnull
-  @DecimalMin(groups = InitialCheck.class, value = "0.0", inclusive = false)
+  @DecimalMin(groups = InitialCheck.class, value = "0.0", inclusive = false, message = "> 0.0 please")
   @Digits(groups = InitialCheck.class, integer = 4, fraction = 2)
   private BigDecimal amount;
 }
