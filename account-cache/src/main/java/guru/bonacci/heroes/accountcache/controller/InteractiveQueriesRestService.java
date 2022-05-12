@@ -1,6 +1,5 @@
 package guru.bonacci.heroes.accountcache.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -10,6 +9,7 @@ import java.util.stream.StreamSupport;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.state.HostInfo;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,10 +29,12 @@ public class InteractiveQueriesRestService {
   private final MetadataService metadataService;
   private final HostInfo hostInfo;
 
-  InteractiveQueriesRestService(final KafkaStreamsService streams, final MetadataService metadataService) {
+  InteractiveQueriesRestService(final KafkaStreamsService streams, 
+                                final MetadataService metadataService, 
+                                @Value("${server.port}") int port) {
     this.streams = streams;
     this.metadataService = metadataService;
-    this.hostInfo = new HostInfo("localhost", 8080);
+    this.hostInfo = new HostInfo("localhost", port);
   }
 
   @GetMapping("/keyvalue/{storeName}/{key}")

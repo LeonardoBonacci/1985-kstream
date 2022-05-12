@@ -8,6 +8,21 @@ docker-compose build && docker-compose up -d && docker-compose logs -f account-s
 docker stop account-storage && docker rm account-storage
 ```
 
+to run multiple services
+
+```
+mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8085'
+
+
+curl localhost:8080/state/instances/AccountStore
+curl localhost:8080/state/keyvalue/AccountStore/all
+
+curl localhost:8080/state/instances
+curl localhost:8080/state/instances/AccountStore
+curl localhost:8080/state/instance/AccountStore/coro.b
+curl localhost:8080/state/keyvalue/AccountStore/coro.a
+
+```
 
 ```
 ./bin/kafka-console-producer \
