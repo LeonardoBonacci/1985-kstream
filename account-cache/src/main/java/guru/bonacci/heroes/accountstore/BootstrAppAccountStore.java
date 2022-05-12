@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcache;
+package guru.bonacci.heroes.accountstore;
 
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC;
@@ -18,21 +18,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
-import guru.bonacci.heroes.accountcache.service.TransferValidationService;
+import guru.bonacci.heroes.accountstore.service.TransferValidationService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @EnableKafkaStreams
 @SpringBootApplication
 @RequiredArgsConstructor
-public class BootstrAppAccountCache {
+public class BootstrAppAccountStore {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BootstrAppAccountCache.class, args);
+  
+  public static final String STORE = "AccountStore";
+
+  
+  public static void main(String[] args) {
+		SpringApplication.run(BootstrAppAccountStore.class, args);
 	}
 
 	private final TransferValidationService validator;
@@ -51,7 +53,7 @@ public class BootstrAppAccountCache {
       builder
       .table(ACCOUNT_TRANSFER_TOPIC, 
           Consumed.with(Serdes.String(), accountSerde),
-          Materialized.as("AccountStore"));
+          Materialized.as(STORE));
   
     accountTable
       .toStream()

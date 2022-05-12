@@ -20,7 +20,7 @@
 	<modules>
 		<module>account-cdc</module>
 		<module>account-initializer</module>
-		<module>account-cache</module>
+		<module>account-store</module>
 		<module>account-transfer</module>
 		<module>domain</module>
 		<module>simulator</module>

@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcache;
+package guru.bonacci.heroes.accountstore;
 
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StoreQueryParameters;
@@ -16,7 +16,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KafkaStreamsService {
 
-  private static final QueryableStoreType<ReadOnlyKeyValueStore<String, Account>> ACCOUNT_STORE_TYPE = QueryableStoreTypes.keyValueStore();
+  private static final QueryableStoreType<ReadOnlyKeyValueStore<String, Account>> ACCOUNT_STORE_TYPE 
+        = QueryableStoreTypes.keyValueStore();
 
   private final StreamsBuilderFactoryBean streamsBuilder;
 

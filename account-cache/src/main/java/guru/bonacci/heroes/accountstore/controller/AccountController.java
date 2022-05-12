@@ -1,4 +1,6 @@
-package guru.bonacci.heroes.accountcache.controller;
+package guru.bonacci.heroes.accountstore.controller;
+
+import static guru.bonacci.heroes.accountstore.BootstrAppAccountStore.STORE;
 
 import java.util.List;
 import java.util.Spliterator;
@@ -9,7 +11,6 @@ import java.util.stream.StreamSupport;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.state.HostInfo;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,32 +19,28 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import guru.bonacci.heroes.accountcache.KafkaStreamsService;
+import guru.bonacci.heroes.accountstore.KafkaStreamsService;
 import guru.bonacci.heroes.domain.Account;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequestMapping("state")
 @RestController
-public class InteractiveQueriesRestService {
+@RequiredArgsConstructor
+public class AccountController {
 
   private final KafkaStreamsService streams;
   private final MetadataService metadataService;
   private final HostInfo hostInfo;
 
-  InteractiveQueriesRestService(final KafkaStreamsService streams, 
-                                final MetadataService metadataService, 
-                                @Value("${server.port}") int port) {
-    this.streams = streams;
-    this.metadataService = metadataService;
-    this.hostInfo = new HostInfo("localhost", port);
-  }
 
-  @GetMapping("/keyvalue/{storeName}/{key}")
-  public KeyValueBean byKey(@PathVariable("storeName") final String storeName,
-                            @PathVariable("key") final String key) {
+  @GetMapping("/keyvalue/{key}")
+  public KeyValueBean byKey(@PathVariable("key") final String key) {
 
-    final HostStoreInfo hostStoreInfo = streamsMetadataForStoreAndKey(storeName, key);
+    final HostStoreInfo hostStoreInfo = streamsMetadataForKey(key);
     if (!thisHost(hostStoreInfo)){
-       return fetchByKey(hostStoreInfo, "/state/keyvalue/"+storeName+"/"+key);
+       return fetchByKey(hostStoreInfo, "/state/keyvalue/" + key);
     }
 
     // Lookup the KeyValueStore with the provided storeName
@@ -61,8 +58,8 @@ public class InteractiveQueriesRestService {
   }
   
   // for testing
-  @GetMapping("/keyvalue/{storeName}/all")
-  public List<KeyValueBean> all(@PathVariable("storeName") final String storeName) {
+  @GetMapping("/keyvalue/all")
+  public List<KeyValueBean> all() {
 
     // Lookup the KeyValueStore with the provided storeName
     final ReadOnlyKeyValueStore<String, Account> store = streams.accountStore();
@@ -81,42 +78,24 @@ public class InteractiveQueriesRestService {
   private KeyValueBean fetchByKey(final HostStoreInfo host, final String path) {
     RestTemplate restTemplate = new RestTemplate();
     var url = String.format("http://%s:%d/%s", host.getHost(), host.getPort(), path);
-    System.out.println(url);
+    log.info(url);
     var kvBean = restTemplate.getForObject(url, KeyValueBean.class);
     return kvBean;
   }
 
-  /**
-   * Get the metadata for all of the instances of this Kafka Streams application
-   * @return List of {@link HostStoreInfo}
-   */
   @GetMapping("/instances")
   public List<HostStoreInfo> streamsMetadata() {
     return metadataService.streamsMetadata();
   }
 
-  /**
-   * Get the metadata for all instances of this Kafka Streams application that currently
-   * has the provided store.
-   * @param store   The store to locate
-   * @return  List of {@link HostStoreInfo}
-   */
-  @GetMapping("/instances/{storeName}")
-  public List<HostStoreInfo> streamsMetadataForStore(@PathVariable("storeName") final String store) {
-    return metadataService.streamsMetadataForStore(store);
+  @GetMapping("/instances/accounts")
+  public List<HostStoreInfo> streamsMetadataForStore() {
+    return metadataService.streamsMetadataForStore(STORE);
   }
 
-  /**
-   * Find the metadata for the instance of this Kafka Streams Application that has the given
-   * store and would have the given key if it exists.
-   * @param store   Store to find
-   * @param key     The key to find
-   * @return {@link HostStoreInfo}
-   */
-  @GetMapping("/instance/{storeName}/{key}")
-  public HostStoreInfo streamsMetadataForStoreAndKey(@PathVariable("storeName") final String store,
-                                                     @PathVariable("key") final String key) {
-    return metadataService.streamsMetadataForStoreAndKey(store, key, new StringSerializer());
+  @GetMapping("/instance/accounts/{key}")
+  public HostStoreInfo streamsMetadataForKey(@PathVariable("key") final String key) {
+    return metadataService.streamsMetadataForStoreAndKey(STORE, key, new StringSerializer());
   }
 
   private boolean thisHost(final HostStoreInfo host) {

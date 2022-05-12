@@ -1,4 +1,4 @@
-spring.application.name: heroes-account-cache-app
+spring.application.name: heroes-account-store-app
 
 server:
   port: 8080

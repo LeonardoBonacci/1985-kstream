@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcache.service;
+package guru.bonacci.heroes.accountstore.service;
 
 import java.io.IOException;
 import java.util.HashMap;

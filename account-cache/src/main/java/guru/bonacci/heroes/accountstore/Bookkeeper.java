@@ -1,9 +1,8 @@
-package guru.bonacci.heroes.accountcache;
+package guru.bonacci.heroes.accountstore;
 
 import java.math.BigDecimal;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import guru.bonacci.heroes.domain.Account;
@@ -25,7 +24,7 @@ public class Bookkeeper {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-//  @Scheduled(fixedRate = 10000)
+//TODO  @Scheduled(fixedRate = 10000)
   public void account() {
     try {
       BigDecimal totalBalance = BigDecimal.ZERO;

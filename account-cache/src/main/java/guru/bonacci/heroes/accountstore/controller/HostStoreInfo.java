@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcache.controller;
+package guru.bonacci.heroes.accountstore.controller;
 
 import java.util.Objects;
 import java.util.Set;

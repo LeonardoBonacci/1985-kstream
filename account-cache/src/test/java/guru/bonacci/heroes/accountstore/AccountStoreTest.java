@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcache;
+package guru.bonacci.heroes.accountstore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,15 +21,15 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import guru.bonacci.heroes.accountcache.BootstrAppAccountCache;
-import guru.bonacci.heroes.accountcache.service.TransferValidationService;
+import guru.bonacci.heroes.accountstore.BootstrAppAccountStore;
+import guru.bonacci.heroes.accountstore.service.TransferValidationService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
 import guru.bonacci.heroes.kafka.KafkaTopicNames;
 
 @ExtendWith(SpringExtension.class)
-public class AccountCacheTest {
+public class AccountStoreTest {
 
   private TopologyTestDriver testDriver;
 
@@ -45,7 +45,7 @@ public class AccountCacheTest {
     var builder = new StreamsBuilder();
     
     validator = Mockito.mock(TransferValidationService.class);
-    var app = new BootstrAppAccountCache(validator);
+    var app = new BootstrAppAccountStore(validator);
     app.topology(builder);
     var topology = builder.build();
 

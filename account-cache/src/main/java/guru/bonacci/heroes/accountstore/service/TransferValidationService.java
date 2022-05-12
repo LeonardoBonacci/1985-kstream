@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcache.service;
+package guru.bonacci.heroes.accountstore.service;
 
 import org.springframework.stereotype.Service;
 
