@@ -10,6 +10,7 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +23,9 @@ import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @EnableKafkaStreams
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -34,8 +37,7 @@ public class BootstrAppAccountCache {
 
 	private final TransferValidationService validator;
 	
-	
-  @Bean
+	@Bean
   public KStream<String, TransferValidationRequest> topology(StreamsBuilder builder) {
     final var accountSerde = new JsonSerde<Account>(Account.class);
     final var transferValidationRequestSerde = new JsonSerde<TransferValidationRequest>(TransferValidationRequest.class);
@@ -50,7 +52,11 @@ public class BootstrAppAccountCache {
       .table(ACCOUNT_TRANSFER_TOPIC, 
           Consumed.with(Serdes.String(), accountSerde),
           Materialized.as("AccountStore"));
-
+  
+    accountTable
+      .toStream()
+      .print(Printed.toSysOut());
+    
     requestStream 
       .leftJoin(accountTable, (request, account) -> validator.getTransferValidationInfo(request, account))
       .to(TRANSFER_VALIDATION_RESPONSE_TOPIC, Produced.with(Serdes.String(), transferValidationResponseSerde));

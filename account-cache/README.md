@@ -12,7 +12,7 @@ docker stop account-storage && docker rm account-storage
 ```
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
-	--topic account-storage-sink \
+	--topic account-transfer \
 	--property parse.key=true \
  	--property key.separator=":"
 

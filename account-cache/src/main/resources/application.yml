@@ -9,8 +9,8 @@ spring.kafka:
     default:
       key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-    max.poll.records: 1 # consumer
-                 
+    application.server: localhost:8080
+
   consumer:
     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

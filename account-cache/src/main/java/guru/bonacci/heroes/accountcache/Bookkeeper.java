@@ -2,11 +2,6 @@ package guru.bonacci.heroes.accountcache;
 
 import java.math.BigDecimal;
 
-import org.apache.kafka.streams.StoreQueryParameters;
-import org.apache.kafka.streams.state.QueryableStoreType;
-import org.apache.kafka.streams.state.QueryableStoreTypes;
-import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
-import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,15 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class Bookkeeper {
 
-  private static final QueryableStoreType<ReadOnlyKeyValueStore<String, Account>> ACCOUNT_STORE_TYPE = QueryableStoreTypes.keyValueStore();
-
-  private final StreamsBuilderFactoryBean streamsBuilder;
+  private final KafkaStreamsService streams;
   
-  
-  private ReadOnlyKeyValueStore<String, Account> accountStore() {
-    final var streams = streamsBuilder.getKafkaStreams();
-    return streams.store(StoreQueryParameters.fromNameAndType("AccountStore", ACCOUNT_STORE_TYPE).enableStaleStores());
-  }
   
   private BigDecimal getBalance(Account account) {
     return account.getTransfers().stream()
@@ -37,12 +25,12 @@ public class Bookkeeper {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-  @Scheduled(fixedRate = 10000)
+//  @Scheduled(fixedRate = 10000)
   public void account() {
     try {
       BigDecimal totalBalance = BigDecimal.ZERO;
       
-      var it = accountStore().all();
+      var it = streams.accountStore().all();
       while(it.hasNext()) {
         var kv = it.next();
         kv.value.getTransfers().forEach(t -> log.debug("{}", t.getAmount()));

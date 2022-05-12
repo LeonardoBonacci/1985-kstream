@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.transferingress.tip.TIPService;
@@ -24,7 +24,7 @@ public class TransferService {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
     
     if (tipService.isBlocked(transfer)) {
-      throw new TooManyRequestsException("try again in a second..");
+      throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "try again in a second..");
     }
 
     return doTransfer(transfer);
@@ -34,23 +34,9 @@ public class TransferService {
     Objects.requireNonNull(transfer.getTransferId(), "cheating..");
 
     if (!tipService.proceed(transfer)) {
-      throw new TooManyRequestsException("the reward of patience..");
+      throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "the reward of patience..");
     }
     
     return transferProducer.send(transfer);
-  }
-  
-  
-  @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
-  public static class TooManyRequestsException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-
-    public TooManyRequestsException() {
-        super();
-    }
-    
-    public TooManyRequestsException(String message) {
-        super(message);
-    }
   }
 }
