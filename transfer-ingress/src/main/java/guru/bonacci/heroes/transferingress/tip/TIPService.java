@@ -2,6 +2,7 @@ package guru.bonacci.heroes.transferingress.tip;
 
 import static guru.bonacci.heroes.domain.Account.identifier;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
@@ -11,14 +12,16 @@ import guru.bonacci.heroes.domain.TransferInProgress;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Profile("docker")
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TIPService {
+public class TIPService implements ITIPService {
 
   private final TIPCache cache;
 
   
+  @Override
   public boolean proceed(Transfer transfer) {
     var fromTip = toFromTIP(transfer);
     if (cache.existsById(fromTip.getPoolAccountId())) {
@@ -36,13 +39,13 @@ public class TIPService {
     return true;
   }
   
-  
-  public Boolean isBlocked(Transfer transfer) {
+  @Override
+  public boolean isBlocked(Transfer transfer) {
     return isBlocked(identifier(transfer.getPoolId(), transfer.getFrom())) || 
            isBlocked(identifier(transfer.getPoolId(), transfer.getTo()));
   }
 
-  private Boolean isBlocked(String identifier) {
+  private boolean isBlocked(String identifier) {
     if (!cache.lock(identifier)) {
       log.warn("attempt to override lock {}", identifier);
       return true;

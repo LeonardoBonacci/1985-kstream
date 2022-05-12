@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import guru.bonacci.heroes.domain.Transfer;
-import guru.bonacci.heroes.transferingress.tip.TIPService;
+import guru.bonacci.heroes.transferingress.tip.ITIPService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TransferService {
 
-  private final TIPService tipService;
+  private final ITIPService tipService;
   private final TransferProducer transferProducer;
 
   

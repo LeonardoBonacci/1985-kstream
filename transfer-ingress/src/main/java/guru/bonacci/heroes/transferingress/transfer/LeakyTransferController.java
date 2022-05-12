@@ -1,5 +1,7 @@
 package guru.bonacci.heroes.transferingress.transfer;
 
+import static guru.bonacci.heroes.transferingress.transfer.ITransferController.toTf;
+
 import java.util.concurrent.Callable;
 
 import org.springframework.context.annotation.Profile;
@@ -11,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import guru.bonacci.heroes.domain.Transfer;
 import lombok.RequiredArgsConstructor;
 
-@Profile("docker")
+@Profile("!docker")
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor
-public class TransferController implements ITransferController {
+public class LeakyTransferController implements ITransferController {
 
   private final TransferService service;
   
@@ -23,7 +25,7 @@ public class TransferController implements ITransferController {
   @PostMapping
   @Override
   public Callable<Transfer> transfer(@RequestBody TransferDto dto) {
-    var transfer = ITransferController.toTf(dto);
+    var transfer = toTf(dto);
     return () -> service.transfer(transfer);
   }
 }
