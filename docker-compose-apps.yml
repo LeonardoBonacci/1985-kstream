@@ -10,12 +10,13 @@ services:
    environment:
      - SPRING_PROFILES_ACTIVE=docker
 
-  account-cache:
-    image: leonardobonacci/heroes-account-cache
-    build: account-cache
-    container_name: account-cache
+  account-store:
+    image: leonardobonacci/heroes-account-store
+    build: account-store
     depends_on:
       - broker
+    ports:
+      - "8081-9000:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 

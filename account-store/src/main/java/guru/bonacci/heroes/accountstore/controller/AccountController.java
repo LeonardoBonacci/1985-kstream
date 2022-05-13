@@ -39,8 +39,10 @@ public class AccountController {
   public KeyValueBean byKey(@PathVariable("key") final String key) {
 
     final HostStoreInfo hostStoreInfo = streamsMetadataForKey(key);
+    log.warn(hostStoreInfo.toString());
+    log.warn(hostInfo.toString());
     if (!thisHost(hostStoreInfo)){
-       return fetchByKey(hostStoreInfo, "/state/keyvalue/" + key);
+       return fetchByKey(hostStoreInfo, "state/keyvalue/" + key);
     }
 
     // Lookup the KeyValueStore with the provided storeName
@@ -83,6 +85,7 @@ public class AccountController {
     return kvBean;
   }
 
+  
   @GetMapping("/instances")
   public List<HostStoreInfo> streamsMetadata() {
     return metadataService.streamsMetadata();
@@ -93,7 +96,7 @@ public class AccountController {
     return metadataService.streamsMetadataForStore(STORE);
   }
 
-  @GetMapping("/instance/accounts/{key}")
+  @GetMapping("/instances/accounts/{key}")
   public HostStoreInfo streamsMetadataForKey(@PathVariable("key") final String key) {
     return metadataService.streamsMetadataForStoreAndKey(STORE, key, new StringSerializer());
   }
@@ -102,5 +105,15 @@ public class AccountController {
     return host.getHost().equals(hostInfo.host()) &&
            host.getPort() == hostInfo.port();
   }
+  
+//  private URI getOtherUri(String host, int port, int id) {
+//    try {
+//        return new URI("http://" + host + ":" + port + "/weather-stations/data/" + id);
+//    }
+//    catch (URISyntaxException e) {
+//        throw new RuntimeException(e);
+//    }
+//  }
+
 }
 

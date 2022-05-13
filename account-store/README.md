@@ -6,6 +6,8 @@ mvn clean install -pl :account-storage
 docker-compose build && docker-compose up -d && docker-compose logs -f account-storage
 
 docker stop account-storage && docker rm account-storage
+
+docker-compose -f docker-compose.yml -f docker-compose-apps.yml up -d --scale  account-store=2
 ```
 
 to run multiple services
@@ -20,7 +22,7 @@ curl localhost:8080/state/keyvalue/AccountStore/all
 curl localhost:8080/state/instances
 curl localhost:8080/state/instances/AccountStore
 curl localhost:8080/state/instance/AccountStore/coro.b
-curl localhost:8080/state/keyvalue/AccountStore/coro.a
+curl localhost:8080/state/keyvalue/coro.a
 
 ```
 

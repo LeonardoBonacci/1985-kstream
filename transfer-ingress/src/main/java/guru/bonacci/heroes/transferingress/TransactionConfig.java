@@ -37,7 +37,7 @@ import guru.bonacci.heroes.domain.TransferValidationResponse;
 @EnableKafka
 @Configuration
 @EnableTransactionManagement  
-public class Config {
+public class TransactionConfig {
 
   @Value("${spring.kafka.bootstrap-servers}") String bootstrapServer;
   @Value("${redis.host}") String redisHost;
