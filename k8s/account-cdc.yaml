@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: account-cdc-app
+spec:
+  containers:
+    - name: account-cdc-app
+      image: leonardobonacci/heroes-account-cdc
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: kube

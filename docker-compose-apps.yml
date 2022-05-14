@@ -1,10 +1,17 @@
 ---
 version: '2'
 services:
+  account-cdc:
+   image: leonardobonacci/heroes-account-cdc
+   build: account-cdc
+   depends_on:
+     - broker
+   environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
   account-initializer:
    image: leonardobonacci/heroes-account-initializer
    build: account-initializer
-   container_name: account-initializer
    depends_on:
      - broker
    environment:
@@ -23,7 +30,6 @@ services:
   account-transfer:
     image: leonardobonacci/heroes-account-transfer
     build: account-transfer
-    container_name: account-transfer
     depends_on:
       - broker
     environment:
@@ -32,7 +38,6 @@ services:
   simulator:
     image: leonardobonacci/heroes-simulator
     build: simulator
-    container_name: simulator
     environment:
       - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
       - FIXED_RATE=1000
@@ -40,7 +45,6 @@ services:
   tip-purger:
     image: leonardobonacci/heroes-tip-purger
     build: tip-purger
-    container_name: tip-purger
     depends_on:
       - broker
       - cache
@@ -50,7 +54,6 @@ services:
   transfer-ingress:
     image: leonardobonacci/heroes-transfer-ingress
     build: transfer-ingress
-    container_name: transfer-ingress
     depends_on:
       - broker
       - cache
@@ -62,7 +65,6 @@ services:
   transfer-processor:
     image: leonardobonacci/heroes-transfer-processor
     build: transfer-processor
-    container_name: transfer-processor
     depends_on:
       - broker
     environment:
@@ -71,7 +73,6 @@ services:
   transfer-pairer:
     image: leonardobonacci/heroes-transfer-pairer
     build: transfer-pairer
-    container_name: transfer-pairer
     depends_on:
       - broker
     environment:
