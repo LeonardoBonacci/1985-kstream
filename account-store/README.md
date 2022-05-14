@@ -1,5 +1,25 @@
 # Account Restful service
 
+```
+./bin/kafka-console-producer \
+	--bootstrap-server localhost:9092 \
+	--topic account-transfer \
+	--property parse.key=true \
+ 	--property key.separator=":"
+
+coro.a:{"accountId":"a", "poolId":"coro", "transfers":[]}
+coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
+```
+
+```
+curl localhost:8080/metadata/all
+curl localhost:8080/metadata/accounts
+curl localhost:8080/metadata/accounts/coro.a
+
+curl localhost:8080/pools/coro/accounts/a
+curl localhost:8080/pools/coro/accounts/a/balance
+```
+
 ### local
 
 ```
@@ -27,33 +47,18 @@ kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
 kubectl apply -f k8s/topics
 kubectl apply -f k8s/account-store.yaml -n kafka
 
-https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
-
-kubectl port-forward service/account-store-service 8080:8080
-kubectl port-forward pods/account-store-app-5d5665d55c-czq9h -n kafka 8080:8080
-
-```
-
-```
-curl localhost:8080/metadata/all
-curl localhost:8080/metadata/accounts
-curl localhost:8080/metadata/accounts/coro.a
-
-curl localhost:8080/pools/coro/accounts/a
-curl localhost:8080/pools/coro/accounts/a/balance
-
-```
-
-```
-./bin/kafka-console-producer \
-	--bootstrap-server localhost:9092 \
-	--topic account-transfer \
-	--property parse.key=true \
- 	--property key.separator=":"
+kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic account-transfer --property parse.key=true --property key.separator=":"
 
 coro.a:{"accountId":"a", "poolId":"coro", "transfers":[]}
 coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
+
+https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
+
+kubectl port-forward service/account-store-service 8080:8080
+kubectl port-forward pod/account-store-app-5d5665d55c-56m79 -n kafka 8080:8080
+
 ```
+
 
 ## validaton
 
