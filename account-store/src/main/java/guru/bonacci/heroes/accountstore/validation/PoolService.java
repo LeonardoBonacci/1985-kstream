@@ -43,8 +43,4 @@ public class PoolService {
     return exists(poolId) && poolCache.get(poolId).contains(accountId);
     
   }
-
-  public boolean notContainsAccount(String poolId, String accountId) {
-    return !containsAccount(poolId, accountId);
-  }
 }

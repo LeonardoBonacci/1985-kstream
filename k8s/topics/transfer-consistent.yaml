@@ -1,11 +1,9 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: account-transfer
+  name: transfer-consistent
   labels:
     strimzi.io/cluster: "my-cluster"
 spec:
   partitions: 3
   replicas: 1
-  config:
-    cleanup.policy: compact

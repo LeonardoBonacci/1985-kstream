@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: transfer-ingress-service
+spec:
+  selector:
+    app: transfer-ingress-app
+  ports:
+    - protocol: "TCP"
+      port: 8081
+      targetPort: 8080
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-ingress-app
+spec:
+  selector:
+    matchLabels:
+      app: transfer-ingress-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: transfer-ingress-app
+    spec:
+      containers:
+        - name: transfer-ingress-app
+          image: leonardobonacci/heroes-transfer-ingress
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube

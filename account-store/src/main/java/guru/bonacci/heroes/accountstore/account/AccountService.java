@@ -17,6 +17,7 @@ import guru.bonacci.heroes.accountstore.Bookkeeper;
 import guru.bonacci.heroes.accountstore.KafkaStreamsService;
 import guru.bonacci.heroes.accountstore.rpc.HostStoreInfo;
 import guru.bonacci.heroes.accountstore.rpc.MetadataController;
+import guru.bonacci.heroes.accountstore.validation.PoolService;
 import guru.bonacci.heroes.domain.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,25 +33,40 @@ public class AccountService {
   private final Bookkeeper bookkeeper;
   private final MetadataController metadata;
   private final RestTemplate restTemplate;
+
+  private final PoolService poolService;
+
   
+  private void validateInput(String poolId, String accountId) {
+    if (!poolService.exists(poolId)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "pool " + poolId + " does not exist");      
+    }
+  
+    if (!poolService.containsAccount(poolId, accountId)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "account " + accountId + " not in pool " + poolId);      
+    }
+  }
 
+  
   public Optional<Account> getAccount(String poolId, String accountId) {
+    validateInput(poolId, accountId);
+    
     var poolAccountId = Account.identifier(poolId, accountId);
-
+  
     final HostStoreInfo hostStoreInfo = metadata.streamsMetadataForKey(poolAccountId);
-
+  
     log.info("there {}", hostStoreInfo);
     log.info("here {}", hostInfo);
     
     if (!thisHost(hostStoreInfo)){
        return fetchRemote(hostStoreInfo, poolId, accountId);
     }
-
+  
     final ReadOnlyKeyValueStore<String, Account> store = streams.waitForAccountStore();
     if (store == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-
+  
     log.debug("Get account {} from the store", poolAccountId); 
     return Optional.ofNullable(store.get(poolAccountId));
   }

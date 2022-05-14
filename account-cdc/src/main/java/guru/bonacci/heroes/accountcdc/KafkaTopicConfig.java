@@ -17,7 +17,8 @@ public class KafkaTopicConfig {
   public NewTopic accounts() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TOPIC)
       .partitions(2)
-      .build(); // TODO infinite retention
+      .config(TopicConfig.RETENTION_MS_CONFIG, "-1")
+      .build();
   }
   
   @Bean
@@ -48,7 +49,8 @@ public class KafkaTopicConfig {
   public NewTopic transfers() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_TOPIC)
       .partitions(2)
-      .build(); // TODO infinite retention
+      .config(TopicConfig.RETENTION_MS_CONFIG, "-1")
+      .build();
   }
 
   @Bean
