@@ -5,19 +5,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
 import org.apache.kafka.streams.state.HostInfo;
-import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import guru.bonacci.heroes.accountstore.Bookkeeper;
 import guru.bonacci.heroes.accountstore.KafkaStreamsService;
 import guru.bonacci.heroes.accountstore.rpc.HostStoreInfo;
 import guru.bonacci.heroes.accountstore.rpc.MetadataController;
-import guru.bonacci.heroes.accountstore.validation.PoolService;
+import guru.bonacci.heroes.accountstore.validation.AccountToValidate;
 import guru.bonacci.heroes.domain.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,16 +34,18 @@ public class AccountService {
   private final MetadataController metadata;
   private final RestTemplate restTemplate;
 
-  private final PoolService poolService;
+  private final Validator validator;
 
   
   private void validateInput(String poolId, String accountId) {
-    if (!poolService.exists(poolId)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "pool " + poolId + " does not exist");      
-    }
-  
-    if (!poolService.containsAccount(poolId, accountId)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "account " + accountId + " not in pool " + poolId);      
+    var violations = validator.validate(new AccountToValidate(poolId, accountId));
+
+    if (!violations.isEmpty()) {
+      var sb = new StringBuilder();
+      for (ConstraintViolation<AccountToValidate> constraintViolation : violations) {
+          sb.append(constraintViolation.getMessage());
+      }
+      throw new InvalidPoolAccountException(sb.toString());
     }
   }
 
@@ -53,7 +55,7 @@ public class AccountService {
     
     var poolAccountId = Account.identifier(poolId, accountId);
   
-    final HostStoreInfo hostStoreInfo = metadata.streamsMetadataForKey(poolAccountId);
+    final var hostStoreInfo = metadata.streamsMetadataForKey(poolAccountId);
   
     log.info("there {}", hostStoreInfo);
     log.info("here {}", hostInfo);
@@ -62,9 +64,9 @@ public class AccountService {
        return fetchRemote(hostStoreInfo, poolId, accountId);
     }
   
-    final ReadOnlyKeyValueStore<String, Account> store = streams.waitForAccountStore();
+    final var store = streams.waitForAccountStore();
     if (store == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+      throw new NoStoreException();
     }
   
     log.debug("Get account {} from the store", poolAccountId); 

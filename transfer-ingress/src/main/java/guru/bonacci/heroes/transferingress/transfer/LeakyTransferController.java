@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.domain.dto.TransferDto;
 import lombok.RequiredArgsConstructor;
 
-@Profile("!docker")
+@Profile("default")
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor

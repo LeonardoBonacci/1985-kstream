@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress.validate;
+package guru.bonacci.heroes.transferingress.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,7 +13,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TransferConstraint {
 
-  String message() default "Transfer details validation failed";
+  String message() default "${errorMessage}";
   Class<? extends Payload>[] payload() default {};
   Class<?>[] groups() default {};
 

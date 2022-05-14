@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress.validate;
+package guru.bonacci.heroes.transferingress.validation;
 
 import java.math.BigDecimal;
 

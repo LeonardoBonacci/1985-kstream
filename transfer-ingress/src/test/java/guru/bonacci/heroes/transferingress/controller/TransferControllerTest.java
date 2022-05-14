@@ -18,8 +18,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import guru.bonacci.heroes.domain.Transfer;
+import guru.bonacci.heroes.domain.dto.TransferDto;
 import guru.bonacci.heroes.transferingress.transfer.TransferController;
-import guru.bonacci.heroes.transferingress.transfer.TransferDto;
 import guru.bonacci.heroes.transferingress.transfer.TransferService;
  
 @WebMvcTest(value = TransferController.class)

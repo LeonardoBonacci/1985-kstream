@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.transferingress.validate;
+package guru.bonacci.heroes.transferingress.validation;
 
 import static guru.bonacci.heroes.domain.Account.identifier;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.TRANSFER_VALIDATION_REQUEST_TOPIC;
@@ -12,6 +12,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class TransferValidationDelegator implements ConstraintValidator<TransferConstraint, Object> {
+public class TransferValidationDelegator implements ConstraintValidator<TransferConstraint, Object>  {
 
   private final PoolRepository poolRepo;
   private final ApplicationContext appContext;
@@ -64,10 +65,15 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
 
       var poolType = poolRepo.getType(poolId).getName();
       var validator = appContext.getBean(poolType, PoolTypeBasedValidator.class);
-      return validator.validate(consumerRecord.value(), amount).isValid();
-      
+
+      TransferValidationResult validationResult = validator.validate(consumerRecord.value(), amount);
+      if (!validationResult.isValid()) {
+        context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("errorMessage", validationResult.getErrorMessage());
+      }
+      return validationResult.isValid();
     } catch (TimeoutException | InterruptedException | ExecutionException e) {
       e.printStackTrace();
+      context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("errorMessage", "sorry, our fault, please try again");
       return false;
     }
   }

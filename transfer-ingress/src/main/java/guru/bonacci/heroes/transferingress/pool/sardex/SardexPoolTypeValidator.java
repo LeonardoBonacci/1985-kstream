@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
-import guru.bonacci.heroes.transferingress.validate.PoolTypeBasedValidator;
-import guru.bonacci.heroes.transferingress.validate.TransferValidationResult;
+import guru.bonacci.heroes.transferingress.validation.PoolTypeBasedValidator;
+import guru.bonacci.heroes.transferingress.validation.TransferValidationResult;
 
 @Component("sardex")
 public class SardexPoolTypeValidator implements PoolTypeBasedValidator {

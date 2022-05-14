@@ -1,5 +1,6 @@
 package guru.bonacci.heroes.integrationtest;
 
+import guru.bonacci.heroes.domain.dto.TransferDto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;

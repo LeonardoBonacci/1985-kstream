@@ -16,13 +16,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Account {
 
-  private String accountId;
   private String poolId;
+  private String accountId;
 
   @Builder.Default
   private final List<Transfer> transfers = new ArrayList<>();
   
 
+  // utilities follow below
   public String identifier() {
     return this.poolId + "." + this.accountId;
   }

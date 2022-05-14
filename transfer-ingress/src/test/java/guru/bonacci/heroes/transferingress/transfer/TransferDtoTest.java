@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import guru.bonacci.heroes.transferingress.validate.InitialCheck;
+import guru.bonacci.heroes.domain.dto.TransferDto;
 
  
 @SpringBootTest
@@ -24,7 +24,7 @@ public class TransferDtoTest {
   void passesInitial() {
     var dto = new TransferDto("coro", "foo", "bar", BigDecimal.valueOf(10.22));
     
-    Set<ConstraintViolation<TransferDto>> violations = validator.validate(dto, InitialCheck.class);
+    Set<ConstraintViolation<TransferDto>> violations = validator.validate(dto);
     assertThat(violations).isEmpty();
   }
 
@@ -32,7 +32,7 @@ public class TransferDtoTest {
   void amountFormatInvalid() {
     var dto = new TransferDto("coro", "foo", "bar", BigDecimal.valueOf(10.220022));
     
-    Set<ConstraintViolation<TransferDto>> violations = validator.validate(dto, InitialCheck.class);
+    Set<ConstraintViolation<TransferDto>> violations = validator.validate(dto);
     assertThat(violations).isNotEmpty();
   }
 }
