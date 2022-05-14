@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountstore.service;
+package guru.bonacci.heroes.accountstore.validation;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountstore.controller;
+package guru.bonacci.heroes.accountstore.rpc;
 
 import guru.bonacci.heroes.domain.Account;
 import lombok.AllArgsConstructor;

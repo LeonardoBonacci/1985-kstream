@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountstore.service;
+package guru.bonacci.heroes.accountstore.validation;
 
 import java.io.IOException;
 import java.util.HashMap;

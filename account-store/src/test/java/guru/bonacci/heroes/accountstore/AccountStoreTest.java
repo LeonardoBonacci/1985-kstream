@@ -22,7 +22,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import guru.bonacci.heroes.accountstore.BootstrAppAccountStore;
-import guru.bonacci.heroes.accountstore.service.TransferValidationService;
+import guru.bonacci.heroes.accountstore.validation.TransferValidationService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;

@@ -1,6 +1,80 @@
-# Account admin service
+# Account Restful service
 
-Move this to a better place
+### local
+
+```
+mvn clean install -DskipTests -pl :account-store
+mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8085'
+```
+
+### docker
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-apps.yml build account-store
+docker-compose -f docker-compose.yml -f docker-compose-apps.yml up -d account-store
+docker-compose -f docker-compose.yml -f docker-compose-apps.yml scale account-store=2
+```
+
+### k8s
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-apps.yml build account-store
+
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+kubectl apply -f  k8s/kafka-persistent-single.yaml -n kafka
+kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka 
+
+kubectl apply -f k8s/topics
+kubectl apply -f k8s/account-store.yaml -n kafka
+
+https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
+
+kubectl port-forward service/account-store-service 8080:8080
+kubectl port-forward pods/account-store-app-5d5665d55c-czq9h -n kafka 8080:8080
+
+```
+
+```
+curl localhost:8080/metadata/all
+curl localhost:8080/metadata/accounts
+curl localhost:8080/metadata/accounts/coro.a
+
+curl localhost:8080/pools/coro/accounts/a
+curl localhost:8080/pools/coro/accounts/a/balance
+
+```
+
+```
+./bin/kafka-console-producer \
+	--bootstrap-server localhost:9092 \
+	--topic account-transfer \
+	--property parse.key=true \
+ 	--property key.separator=":"
+
+coro.a:{"accountId":"a", "poolId":"coro", "transfers":[]}
+coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
+```
+
+## validaton
+
+```
+./bin/kafka-console-producer \
+	--bootstrap-server localhost:9092 \
+	--topic transfer-validation-requests \
+	--property parse.key=true \
+ 	--property key.separator=":"
+
+coro.a:{"from":"a", "poolId":"coro", "to":"b"}
+coro.a:{"from":"a", "poolId":"coro", "to":"c"}
+
+./bin/kafka-console-consumer \
+ --bootstrap-server localhost:9092 \
+ --topic transfer-validation-replies \
+ --from-beginning
+
+```
+
+
 
 ```
 https://strimzi.io/quickstarts/
@@ -21,56 +95,3 @@ kubectl port-forward pods/account-store-app-5d5665d55c-czq9h -n kafka 8080:8080
 
 ```
 
-
-
-```
-mvn clean install -pl :account-storage
-
-docker-compose build && docker-compose up -d && docker-compose logs -f account-storage
-
-docker stop account-storage && docker rm account-storage
-
-docker-compose -f docker-compose.yml -f docker-compose-apps.yml up -d --scale  account-store=2
-```
-
-to run multiple services
-
-```
-mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8085'
-
-
-curl localhost:8080/state/instances/AccountStore
-curl localhost:8080/state/keyvalue/AccountStore/all
-
-curl localhost:8080/state/instances
-curl localhost:8080/state/instances/AccountStore
-curl localhost:8080/state/instance/AccountStore/coro.b
-curl localhost:8080/state/keyvalue/coro.a
-
-```
-
-```
-./bin/kafka-console-producer \
-	--bootstrap-server localhost:9092 \
-	--topic account-transfer \
-	--property parse.key=true \
- 	--property key.separator=":"
-
-coro.a:{"accountId":"a", "poolId":"coro", "transfers":[]}
-coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
-
-./bin/kafka-console-producer \
-	--bootstrap-server localhost:9092 \
-	--topic transfer-validation-requests \
-	--property parse.key=true \
- 	--property key.separator=":"
-
-coro.a:{"from":"a", "poolId":"coro", "to":"b"}
-coro.a:{"from":"a", "poolId":"coro", "to":"c"}
-
-./bin/kafka-console-consumer \
- --bootstrap-server localhost:9092 \
- --topic transfer-validation-replies \
- --from-beginning
-
-```

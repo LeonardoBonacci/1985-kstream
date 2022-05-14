@@ -2,6 +2,7 @@ package guru.bonacci.heroes.accountstore;
 
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StoreQueryParameters;
+import org.apache.kafka.streams.errors.InvalidStateStoreException;
 import org.apache.kafka.streams.state.QueryableStoreType;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
@@ -27,9 +28,21 @@ public class KafkaStreamsService {
     return streamsBuilder.getKafkaStreams();
   }
 
-  public ReadOnlyKeyValueStore<String, Account> accountStore() {
-    return getKafkaStreams()
-         .store(StoreQueryParameters.fromNameAndType("AccountStore", ACCOUNT_STORE_TYPE).enableStaleStores());
+  public ReadOnlyKeyValueStore<String, Account> waitForAccountStore() {
+    while (true) {
+      try {
+        return getKafkaStreams()
+            .store(StoreQueryParameters.fromNameAndType("AccountStore", ACCOUNT_STORE_TYPE).enableStaleStores());
+      } catch (InvalidStateStoreException ignored) {
+        // store not yet ready for querying
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    
   }
 
 }

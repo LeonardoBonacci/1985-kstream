@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountstore.controller;
+package guru.bonacci.heroes.accountstore.rpc;
 
 import java.util.Collection;
 import java.util.Collections;

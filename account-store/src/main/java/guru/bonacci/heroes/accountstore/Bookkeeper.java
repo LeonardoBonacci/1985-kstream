@@ -3,6 +3,7 @@ package guru.bonacci.heroes.accountstore;
 import java.math.BigDecimal;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import guru.bonacci.heroes.domain.Account;
@@ -18,27 +19,28 @@ public class Bookkeeper {
   private final KafkaStreamsService streams;
   
   
-  private BigDecimal getBalance(Account account) {
+  public BigDecimal determineBalance(Account account) {
     return account.getTransfers().stream()
                     .map(tf -> tf.getAmount())
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
-
-//TODO  @Scheduled(fixedRate = 10000)
-  public void account() {
+  
+  @Scheduled(fixedRate = 60000)
+  public void print() {
     try {
       BigDecimal totalBalance = BigDecimal.ZERO;
       
-      var it = streams.accountStore().all();
+      var it = streams.waitForAccountStore().all();
       while(it.hasNext()) {
         var kv = it.next();
         kv.value.getTransfers().forEach(t -> log.debug("{}", t.getAmount()));
-        var balance = getBalance(kv.value);
+        var balance = determineBalance(kv.value);
         log.info("balance for {} is {}", kv.value.getAccountId(), balance);
         totalBalance = totalBalance.add(balance);
       };
       log.warn("TOTAL BALANCE IS {}", totalBalance);
       if (!totalBalance.equals(BigDecimal.ZERO)) {
+        log.error("TOTAL BALANCE IS {}", totalBalance);
         System.exit(1);
       }
     } catch(RuntimeException e) {
