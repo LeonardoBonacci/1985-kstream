@@ -34,3 +34,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kube
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name

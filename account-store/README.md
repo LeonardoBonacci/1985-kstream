@@ -49,6 +49,8 @@ kubectl apply -f k8s/account-store.yaml -n kafka
 
 kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic account-transfer --property parse.key=true --property key.separator=":"
 
+kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic account --from-beginning
+
 coro.a:{"accountId":"a", "poolId":"coro", "transfers":[]}
 coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
 
@@ -56,6 +58,7 @@ https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-
 
 kubectl port-forward service/account-store-service 8080:8080
 kubectl port-forward pod/account-store-app-5d5665d55c-56m79 -n kafka 8080:8080
+
 
 ```
 

@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: v1
 kind: Pod
 metadata:
   name: account-cdc-app
@@ -12,3 +12,4 @@ spec:
       env:
         - name: SPRING_PROFILES_ACTIVE
           value: kube
+  restartPolicy: Never
