@@ -1,5 +1,28 @@
 # Account admin service
 
+Move this to a better place
+
+```
+https://strimzi.io/quickstarts/
+
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+kubectl apply -f  kafka-persistent-single.yaml
+
+kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic account-transfer --property parse.key=true --property key.separator=":"
+
+coro.a:{"accountId":"a", "poolId":"coro", "transfers":[]}
+coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
+
+https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
+
+kubectl port-forward service/account-store-service 8080:8080
+
+kubectl port-forward pods/account-store-app-5d5665d55c-czq9h -n kafka 8080:8080
+
+```
+
+
+
 ```
 mvn clean install -pl :account-storage
 

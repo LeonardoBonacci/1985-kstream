@@ -12,7 +12,7 @@ spring.kafka:
     default:
       key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-    application.server: ${spring.cloud.client.hostname}:${server.port}
+    application.server: ${spring.cloud.client.ip-address}:${server.port}
     state.dir: /tmp/${server.port}
   
   consumer:

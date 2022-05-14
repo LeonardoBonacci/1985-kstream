@@ -27,6 +27,6 @@ public class RPCConfig {
     log.warn("inet hostname {}", InetAddress.getLocalHost().getHostName());
     log.warn("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
  
-    return new HostInfo(host, port);
+    return new HostInfo(ip, port);
   }
 }
