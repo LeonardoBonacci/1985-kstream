@@ -22,7 +22,7 @@ import guru.bonacci.heroes.transferingress.validation.CheckTransfer;
 import guru.bonacci.heroes.transferingress.validation.TransferToValidate;
 import lombok.RequiredArgsConstructor;
 
-@Profile("default")
+@Profile("!default")
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor

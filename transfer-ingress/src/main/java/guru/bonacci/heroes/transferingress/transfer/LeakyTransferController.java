@@ -14,7 +14,7 @@ import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.domain.dto.TransferDto;
 import lombok.RequiredArgsConstructor;
 
-@Profile("!default")
+@Profile("default")
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor
