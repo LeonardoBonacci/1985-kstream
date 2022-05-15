@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class TIPCache {
+public class TIPRepository {
   
   public static final String LOCK_KEY_PREFIX = "###-";
 
@@ -31,22 +31,22 @@ public class TIPCache {
   private StringRedisTemplate readTemplate;
 
 
-  boolean existsById(String id) {
+  public boolean existsById(String id) {
     return readTemplate.hasKey(id);
   }
   
-  TransferInProgress save(TransferInProgress tip) {
+  public TransferInProgress save(TransferInProgress tip) {
     writeTemplate.opsForValue().set(tip.getPoolAccountId(), tip.getTransferId());
     return tip;
   }
   
-  Map<String, TransferInProgress> saveAll(Map<String, TransferInProgress> tips) {
+  public Map<String, TransferInProgress> saveAll(Map<String, TransferInProgress> tips) {
     var tipsAsString = Maps.transformValues(tips, tip -> tip.getTransferId());
     writeTemplate.opsForValue().multiSet(tipsAsString);
     return tips;
   }
   
-  Boolean lock(String lockId) {
+  public Boolean lock(String lockId) {
     boolean newKey = readTemplate.opsForValue()
                           .setIfAbsent(LOCK_KEY_PREFIX + lockId, lockId, Duration.ofMillis(ttlInMs));
     log.info("new lock {}: {}", lockId, newKey);

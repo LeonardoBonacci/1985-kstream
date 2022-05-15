@@ -74,8 +74,7 @@ public class TransactionConfig {
 
   @Bean("no-tx")
   public StringRedisTemplate redisReadTemplate() {
-    StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory());
-    return template;
+    return new StringRedisTemplate(redisConnectionFactory());
   }
 
   @Bean("tx")

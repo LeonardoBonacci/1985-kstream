@@ -1,39 +1,41 @@
 package guru.bonacci.heroes.transferingress.transfer;
 
-import java.util.Objects;
+import static guru.bonacci.heroes.domain.Account.identifier;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.ImmutableMap;
+
 import guru.bonacci.heroes.domain.Transfer;
-import guru.bonacci.heroes.transferingress.tip.ITIPService;
-import guru.bonacci.heroes.transferingress.tip.TransferConcurrencyException;
-import guru.bonacci.heroes.transferingress.tip.TransferLockedException;
+import guru.bonacci.heroes.domain.TransferInProgress;
+import guru.bonacci.heroes.transferingress.tip.TIPRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TransferService {
 
-  private final ITIPService tipService;
+  private final TIPRepository cache;
   private final TransferProducer transferProducer;
   
   @Transactional
   public Transfer transfer(Transfer transfer) {
-    Objects.requireNonNull(transfer.getTransferId(), "cheating..");
+    var fromTip = toFromTIP(transfer);
+    var toTip = toToTIP(transfer);
     
-    if (tipService.isBlocked(transfer)) {
-      throw new TransferLockedException();
-    }
+    cache.saveAll(ImmutableMap.of(
+      fromTip.getPoolAccountId(), fromTip, 
+      toTip.getPoolAccountId(), toTip));
 
-    return doTransfer(transfer);
-  }
-
-  private Transfer doTransfer(Transfer transfer) {
-    if (!tipService.proceed(transfer)) {
-      throw new TransferConcurrencyException();
-    }
-    
     return transferProducer.send(transfer);
+  }
+  
+  private TransferInProgress toFromTIP(Transfer transfer) {
+    return new TransferInProgress(identifier(transfer.getPoolId(), transfer.getFrom()), transfer.getTransferId());  
+  }
+  
+  private TransferInProgress toToTIP(Transfer transfer) {
+    return new TransferInProgress(identifier(transfer.getPoolId(), transfer.getTo()), transfer.getTransferId());  
   }
 }

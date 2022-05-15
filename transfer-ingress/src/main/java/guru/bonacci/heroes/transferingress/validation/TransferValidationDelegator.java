@@ -68,12 +68,14 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
 
       TransferValidationResult validationResult = validator.validate(consumerRecord.value(), amount);
       if (!validationResult.isValid()) {
-        context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("errorMessage", validationResult.getErrorMessage());
+        context.unwrap(HibernateConstraintValidatorContext.class)
+               .addExpressionVariable("errorMessage", validationResult.getErrorMessage());
       }
       return validationResult.isValid();
     } catch (TimeoutException | InterruptedException | ExecutionException e) {
       e.printStackTrace();
-      context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("errorMessage", "sorry, our fault, please try again");
+      context.unwrap(HibernateConstraintValidatorContext.class)
+             .addExpressionVariable("errorMessage", "sorry, our fault, please try again");
       return false;
     }
   }
