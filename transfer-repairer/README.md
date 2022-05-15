@@ -1,6 +1,5 @@
 # Re-joins the previously split transfer pairs
 
-
 ```
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \

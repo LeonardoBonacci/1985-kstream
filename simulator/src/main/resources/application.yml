@@ -1,7 +1,5 @@
 spring.application.name: heroes-simulator
        
-server.port: 8081
-
 client.hostAndPort: http://localhost:8080
 
 fixed.rate: 1000

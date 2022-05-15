@@ -1,11 +1,11 @@
 # Change capture data mock/stub from account datastore
 
-Also creates all the topics
+Creates the topics
 
 ```
 ./bin/kafka-console-consumer \
          --bootstrap-server localhost:9092 \
-         --topic accounts \
+         --topic account \
          --property print.key=true \
          --from-beginning
 ```

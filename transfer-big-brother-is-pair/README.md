@@ -1,4 +1,4 @@
-# Combines the previously created transfer-pair
+# Monitors that each side of the transfer-split is processed within n seconds
 
 ```
 ./bin/kafka-console-producer \

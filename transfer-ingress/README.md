@@ -1,19 +1,4 @@
-# Heroes - Token exchange service is a platform that aims to aid local communities in experimenting with alternative forms of value exchange
-
-
-```
-mvn clean install -pl :transfer-ingress
-
-docker-compose build && docker-compose up -d && docker-compose logs -f transfer-ingress
-
-docker stop transfer-ingress && docker rm transfer-ingress
-```
-
-### coro
-* foo
-* goo
-* bar
-* baz
+# Transfer entry point - Rest Endpoint
 
 ```
 valid
@@ -30,6 +15,12 @@ curl -d '{"poolId": "coro", "from":"bar", "to":"goo", "amount":9999.10}' -H "Con
 ```
 ./bin/kafka-console-consumer \
 	 --bootstrap-server localhost:9092 \
-	 --topic transfers \
+	 --topic transfer \
 	 --from-beginning
- ```
+```
+
+### k8s
+ 
+```
+kubectl port-forward service/transfer-ingress-service 8080:8081 -n kafka
+```

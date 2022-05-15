@@ -1,17 +1,9 @@
 # Transfer processing service
 
 ```
-mvn clean install -pl :account-transfer
-
-docker-compose build && docker-compose up -d && docker-compose logs -f account-transfer
-
-docker stop account-transfer && docker rm account-transfer
-```
-
-```
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
-	--topic accounts \
+	--topic account \
 	--property parse.key=true \
  	--property key.separator=":"
 
@@ -23,7 +15,7 @@ a:{"accountId":"a", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"ini
 
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
-	--topic accounts \
+	--topic account \
 	--property parse.key=true \
  	--property key.separator=":"
 

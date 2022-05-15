@@ -1,5 +1,1 @@
-```
-
-
-
-```
+# Cleans-up the Redis cache

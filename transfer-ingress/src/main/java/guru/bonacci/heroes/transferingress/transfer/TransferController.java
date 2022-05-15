@@ -34,6 +34,7 @@ public class TransferController implements ITransferController {
   public Callable<Transfer> transfer(@RequestBody @Valid TransferDto dto) {
     var transfer = TransferController.toTf(dto);
     // to avoid a lot of complexity, we validate transfer here instead of in the service
+    //TODO the order of input validation mechanisms can be altered to increase performance
     validateInput(transfer);
     return () -> service.transfer(transfer);
   }

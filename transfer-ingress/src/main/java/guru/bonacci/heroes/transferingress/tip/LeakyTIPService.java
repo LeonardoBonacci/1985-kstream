@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import guru.bonacci.heroes.domain.Transfer;
 
-@Profile("!docker")
+@Profile("default")
 @Service
 public class LeakyTIPService implements ITIPService {
 

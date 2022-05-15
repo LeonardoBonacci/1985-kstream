@@ -1,16 +1,6 @@
 # Heroes - Anonymous token exchange service that aims to aid local communities in experimenting with alternative forms of value exchange
 
 
-
-```
-docker stop account-initializer && docker rm account-initializer
-docker stop account-transfer && docker rm account-transfer
-docker stop account-storage && docker rm account-storage
-docker stop transfer-ingress && docker rm transfer-ingress
-docker stop transfer-pairer && docker rm transfer-pairer
-```
-
-
 Community currencies need some more thought in practice
 
 So why do they flop? Some don’t survive the loss of activist leadership. Others fail to scale for a different reason. “People don’t understand money,”
@@ -18,12 +8,6 @@ So why do they flop? Some don’t survive the loss of activist leadership. Other
 https://monneta.org/en/sardex/
 
 Sardex - The credits are denominated in Euro but cannot be exchanged for Euro or bought with Euro
-
-## TODO
-implement sardex
-exactly once semantics
-k8s + scaling accounts
-graalvm
 
 ## Basic concepts
 
@@ -34,9 +18,9 @@ there are different types of pools
 
 TODO something about tokens?
 
-the admin can invite members to the pool
+the admin can invite/accept members to the pool
 
-in sardex, a pool-member can exchange tokens within the pool
+a pool-member can exchange tokens within the pool
 
 each pool-member has a balance, represented in pool-tokens
 pool-members can transfer tokens to each other - given that they have enough balance for the transfer
@@ -48,13 +32,13 @@ there can be no cross-pool exchange
 
 needs to install a phone-app
 
-requests the gatekeeper to be added to a pool
+requests the admin to be added to a pool
 
-acquiring tokens depends on the pool type - i.e. request the gatekeeper
+acquiring tokens depends on the pool type - i.e. request the admin
 
 uses the phone-app to transfer tokens to other members of the pool
 
-### The gatekeeper
+### The admin
 
 needs to install a phone-app
 

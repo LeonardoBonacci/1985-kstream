@@ -12,7 +12,7 @@ import guru.bonacci.heroes.domain.TransferInProgress;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Profile("docker")
+@Profile("!default")
 @Slf4j
 @Service
 @RequiredArgsConstructor

@@ -1,5 +1,1 @@
-spring:
-  kafka:
-    bootstrap-servers: broker:29092
-    
 client.hostAndPort: http://transfer-ingress:8080
