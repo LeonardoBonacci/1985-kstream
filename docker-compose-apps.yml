@@ -1,0 +1,88 @@
+---
+version: '2'
+services:
+  account-cdc:
+   image: leonardobonacci/heroes-account-cdc
+   build: account-cdc
+   depends_on:
+     - broker
+   environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  account-initializer:
+   image: leonardobonacci/heroes-account-initializer
+   build: account-initializer
+   depends_on:
+     - broker
+   environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  account-store:
+    image: leonardobonacci/heroes-account-store
+    build: account-store
+    depends_on:
+      - broker
+    ports:
+      - "8081-9000:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  account-transfer:
+    image: leonardobonacci/heroes-account-transfer
+    build: account-transfer
+    depends_on:
+      - broker
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  simulator:
+    image: leonardobonacci/heroes-simulator
+    build: simulator
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+      - FIXED_RATE=1000
+
+  tip-purger:
+    image: leonardobonacci/heroes-tip-purger
+    build: tip-purger
+    depends_on:
+      - broker
+      - cache
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  transfer-ingress:
+    image: leonardobonacci/heroes-transfer-ingress
+    build: transfer-ingress
+    depends_on:
+      - broker
+      - cache
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  transfer-processor:
+    image: leonardobonacci/heroes-transfer-processor
+    build: transfer-processor
+    depends_on:
+      - broker
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  transfer-pairer:
+    image: leonardobonacci/heroes-transfer-pairer
+    build: transfer-pairer
+    depends_on:
+      - broker
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
+
+  transfer-repairer:
+    image: leonardobonacci/heroes-transfer-repairer
+    build: transfer-repairer
+    container_name: transfer-repairer
+    depends_on:
+      - broker
+    environment:
+      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-processor-app
+spec:
+  selector:
+    matchLabels:
+      app: transfer-processor-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: transfer-processor-app
+    spec:
+      containers:
+        - name: transfer-processor-app
+          image: leonardobonacci/heroes-transfer-processor
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube

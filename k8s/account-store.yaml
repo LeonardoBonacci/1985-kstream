@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-store-service
+spec:
+  selector:
+    app: account-store-app
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-store-app
+spec:
+  selector:
+    matchLabels:
+      app: account-store-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: account-store-app
+    spec:
+      containers:
+        - name: account-store-app
+          image: leonardobonacci/heroes-account-store
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name

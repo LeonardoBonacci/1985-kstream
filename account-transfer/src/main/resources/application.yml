@@ -1,0 +1,12 @@
+spring.application.name: heroes-account-transfer-apps
+       
+spring.kafka:
+  bootstrap-servers: localhost:9092
+
+  # streams configurations
+  streams.properties:
+    processing.guarantee: exactly_once
+    default:
+      key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+    max.poll.records: 1 # consumer

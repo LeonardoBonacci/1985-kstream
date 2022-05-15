@@ -18,12 +18,19 @@
 	</properties>
 
 	<modules>
+		<module>account-cdc</module>
 		<module>account-initializer</module>
-		<module>accounts</module>
+		<module>account-store</module>
+		<module>account-transfer</module>
 		<module>domain</module>
-		<module>json-serde</module>
-		<module>transfers</module>
-		<module>transfer-tupler</module>
+		<module>simulator</module>
+		<module>tip-purger</module>
+		<module>transfer-big-brother-is-pair</module>
+		<module>transfer-big-brother-is-processed</module>
+		<module>transfer-ingress</module>
+		<module>transfer-processor</module>
+		<module>transfer-pairer</module>
+		<module>transfer-repairer</module>
 	</modules>
 
 	<dependencies>

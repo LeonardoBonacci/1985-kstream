@@ -1,0 +1,25 @@
+spring.application.name: heroes-account-store-app
+
+server:
+  port: 8080
+  
+spring.kafka:
+  bootstrap-servers: localhost:9092
+
+  # streams configurations
+  streams.properties:
+    processing.guarantee: exactly_once
+    default:
+      key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+    application.server: ${spring.cloud.client.ip-address}:${server.port}
+    state.dir: /tmp/${server.port} 
+  #TODO state dir in a decent place
+      
+  consumer:
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.value.default.type: guru.bonacci.heroes.domain.Account
+    auto-offset-reset: earliest # consumer
+ 

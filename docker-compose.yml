@@ -55,15 +55,6 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
 
-  account-initializer:
-    image: leonardobonacci/heroes-account-initializer
-    build: account-initializer
-    container_name: account-initializer
-    depends_on:
-      - broker
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      
   cache:
     image: redis:6.2-alpine
     restart: always

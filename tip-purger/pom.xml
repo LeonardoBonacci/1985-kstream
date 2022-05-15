@@ -27,11 +27,6 @@
 
 		<dependency>
 			<groupId>guru.bonacci.heroes</groupId>
-			<artifactId>serialization</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>guru.bonacci.heroes</groupId>
 			<artifactId>domain</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -59,6 +54,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<finalName>app</finalName>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

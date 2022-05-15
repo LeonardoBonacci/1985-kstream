@@ -1,0 +1,9 @@
+spring.kafka:
+  bootstrap-servers: my-cluster-kafka-bootstrap:9092
+
+  streams.properties:
+    num.standby.replicas: 2
+    
+  consumer:
+    properties:
+      group.instance.id: ${pod.name}  

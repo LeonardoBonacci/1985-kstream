@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-pairer-app
+spec:
+  selector:
+    matchLabels:
+      app: transfer-pairer-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: transfer-pairer-app
+    spec:
+      containers:
+        - name: transfer-pairer-app
+          image: leonardobonacci/heroes-transfer-pairer
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube

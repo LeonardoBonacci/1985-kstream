@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator-app
+spec:
+  selector:
+    matchLabels:
+      app: simulator-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: simulator-app
+    spec:
+      containers:
+        - name: simulator-app
+          image: leonardobonacci/heroes-simulator
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube

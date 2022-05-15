@@ -1,14 +1,15 @@
 package guru.bonacci.heroes.domain;
 
-import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.Value;
-
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransferValidationRequest {
 
   private String poolId;
   private String from;
   private String to;
-  private BigDecimal amount;
 }

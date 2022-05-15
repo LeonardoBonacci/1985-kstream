@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-transfer-app
+spec:
+  selector:
+    matchLabels:
+      app: account-transfer-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: account-transfer-app
+    spec:
+      containers:
+        - name: account-transfer-app
+          image: leonardobonacci/heroes-account-transfer
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
