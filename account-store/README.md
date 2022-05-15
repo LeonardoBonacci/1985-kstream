@@ -12,9 +12,9 @@ coro.b:{"accountId":"b", "poolId":"coro", "transfers":[]}
 ```
 
 ```
-curl localhost:8080/metadata/all
+curl localhost:8080/metadata
 curl localhost:8080/metadata/accounts
-curl localhost:8080/metadata/accounts/coro.a
+curl localhost:8080/metadata/pools/coro/accounts/a
 
 curl localhost:8080/pools/coro/accounts/a
 curl localhost:8080/pools/coro/accounts/a/balance
@@ -23,7 +23,6 @@ curl localhost:8080/pools/coro/accounts/a/balance
 ### local
 
 ```
-mvn clean install -DskipTests -pl :account-store
 mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8085'
 ```
 

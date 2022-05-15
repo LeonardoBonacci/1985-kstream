@@ -1,13 +1,13 @@
 package guru.bonacci.heroes.accountstore.account;
 
+import static guru.bonacci.heroes.accountstore.BootstrAppAccountStore.STORE;
+
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.state.HostInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -16,8 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import guru.bonacci.heroes.accountstore.Bookkeeper;
 import guru.bonacci.heroes.accountstore.KafkaStreamsService;
 import guru.bonacci.heroes.accountstore.rpc.HostStoreInfo;
-import guru.bonacci.heroes.accountstore.rpc.MetadataController;
-import guru.bonacci.heroes.accountstore.validation.AccountToValidate;
+import guru.bonacci.heroes.accountstore.rpc.MetadataService;
 import guru.bonacci.heroes.domain.Account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,32 +30,23 @@ public class AccountService {
   private final HostInfo hostInfo;
 
   private final Bookkeeper bookkeeper;
-  private final MetadataController metadata;
+  private final MetadataService metadata;
   private final RestTemplate restTemplate;
 
-  private final Validator validator;
-
   
-  private void validateInput(String poolId, String accountId) {
-    var violations = validator.validate(new AccountToValidate(poolId, accountId));
-
-    if (!violations.isEmpty()) {
-      var sb = new StringBuilder();
-      for (ConstraintViolation<AccountToValidate> constraintViolation : violations) {
-          sb.append(constraintViolation.getMessage());
-      }
-      throw new InvalidPoolAccountException(sb.toString());
-    }
-  }
-
-  
-  public Optional<Account> getAccount(String poolId, String accountId) {
-    validateInput(poolId, accountId);
-    
+  //https://github.com/quarkusio/quarkus-quickstarts/blob/main/kafka-streams-quickstart/aggregator/src/main/java/org/acme/kafka/streams/aggregator/streams/InteractiveQueries.java
+  public Optional<Account> getAccount(final String poolId, final String accountId) {
     var poolAccountId = Account.identifier(poolId, accountId);
   
-    final var hostStoreInfo = metadata.streamsMetadataForKey(poolAccountId);
-  
+    var hostStoreInfoOpt = metadata.streamsMetadataForStoreAndKey(STORE, poolAccountId, new StringSerializer());
+    return hostStoreInfoOpt
+              .map(hostStoreInfo -> doGetAccount(poolId, accountId, hostStoreInfo))
+              .orElse(Optional.empty());
+  }
+
+  private Optional<Account> doGetAccount(String poolId, String accountId, HostStoreInfo hostStoreInfo) {
+    var poolAccountId = Account.identifier(poolId, accountId);
+    
     log.info("there {}", hostStoreInfo);
     log.info("here {}", hostInfo);
     
@@ -72,7 +62,7 @@ public class AccountService {
     log.debug("Get account {} from the store", poolAccountId); 
     return Optional.ofNullable(store.get(poolAccountId));
   }
-  
+
   public Optional<BigDecimal> getBalance(String poolId, String accountId) {
     var accOpt = getAccount(poolId, accountId);
     return accOpt.map(bookkeeper::determineBalance);

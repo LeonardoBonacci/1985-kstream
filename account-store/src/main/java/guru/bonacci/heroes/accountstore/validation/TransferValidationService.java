@@ -1,7 +1,12 @@
 package guru.bonacci.heroes.accountstore.validation;
 
+import static guru.bonacci.heroes.accountstore.BootstrAppAccountStore.STORE;
+import static guru.bonacci.heroes.domain.Account.identifier;
+
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.stereotype.Service;
 
+import guru.bonacci.heroes.accountstore.rpc.MetadataService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
@@ -13,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TransferValidationService {
 
-  private final PoolService poolService;
+  private final MetadataService metadata;
   
 
   public TransferValidationResponse getTransferValidationInfo(TransferValidationRequest request, Account account) {
-      if (account == null) { // we executed a left join
+      if (account == null) { // we executed a left join, hence..
         log.warn("pool.from {}.{} not found", request.getPoolId(), request.getFrom());
         return new TransferValidationResponse(false, false, false, null, "'pool.from' combination does not exist");
       }
@@ -27,7 +32,9 @@ public class TransferValidationService {
       // the join proves pool and from
       var poolExists = true; 
       var fromExists = true; 
-      var toExists = poolService.containsAccount(request.getPoolId(), request.getTo());
+      var toExists = 
+          metadata.streamsMetadataForStoreAndKey(STORE, identifier(request.getPoolId(), request.getTo()), new StringSerializer())
+                  .isPresent();
 
       return new TransferValidationResponse(poolExists, fromExists, toExists, account, null);
   }

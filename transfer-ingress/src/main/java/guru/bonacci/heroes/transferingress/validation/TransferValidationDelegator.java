@@ -63,6 +63,12 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
       var consumerRecord = replyFuture.get(3, TimeUnit.SECONDS);
       log.info("Return value: {} on partition {}", consumerRecord.value(), consumerRecord.partition());
 
+      if (poolRepo.getType(poolId) == null) {
+        context.unwrap(HibernateConstraintValidatorContext.class)
+            .addExpressionVariable("errorMessage", "pool " + poolId + " does not exist");
+        return false;
+      }
+
       var poolType = poolRepo.getType(poolId).getName();
       var validator = appContext.getBean(poolType, PoolTypeBasedValidator.class);
 
@@ -71,9 +77,11 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
         context.unwrap(HibernateConstraintValidatorContext.class)
                .addExpressionVariable("errorMessage", validationResult.getErrorMessage());
       }
+    
       return validationResult.isValid();
+
     } catch (TimeoutException | InterruptedException | ExecutionException e) {
-      e.printStackTrace();
+      log.warn(e.getMessage());
       context.unwrap(HibernateConstraintValidatorContext.class)
              .addExpressionVariable("errorMessage", "sorry, our fault, please try again");
       return false;

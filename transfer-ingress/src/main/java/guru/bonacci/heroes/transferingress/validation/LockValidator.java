@@ -40,17 +40,17 @@ public class LockValidator implements ConstraintValidator<LockConstraint, Object
       
     if (blocked) {
       context.unwrap(HibernateConstraintValidatorContext.class)
-             .addExpressionVariable("errorMessage", "Concurrent transfer attempt, try again in 10 seconds");
+             .addExpressionVariable("errorMessage", "Concurrent transfer request, please try again in 10 seconds");
       return false;
     }
     
-    if (proceed(poolId, from)) {
+    if (!cached(poolId, from)) {
       context.unwrap(HibernateConstraintValidatorContext.class)
              .addExpressionVariable("errorMessage", from + " has transfer in progress");
       return false;
     }
 
-    if (proceed(poolId, to)) {
+    if (!cached(poolId, to)) {
       context.unwrap(HibernateConstraintValidatorContext.class)
              .addExpressionVariable("errorMessage", to + " has transfer in progress");
       return false;
@@ -67,7 +67,7 @@ public class LockValidator implements ConstraintValidator<LockConstraint, Object
     return false;
   }
 
-  private boolean proceed(String poolId, String accountId) {
+  private boolean cached(String poolId, String accountId) {
     return !cache.existsById(identifier(poolId, accountId));
   }
 }

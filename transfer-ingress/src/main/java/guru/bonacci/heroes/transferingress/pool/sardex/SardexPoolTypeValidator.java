@@ -23,11 +23,9 @@ public class SardexPoolTypeValidator implements PoolTypeBasedValidator {
       return new TransferValidationResult(false, info.getErrorMessage());
     }
 
-    if (hasSufficientFunds(info.getFromAccount())) {
-      return new TransferValidationResult(true, null);
-    }
-
-    return new TransferValidationResult(false, "insufficient balance");
+    return hasSufficientFunds(info.getFromAccount()) ?
+          new TransferValidationResult(true, null) :
+          new TransferValidationResult(false, "insufficient balance");
   }    
       
   @Override 

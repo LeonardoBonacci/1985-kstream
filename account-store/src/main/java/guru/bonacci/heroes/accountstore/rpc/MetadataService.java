@@ -3,14 +3,13 @@ package guru.bonacci.heroes.accountstore.rpc;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KeyQueryMetadata;
 import org.apache.kafka.streams.state.StreamsMetadata;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import guru.bonacci.heroes.accountstore.KafkaStreamsService;
 import lombok.RequiredArgsConstructor;
@@ -32,19 +31,17 @@ public class MetadataService {
     return mapInstancesToHostStoreInfo(metadata);
   }
 
-  public <K> HostStoreInfo streamsMetadataForStoreAndKey(final String store,
+  public <K> Optional<HostStoreInfo> streamsMetadataForStoreAndKey(final String store,
                                                          final K key,
                                                          final Serializer<K> serializer) {
     final KeyQueryMetadata metadata = streams.getKafkaStreams().queryMetadataForKey(store, key, serializer);
-    if (metadata == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
-    }
-
-    return new HostStoreInfo(metadata.activeHost().host(),
-                             metadata.activeHost().port(),
-                             Collections.singleton(store));
+    return metadata == null || metadata == KeyQueryMetadata.NOT_AVAILABLE ?
+            Optional.empty() :
+            Optional.of(new HostStoreInfo(metadata.activeHost().host(),
+                                         metadata.activeHost().port(),
+                                         Collections.singleton(store)));
   }
-
+  
   private List<HostStoreInfo> mapInstancesToHostStoreInfo(
       final Collection<StreamsMetadata> metadatas) {
     return metadatas.stream().map(metadata -> new HostStoreInfo(metadata.host(),

@@ -44,7 +44,8 @@ public class BootstrAppTIPPurger {
     
     if (tips.size() != 2) {
       log.error("BIG ERROR!!");
-      System.exit(1);
+      log.error(tips.toString());
+      System.exit(1); // for now
     }
     
     tipRepo.delete(tips);

@@ -35,11 +35,6 @@ public class TIPRepository {
     return readTemplate.hasKey(id);
   }
   
-  public TransferInProgress save(TransferInProgress tip) {
-    writeTemplate.opsForValue().set(tip.getPoolAccountId(), tip.getTransferId());
-    return tip;
-  }
-  
   public Map<String, TransferInProgress> saveAll(Map<String, TransferInProgress> tips) {
     var tipsAsString = Maps.transformValues(tips, tip -> tip.getTransferId());
     writeTemplate.opsForValue().multiSet(tipsAsString);
