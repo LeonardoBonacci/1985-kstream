@@ -29,8 +29,8 @@ public class BootstrAppTIPPurger {
   }
   
   
-  @KafkaListener(topics = KafkaTopicNames.TRANSFER_TOPIC, 
-                 groupId = "us", 
+  @KafkaListener(topics = KafkaTopicNames.TRANSFER_CONSISTENT_TOPIC, 
+                 groupId = "us-and-them", 
                  properties = {"isolation.level:read_committed"})
   public void listen(ConsumerRecord<String, Transfer> record) {
     
@@ -43,9 +43,10 @@ public class BootstrAppTIPPurger {
     tips.removeIf(tipTransferId -> !transfer.getTransferId().equals(tipTransferId.getTransferId()));
     
     if (tips.size() != 2) {
-      log.error("BIG ERROR!!");
-      log.error(tips.toString());
-      System.exit(1); // for now
+      log.warn("-----BIG WARNING------");
+      log.warn(tips.toString());
+      log.warn("consumer rebalance has created a dangerous - but anticipated - situation");
+      log.warn("----------------------");
     }
     
     tipRepo.delete(tips);
