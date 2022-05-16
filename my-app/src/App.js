@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
+  TextInput,
   Button,
   View,
   SafeAreaView,
@@ -16,6 +17,9 @@ const postTransferURL = heroesHost + "/transfers";
 
 const App = () => {
   const [isLoading, setLoading] = useState(true);
+  const [from, setFrom] = useState([]);
+  const [to, setTo] = useState([]);
+  const [money, setMoney] = useState([]);
   const [user, setUser] = useState("bb");
   const [transfers, setTransfers] = useState([]);
   const [accountName, setAccountName] = useState([]);
@@ -36,9 +40,9 @@ const App = () => {
         },
         body: JSON.stringify({
           poolId: 'coro',
-          from: 'aa',
-          to: 'bb',
-          amount: 5.55
+          from: from,
+          to: to,
+          amount: money
         })
       });
     } catch (error) {
@@ -72,6 +76,22 @@ const App = () => {
         <ActivityIndicator />
       ) : (
           <View>
+           <TextInput
+            style={{height: 40}}
+            placeholder="From.."
+            onChangeText={newFrom => setFrom(newFrom)}
+          />  
+           <TextInput
+            style={{height: 40}}
+            placeholder="To.."
+            onChangeText={newTo => setTo(newTo)}
+          />  
+          <TextInput
+            style={{height: 40}}
+            placeholder="Show me the money!!"
+            onChangeText={newAmount => setMoney(newAmount)}
+            defaultValue={0.0}
+          />
           <Button
             onPress={() => {
               postTransferAsync();
