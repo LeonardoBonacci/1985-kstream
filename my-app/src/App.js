@@ -8,37 +8,32 @@ import {
   FlatList,
 } from "react-native";
 
-// get data from this URL!
-const movieURL = "https://reactnative.dev/movies.json";
+const heroesURL = "http://localhost:8080/pools/coro/accounts/aa/wallet";
 
 const App = () => {
-  // managing state with 'useState'
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [title, setTitle] = useState([]);
-  const [description, setDescription] = useState([]);
+  const [transfers, setTransfers] = useState([]);
+  const [accountName, setAccountName] = useState([]);
+  const [balance, setBalance] = useState([]);
 
-  // similar to 'componentDidMount', gets called once
+  // gets called once
   useEffect(() => {
-    fetch(movieURL)
-      .then((response) => response.json()) // get response, convert to json
-      .then((json) => {
-        setData(json.movies);
-        setTitle(json.title);
-        setDescription(json.description);
-      })
-      .catch((error) => alert(error)) // display errors
-      .finally(() => setLoading(false)); // change loading state
+    getWalletAsync();
   }, []);
 
-  // Also get call asynchronous function
-  async function getMoviesAsync() {
+  async function getWalletAsync() {
     try {
-      let response = await fetch(movieURL);
+      let response = await fetch(heroesURL, {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+      });
+  
       let json = await response.json();
-      setData(json.movies);
-      setTitle(json.title);
-      setDescription(json.description);
+      setTransfers(json.account.transfers);
+      setAccountName(json.account.poolId + '.' + json.account.accountId);
+      setBalance(json.balance);
       setLoading(false);
     } catch (error) {
       alert(error);
@@ -52,23 +47,19 @@ const App = () => {
         <ActivityIndicator />
       ) : (
         <View>
-          {/* Title from URL */}
-          <Text style={styles.title}>{title}</Text>
-          {/* Display each movie */}
+          <Text style={styles.title}>Welcome '{accountName}' - your balance is: {balance}</Text>
           <View style={{ borderBottomWidth: 1, marginBottom: 12 }}></View>
           <FlatList
-            data={data}
-            keyExtractor={({ id }, index) => id}
+            data={transfers}
+            keyExtractor={({ transferId }, index) => transferId}
             renderItem={({ item }) => (
               <View style={{ paddingBottom: 10 }}>
-                <Text style={styles.movieText}>
-                  {item.id}. {item.title}, {item.releaseYear}
+                <Text style={styles.transferText}>
+                  id - {item.transferId} | from - {item.from} | to - {item.to} | amount - {item.amount}
                 </Text>
               </View>
             )}
           />
-          {/* Show the description */}
-          <Text style={styles.description}>{description}</Text>
         </View>
       )}
     </SafeAreaView>
@@ -81,19 +72,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 48,
   },
-  movieText: {
+  transferText: {
     fontSize: 26,
     fontWeight: "200",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-  },
-  description: {
-    textAlign: "center",
-    marginBottom: 18,
-    fontWeight: "200",
-    color: "green",
   },
 });
 

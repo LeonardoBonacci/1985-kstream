@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.Transfer;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class AccountService {
 
@@ -23,6 +25,8 @@ public class AccountService {
   }
   
   public boolean process(Transfer tf) {
+    log.info("in {}", tf);
+
     var from = tf.getFrom();
     var fromKey = tf.getPoolId() + "." + from;
     if (!accounts.containsKey(fromKey)) {
