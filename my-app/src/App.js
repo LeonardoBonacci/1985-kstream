@@ -9,7 +9,10 @@ import {
   FlatList,
 } from "react-native";
 
-const heroesURL = "http://localhost:8080/pools/coro/accounts/";
+const heroesHost = "http://localhost:8080";
+
+const getWalletURL = heroesHost + "/pools/coro/accounts";
+const postTransferURL = heroesHost + "/transfers";
 
 const App = () => {
   const [isLoading, setLoading] = useState(true);
@@ -23,8 +26,9 @@ const App = () => {
     getWalletAsync();
   }, []);
 
-  async function getWalletAsync() {
-    fetch('http://localhost:8080/transfers', {
+  async function postTransferAsync() {
+    try {
+      let response = await fetch(postTransferURL, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -36,11 +40,15 @@ const App = () => {
           to: 'bb',
           amount: 5.55
         })
-    });
-  
+      });
+    } catch (error) {
+      alert(error);
+    }
+  }
 
+  async function getWalletAsync() {
     try {
-      let response = await fetch(heroesURL + user + "/wallet", {
+      let response = await fetch(getWalletURL + "/" + user + "/wallet", {
         method: 'GET',
         headers: {
           accept: 'application/json',
@@ -64,6 +72,12 @@ const App = () => {
         <ActivityIndicator />
       ) : (
           <View>
+          <Button
+            onPress={() => {
+              postTransferAsync();
+            }}
+            title={"send"}
+          />
           <Button
             onPress={() => {
               setUser(user === "bb" ? "aa" : "bb");

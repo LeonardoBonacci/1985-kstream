@@ -12,9 +12,7 @@ import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.dto.TransferDto;
 import guru.bonacci.heroes.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor
@@ -25,7 +23,6 @@ public class TransferController {
   @CrossOrigin(origins = "*")
   @PostMapping
   public Transfer transfer(@RequestBody TransferDto dto) {
-    log.info("in {}", dto);
     return service.process(toTf(dto));
   }
   
