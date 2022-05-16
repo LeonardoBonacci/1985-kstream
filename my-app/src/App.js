@@ -60,7 +60,7 @@ const App = () => {
       });
   
       let json = await response.json();
-      setTransfers(json.account.transfers);
+      setTransfers(json.account.transfers.reverse());
       setAccountName(json.account.poolId + '.' + json.account.accountId);
       setBalance(json.balance);
       setLoading(false);
@@ -75,36 +75,41 @@ const App = () => {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-          <View>
-           <TextInput
-            style={{height: 40}}
-            placeholder="From.."
-            onChangeText={newFrom => setFrom(newFrom)}
-          />  
-           <TextInput
-            style={{height: 40}}
-            placeholder="To.."
-            onChangeText={newTo => setTo(newTo)}
-          />  
-          <TextInput
-            style={{height: 40}}
-            placeholder="Show me the money!!"
-            onChangeText={newAmount => setMoney(newAmount)}
-            defaultValue={0.0}
-          />
-          <Button
-            onPress={() => {
-              postTransferAsync();
-            }}
-            title={"send"}
-          />
+        <View>
+          <View style={[styles.container, {
+                // Try setting `flexDirection` to `"row"`.
+                flexDirection: "row"
+              }]}>
+            <TextInput
+              style={{height: 40}}
+              placeholder="From.."
+              onChangeText={newFrom => setFrom(newFrom)}
+            />  
+            <TextInput
+              style={{height: 40}}
+              placeholder="To.."
+              onChangeText={newTo => setTo(newTo)}
+            />  
+            <TextInput
+              style={{height: 40}}
+              placeholder="Show me the money!!"
+              onChangeText={newAmount => setMoney(newAmount)}
+              defaultValue={0.0}
+            />
+            <Button
+              onPress={() => {
+                postTransferAsync();
+              }}
+              title={"send"}
+            />
+          </View>  
           <Button
             onPress={() => {
               setUser(user === "bb" ? "aa" : "bb");
               getWalletAsync();
               setLoading(true);
             }}
-            title={user === "bb" ? "to aa" : "to bb"}
+            title={user === "bb" ? "show aa" : "show bb"}
           />
           <Text style={styles.title}>Welcome '{accountName}' - your balance is: {balance}</Text>
           <View style={{ borderBottomWidth: 1, marginBottom: 12 }}></View>
