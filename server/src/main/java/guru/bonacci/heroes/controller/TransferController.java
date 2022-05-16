@@ -2,7 +2,7 @@ package guru.bonacci.heroes.controller;
 
 import java.util.UUID;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,9 @@ import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.dto.TransferDto;
 import guru.bonacci.heroes.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor
@@ -20,11 +22,11 @@ public class TransferController {
 
   private final AccountService service;
   
-
+  @CrossOrigin(origins = "*")
   @PostMapping
-  public ResponseEntity<Void> transfer(@RequestBody TransferDto dto) {
-    service.process(toTf(dto));
-    return ResponseEntity.noContent().<Void>build();
+  public Transfer transfer(@RequestBody TransferDto dto) {
+    log.info("in {}", dto);
+    return service.process(toTf(dto));
   }
   
   static Transfer toTf(TransferDto dto) {

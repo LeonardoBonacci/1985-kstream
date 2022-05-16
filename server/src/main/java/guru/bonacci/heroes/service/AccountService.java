@@ -23,7 +23,7 @@ public class AccountService {
     return Optional.ofNullable(accounts.get(poolId + "." + accountId));
   }
   
-  public boolean process(Transfer tf) {
+  public Transfer process(Transfer tf) {
     log.info("in {}", tf);
 
     var from = tf.getFrom();
@@ -39,7 +39,7 @@ public class AccountService {
       accounts.put(toKey, Account.builder().poolId(tf.getPoolId()).accountId(to).build());
     }
     accounts.get(toKey).getTransfers().add(tf.negativeClone());
-    return true;
+    return tf;
   }
   
   public Optional<BigDecimal> getBalance(String accountId, String poolId) {

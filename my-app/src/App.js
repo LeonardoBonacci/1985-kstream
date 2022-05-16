@@ -24,6 +24,21 @@ const App = () => {
   }, []);
 
   async function getWalletAsync() {
+    fetch('http://localhost:8080/transfers', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          poolId: 'coro',
+          from: 'aa',
+          to: 'bb',
+          amount: 5.55
+        })
+    });
+  
+
     try {
       let response = await fetch(heroesURL + user + "/wallet", {
         method: 'GET',
