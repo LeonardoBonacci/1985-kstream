@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class AccountService {
     var to = tf.getTo();
     var toKey = tf.getPoolId() + "." + to;
     if (!accounts.containsKey(toKey)) {
-      accounts.put(toKey, Account.builder().poolId(tf.getPoolId()).accountId(from).build());
+      accounts.put(toKey, Account.builder().poolId(tf.getPoolId()).accountId(to).build());
     }
     accounts.get(toKey).getTransfers().add(tf.negativeClone());
     return true;
@@ -45,10 +44,12 @@ public class AccountService {
   
   public Optional<BigDecimal> getBalance(String accountId, String poolId) {
     var accOpt = showAccount(accountId, poolId);
-    return accOpt.map(acc -> addUpTxs(acc).reduce(BigDecimal.ZERO, BigDecimal::add));
+    return accOpt.map(AccountService::determineBalance);
   }
   
-  private static Stream<BigDecimal> addUpTxs(Account acc) {
-    return acc.getTransfers().stream().map(tx -> tx.getAmount());
+  private static BigDecimal determineBalance(Account account) {
+    return account.getTransfers().stream()
+                    .map(tf -> tf.getAmount())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }

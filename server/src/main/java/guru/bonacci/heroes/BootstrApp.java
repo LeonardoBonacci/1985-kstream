@@ -23,8 +23,10 @@ public class BootstrApp {
   CommandLineRunner demo(AccountService service) {
     return args -> {
       var transfers = Arrays.asList(
-        Transfer.builder().transferId(UUID.randomUUID().toString()).poolId("coro").from("aa").to("bb").amount(BigDecimal.valueOf(1.01)).when(System.currentTimeMillis()).build(),
-        Transfer.builder().transferId(UUID.randomUUID().toString()).poolId("coro").from("aa").to("bb").amount(BigDecimal.valueOf(1.01)).when(System.currentTimeMillis()).build()
+        Transfer.builder().transferId(UUID.randomUUID().toString()).poolId("coro").from("aa").to("bb").amount(BigDecimal.valueOf(1.99)).when(System.currentTimeMillis()).build(),
+        Transfer.builder().transferId(UUID.randomUUID().toString()).poolId("coro").from("bb").to("aa").amount(BigDecimal.valueOf(3.41)).when(System.currentTimeMillis()).build(),
+        Transfer.builder().transferId(UUID.randomUUID().toString()).poolId("coro").from("bb").to("aa").amount(BigDecimal.valueOf(14.34)).when(System.currentTimeMillis()).build(),
+        Transfer.builder().transferId(UUID.randomUUID().toString()).poolId("coro").from("aa").to("bb").amount(BigDecimal.valueOf(8.01)).when(System.currentTimeMillis()).build()
       );    
       transfers.forEach(tf -> service.process(tf));
     };

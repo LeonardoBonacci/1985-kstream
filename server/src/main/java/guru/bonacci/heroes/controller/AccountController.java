@@ -12,7 +12,9 @@ import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.Wallet;
 import guru.bonacci.heroes.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AccountController {
@@ -22,6 +24,7 @@ public class AccountController {
   @CrossOrigin(origins = "*")
   @GetMapping("/pools/{poolId}/accounts/{accountId}/wallet")
   public  ResponseEntity<Wallet> showWallet(@PathVariable String poolId, @PathVariable String accountId) {
+    log.info("in {}.{}", poolId, accountId);
       var acc = accService.showAccount(accountId, poolId).get();
       var bal = accService.getBalance(accountId, poolId).get();
       return ResponseEntity.ok().body(new Wallet(acc, bal));

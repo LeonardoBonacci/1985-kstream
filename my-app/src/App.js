@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
+  Button,
   View,
   SafeAreaView,
   ActivityIndicator,
   FlatList,
 } from "react-native";
 
-const heroesURL = "http://localhost:8080/pools/coro/accounts/aa/wallet";
+const heroesURL = "http://localhost:8080/pools/coro/accounts/";
 
 const App = () => {
   const [isLoading, setLoading] = useState(true);
+  const [user, setUser] = useState("bb");
   const [transfers, setTransfers] = useState([]);
   const [accountName, setAccountName] = useState([]);
   const [balance, setBalance] = useState([]);
@@ -23,7 +25,7 @@ const App = () => {
 
   async function getWalletAsync() {
     try {
-      let response = await fetch(heroesURL, {
+      let response = await fetch(heroesURL + user + "/wallet", {
         method: 'GET',
         headers: {
           accept: 'application/json',
@@ -46,7 +48,15 @@ const App = () => {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-        <View>
+          <View>
+          <Button
+            onPress={() => {
+              setUser(user === "bb" ? "aa" : "bb");
+              getWalletAsync();
+              setLoading(true);
+            }}
+            title={user === "bb" ? "to aa" : "to bb"}
+          />
           <Text style={styles.title}>Welcome '{accountName}' - your balance is: {balance}</Text>
           <View style={{ borderBottomWidth: 1, marginBottom: 12 }}></View>
           <FlatList
@@ -55,7 +65,7 @@ const App = () => {
             renderItem={({ item }) => (
               <View style={{ paddingBottom: 10 }}>
                 <Text style={styles.transferText}>
-                  id - {item.transferId} | from - {item.from} | to - {item.to} | amount - {item.amount}
+                  id: {item.transferId} | from: {item.from} | to: {item.to} | amount: {item.amount}
                 </Text>
               </View>
             )}
