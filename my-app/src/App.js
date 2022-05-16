@@ -77,7 +77,6 @@ const App = () => {
       ) : (
         <View>
           <View style={[styles.container, {
-                // Try setting `flexDirection` to `"row"`.
                 flexDirection: "row"
               }]}>
             <TextInput
@@ -103,14 +102,22 @@ const App = () => {
               title={"send"}
             />
           </View>  
-          <Button
-            onPress={() => {
-              setUser(user === "bb" ? "aa" : "bb");
-              getWalletAsync();
-              setLoading(true);
-            }}
-            title={user === "bb" ? "show aa" : "show bb"}
-          />
+          <View style={[styles.container, {
+                flexDirection: "row"
+              }]}>
+            <TextInput
+              style={{height: 40}}
+              placeholder="Account"
+              onChangeText={newUser => setUser(newUser)}
+            />  
+            <Button
+              onPress={() => {
+                getWalletAsync();
+                setLoading(true);
+              }}
+              title={"show " + user}
+            />
+          </View>
           <Text style={styles.title}>Welcome '{accountName}' - your balance is: {balance}</Text>
           <View style={{ borderBottomWidth: 1, marginBottom: 12 }}></View>
           <FlatList
