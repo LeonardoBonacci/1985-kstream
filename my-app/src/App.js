@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 const heroesHost = "http://localhost:8080";
+// const heroesHost = "http://server-service:8080";
 
 const getWalletURL = heroesHost + "/pools/coro/accounts";
 const postTransferURL = heroesHost + "/transfers";

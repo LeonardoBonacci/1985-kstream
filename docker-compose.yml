@@ -1,0 +1,14 @@
+---
+version: '2'
+services:
+  client-service:
+   image: leonardobonacci/heroes-client
+   build: my-app
+   ports:
+      - "3000:3000"
+
+  server-service:
+   image: leonardobonacci/heroes-server
+   build: server
+   ports:
+      - "8080:8080"
