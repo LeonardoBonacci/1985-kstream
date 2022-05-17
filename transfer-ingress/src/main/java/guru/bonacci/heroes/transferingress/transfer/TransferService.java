@@ -11,7 +11,9 @@ import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.domain.TransferInProgress;
 import guru.bonacci.heroes.transferingress.tip.TIPRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TransferService {
@@ -28,7 +30,9 @@ public class TransferService {
       fromTip.getPoolAccountId(), fromTip, 
       toTip.getPoolAccountId(), toTip));
 
-    return transferProducer.send(transfer);
+    var result = transferProducer.send(transfer);
+    log.info("sent {}", result);
+    return result;
   }
   
   private TransferInProgress toFromTIP(Transfer transfer) {

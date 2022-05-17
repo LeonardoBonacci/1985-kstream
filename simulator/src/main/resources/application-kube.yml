@@ -1,1 +1,4 @@
-client.hostAndPort: http://transfer-ingress-service:8081
+transfer.url: http://transfer-ingress-service:8080
+account.url: http://account-store-service:8081
+
+fixed.rate: 2000

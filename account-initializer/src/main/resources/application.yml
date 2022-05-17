@@ -1,4 +1,4 @@
-spring.application.name: heroes-account-initializer-app
+spring.application.name: heroes-account-initializer-app2
 
 spring:
   kafka:
@@ -9,5 +9,5 @@ spring:
       default:
         key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-      auto-offset-reset: earliest # consumer          
+      auto.offset.reset: earliest # consumer          
       max.poll.records: 1 # consumer

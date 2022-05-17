@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import guru.bonacci.heroes.accountstore.Bookkeeper;
 import guru.bonacci.heroes.accountstore.KafkaStreamsService;
 import guru.bonacci.heroes.accountstore.rpc.HostStoreInfo;
 import guru.bonacci.heroes.accountstore.rpc.MetadataService;
@@ -29,7 +28,6 @@ public class AccountService {
   private final KafkaStreamsService streams;
   private final HostInfo hostInfo;
 
-  private final Bookkeeper bookkeeper;
   private final MetadataService metadata;
   private final RestTemplate restTemplate;
 
@@ -64,8 +62,8 @@ public class AccountService {
   }
 
   public Optional<BigDecimal> getBalance(String poolId, String accountId) {
-    var accOpt = getAccount(poolId, accountId);
-    return accOpt.map(bookkeeper::determineBalance);
+    var accountOpt = getAccount(poolId, accountId);
+    return accountOpt.map(Account::getBalance);
   }
 
 

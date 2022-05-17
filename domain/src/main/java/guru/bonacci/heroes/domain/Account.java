@@ -1,5 +1,6 @@
 package guru.bonacci.heroes.domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,9 @@ public class Account {
 
   @Builder.Default
   private final List<Transfer> transfers = new ArrayList<>();
-  
+  private BigDecimal balance;
 
+  
   // utilities follow below
   public String identifier() {
     return this.poolId + "." + this.accountId;
@@ -34,6 +36,7 @@ public class Account {
 
   public Account addTransfer(Transfer transfer) {
     transfers.add(transfer);
+    balance = balance.add(transfer.getAmount());
     return this;
   }
 

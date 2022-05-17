@@ -3,6 +3,8 @@ package guru.bonacci.heroes.accountinitializer;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TOPIC;
 import static guru.bonacci.heroes.kafka.KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC;
 
+import java.math.BigDecimal;
+
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
@@ -43,10 +45,19 @@ public class BootstrAppAccountInitializer {
 	    builder
 	      .table(ACCOUNT_TRANSFER_TOPIC, Consumed.with(Serdes.String(), accountSerde));
 	  
+	  accountTransferTable
+	      .toStream()
+        .peek((k,v) -> log.info("available {}", k)); // for testing only
+	  
     accountStream
       .leftJoin(accountTransferTable, new AccountJoiner())
+      .peek((identifier, wrapper) -> log.info("{} is insert {}", identifier, wrapper.isInsert()))
       .filter((identifier, wrapper) -> wrapper.isInsert())
       .mapValues(AccountUpsert::getAccount)
+      .mapValues((poolAccountId, account) -> {
+          account.setBalance(BigDecimal.ZERO); 
+          return account; // Depending on the pool type we instantiate the amount -> now 0
+       }) 
       .peek((poolAccountId, account) -> log.info("out {} <> {}", poolAccountId, account))
       .to(ACCOUNT_TRANSFER_TOPIC, Produced.with(Serdes.String(), accountSerde));
 

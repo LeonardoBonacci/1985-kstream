@@ -1,5 +1,8 @@
 spring.application.name: heroes-simulator
+
+server.port: 9001
        
-client.hostAndPort: http://localhost:8080
+transfer.url: http://localhost:8080
+account.url: http://localhost:8081
 
 fixed.rate: 1000

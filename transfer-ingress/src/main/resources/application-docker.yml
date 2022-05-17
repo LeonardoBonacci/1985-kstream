@@ -1,5 +1,4 @@
 spring:
-  mvc.async.request-timeout: 10000
   kafka:
     bootstrap-servers: broker:29092
 

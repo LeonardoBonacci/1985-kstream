@@ -9,36 +9,45 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
-import org.springframework.context.annotation.Profile;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import guru.bonacci.heroes.domain.Transfer;
-import guru.bonacci.heroes.domain.dto.TransferDto;
 import guru.bonacci.heroes.transferingress.validation.CheckLock;
 import guru.bonacci.heroes.transferingress.validation.CheckTransfer;
 import guru.bonacci.heroes.transferingress.validation.TransferToValidate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Profile("!default")
+@Slf4j
 @RestController
 @RequestMapping("transfers")
 @RequiredArgsConstructor
-public class TransferController implements ITransferController {
+public class TransferController {
 
   private final TransferService service;
   private final Validator validator;
 
   
-  @Override
   @PostMapping
   public Callable<Transfer> transfer(@RequestBody @Valid TransferDto dto) {
-    var transfer = TransferController.toTf(dto);
-    // to avoid extra complexity we validate transfer here instead of in the service
-    validateInput(transfer);
-    return () -> service.transfer(transfer);
+    return () -> {
+      StopWatch watch = new StopWatch();
+      watch.start();
+  
+      var transfer = TransferController.toTf(dto);
+      // to avoid extra complexity we validate transfer here instead of in the service
+      validateInput(transfer);
+      var result = service.transfer(transfer);
+  
+      watch.stop();
+      log.info("Processing Time : {}", watch.getTime()); 
+    
+      return result;
+    };  
   }
   
   private void validateInput(Transfer transfer) {

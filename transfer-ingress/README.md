@@ -22,5 +22,5 @@ curl -d '{"poolId": "coro", "from":"bar", "to":"goo", "amount":9999.10}' -H "Con
 ### k8s
  
 ```
-kubectl port-forward service/transfer-ingress-service 8080:8081 -n kafka
+kubectl port-forward service/transfer-ingress-service 8080:8080 -n kafka
 ```

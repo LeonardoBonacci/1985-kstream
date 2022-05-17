@@ -7,3 +7,5 @@ metadata:
 spec:
   partitions: 3
   replicas: 1
+  config:
+    retention.ms: -1

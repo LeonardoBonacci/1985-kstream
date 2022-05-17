@@ -81,7 +81,6 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
       return validationResult.isValid();
 
     } catch (TimeoutException | InterruptedException | ExecutionException e) {
-      log.warn(e.getMessage());
       context.unwrap(HibernateConstraintValidatorContext.class)
              .addExpressionVariable("errorMessage", "sorry, our fault, please try again");
       return false;

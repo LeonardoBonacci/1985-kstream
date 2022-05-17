@@ -4,7 +4,6 @@ services:
   transfer-big-brother-is-pair:
    image: leonardobonacci/heroes-transfer-big-brother-is-pair
    build: transfer-big-brother-is-pair
-   container_name: transfer-big-brother-is-pair
    depends_on:
      - broker
    environment:
@@ -13,7 +12,6 @@ services:
   transfer-big-brother-is-processed:
    image: leonardobonacci/heroes-transfer-big-brother-is-processed
    build: transfer-big-brother-is-processed
-   container_name: transfer-big-brother-is-processed
    depends_on:
      - broker
    environment:

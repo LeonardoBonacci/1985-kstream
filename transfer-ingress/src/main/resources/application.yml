@@ -1,6 +1,6 @@
 spring:
   application.name: heroes-transfer-ingress-app
-  mvc.async.request-timeout: 100000
+  mvc.async.request-timeout: 1000
 
   kafka:
     bootstrap-servers: localhost:9092
