@@ -42,7 +42,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
       - FIXED_RATE=1000
-  
+
   tip-purger:
     image: leonardobonacci/heroes-tip-purger
     build: tip-purger

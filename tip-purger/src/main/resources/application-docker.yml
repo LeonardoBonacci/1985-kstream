@@ -2,5 +2,5 @@ spring:
   kafka:
     bootstrap-servers: broker:29092
 
-  redis:
-    host: cache
+redis:
+  host: cache

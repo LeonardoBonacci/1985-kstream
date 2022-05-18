@@ -43,15 +43,17 @@ kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
 kubectl apply -f  k8s/kafka/kafka-persistent-single.yaml -n kafka
 kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka 
 
+kubectl apply -f k8s/redis
 kubectl apply -f k8s/topics -n kafka
 kubectl apply -f k8s -n kafka
+
 kubectl apply -f k8s/account-store.yaml -n kafka
 kubectl apply -f k8s/account-cdc.yaml -n kafka
 
 
 kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic account-transfer --property parse.key=true --property key.separator=":"
 
-kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic transfer --from-beginning
+kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic transfer-houston --from-beginning
 
 coro.a:{"accountId":"a", "poolId":"coro", "transfers":[], "balance" = 0.0}
 coro.b:{"accountId":"b", "poolId":"coro", "transfers":[], "balance" = 0.0}
