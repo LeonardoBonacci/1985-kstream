@@ -11,7 +11,9 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.SessionWindows;
 import org.apache.kafka.streams.kstream.Suppressed;
@@ -28,38 +30,40 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableKafkaStreams
 @SpringBootApplication
-public class AppTransferBigBrotherIsPair {
+public class AppBigBrotherTransferIsPair {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AppTransferBigBrotherIsPair.class, args);
+		SpringApplication.run(AppBigBrotherTransferIsPair.class, args);
 	}
 	 
   @Bean
-  public KStream<String, Transfer> topology(StreamsBuilder builder) {
+  public KStream<String, Long> topology(StreamsBuilder builder) {
     final var transferSerde = new JsonSerde<Transfer>(Transfer.class);
 
-    KStream<String, Transfer> processedStream = // keyed on poolAccountId
-        builder
+    KStream<String, Long> processedStream = // keyed on poolAccountId
+        builder // rekey to transferId
           .stream(TRANSFER_PROCESSED_TOPIC, Consumed.with(Serdes.String(), transferSerde))
-          .selectKey((poolAccountId, transfer) -> transfer.getTransferId())
-          .peek((transferId, transfer) -> log.info("in {}<>{}", transferId, transfer));
+          .peek((transferId, transfer) -> log.info("in {}<>{}", transferId, transfer))
+          .map((poolAccountId, transfer) -> KeyValue.pair(transfer.getTransferId(), 1l));
 
     KStream<Windowed<String>, Long> windowed = 
       processedStream
-        .groupByKey()
+        .groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
         .windowedBy(
            SessionWindows.ofInactivityGapWithNoGrace(Duration.ofSeconds(MAX_TRANSFER_PROCESSING_TIME_SEC)))
-        .count()
+        .reduce(
+            (aggr, curr) -> aggr + curr, // count -> https://issues.apache.org/jira/browse/KAFKA-9259
+            Materialized.with(Serdes.String(), Serdes.Long()))
         .suppress(Suppressed.untilWindowCloses(unbounded()))
         .toStream()
-        .peek((transferId, counter) -> log.info("windowed {}<>{}", transferId, counter));
-     
+        .peek((transferId, isProcessed) -> log.info("windowed {}<>{}", transferId, isProcessed));
+
     windowed // unwindow
       .map((windowedKey, counter) ->  KeyValue.pair(windowedKey.key(), counter))
-      .filterNot((transferId, counter) -> counter == 2) // pair
+      .filter((transferId, counter) -> counter != 2) // not a pair is alarm
       .peek((transferId, counter) -> log.info("out {}<>{}", transferId, counter))
       .to(TRANSFER_HOUSTON_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
-
+      
     return processedStream;
   }
 }

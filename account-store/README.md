@@ -37,7 +37,7 @@ docker-compose -f docker-compose.yml -f docker-compose-apps.yml scale account-st
 ### k8s
 
 ```
-gcloud container clusters resize hello-cluster --node-pool default-pool --num-nodes 5 --zone us-central1-a
+gcloud container clusters resize hello-cluster --node-pool default-pool --num-nodes 3 --zone us-central1-a
 
 kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
 kubectl apply -f k8s/infra -n kafka

@@ -7,8 +7,8 @@
 		<artifactId>parent</artifactId>
 		<version>4.2</version>
 	</parent>
-	<artifactId>transfer-big-brother-is-pair</artifactId>
-	<name>heroes-transfer-big-brother-is-pair</name>
+	<artifactId>bigbrother-transfer-is-processed</artifactId>
+	<name>heroes-bigbrother-transfer-is-processed</name>
 	<description>Back in business</description>
 
 	<properties>

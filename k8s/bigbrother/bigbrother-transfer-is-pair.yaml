@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transfer-big-brother-is-pair-app
+  name: bigbrother-transfer-is-pair-app
 spec:
   selector:
     matchLabels:
-      app: transfer-big-brother-is-pair-app
+      app: bigbrother-transfer-is-pair-app
   replicas: 1
   template:
     metadata:
       labels:
-        app: transfer-big-brother-is-pair-app
+        app: bigbrother-transfer-is-pair-app
     spec:
       containers:
-        - name: transfer-big-brother-is-pair-app
-          image: leonardobonacci/heroes-transfer-big-brother-is-pair
+        - name: bigbrother-transfer-is-pair-app
+          image: leonardobonacci/heroes-bigbrother-transfer-is-pair
           imagePullPolicy: Always
           env:
             - name: SPRING_PROFILES_ACTIVE

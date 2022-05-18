@@ -1,17 +1,17 @@
 ---
 version: '2'
 services:
-  transfer-big-brother-is-pair:
-   image: leonardobonacci/heroes-transfer-big-brother-is-pair
-   build: transfer-big-brother-is-pair
+  bigbrother-transfer-is-pair:
+   image: leonardobonacci/heroes-bigbrother-transfer-is-pair
+   build: bigbrother-transfer-is-pair
    depends_on:
      - broker
    environment:
       - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
 
-  transfer-big-brother-is-processed:
-   image: leonardobonacci/heroes-transfer-big-brother-is-processed
-   build: transfer-big-brother-is-processed
+  bigbrother-transfer-is-processed:
+   image: leonardobonacci/heroes-bigbrother-transfer-is-processed
+   build: bigbrother-transfer-is-processed
    depends_on:
      - broker
    environment:

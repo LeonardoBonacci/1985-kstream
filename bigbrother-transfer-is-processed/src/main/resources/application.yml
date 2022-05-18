@@ -1,4 +1,4 @@
-spring.application.name: heroes-transfer-big-brother-is-pair-app
+spring.application.name: heroes-bigbrother-transfer-is-processed-app
        
 spring.kafka:
   bootstrap-servers: localhost:9092
@@ -8,4 +8,5 @@ spring.kafka:
     default:
       key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+    cache.max.bytes.buffering: 0
         

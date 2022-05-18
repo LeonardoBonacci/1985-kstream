@@ -16,6 +16,7 @@ import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.JoinWindows;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
@@ -36,10 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableKafkaStreams
 @SpringBootApplication
-public class AppTransferBigBrotherIsProcessed {
+public class AppBigBrotherTransferIsProcessed {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AppTransferBigBrotherIsProcessed.class, args);
+		SpringApplication.run(AppBigBrotherTransferIsProcessed.class, args);
 	}
 	 
 	
@@ -54,7 +55,7 @@ public class AppTransferBigBrotherIsProcessed {
         .peek((transferId, transfer) -> log.info("transfer in {}<>{}", transferId, transfer));
     
     KStream<String, Transfer> processedStream = // keyed on poolId.accountId
-        builder
+        builder // rekey to transferId
           .stream(TRANSFER_PROCESSED_TOPIC, Consumed.with(Serdes.String(), transferSerde))
           .selectKey((poolAccountId, transfer) -> transfer.getTransferId())
           .peek((transferId, transfer) -> log.info("processed in {}<>{}", transferId, transfer));
@@ -64,12 +65,12 @@ public class AppTransferBigBrotherIsProcessed {
         .leftJoin(processedStream, (t1, t2) -> t2 != null, // first false, then true
           JoinWindows.of(Duration.ofSeconds(MAX_TRANSFER_PROCESSING_TIME_SEC)).before(Duration.ofMillis(0)),
           StreamJoined.with(Serdes.String(), transferSerde, transferSerde))
-        .peek((transferId, transfer) -> log.info("joined {}<>{}", transferId, transfer));
+        .peek((transferId, isJoined) -> log.info("joined {}<>{}", transferId, isJoined));
 
     
     KStream<Windowed<String>, Boolean> windowed = 
       joinedStream
-        .groupByKey()
+        .groupByKey(Grouped.with(Serdes.String(), new BooleanSerde()))
         .windowedBy(
            SessionWindows.ofInactivityGapWithNoGrace(Duration.ofSeconds(MAX_TRANSFER_PROCESSING_TIME_SEC)))
         .reduce(

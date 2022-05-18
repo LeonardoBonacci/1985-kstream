@@ -22,11 +22,11 @@
 		<module>account-initializer</module>
 		<module>account-store</module>
 		<module>account-transfer</module>
+		<module>bigbrother-transfer-is-pair</module>
+		<module>bigbrother-transfer-is-processed</module>
 		<module>domain</module>
 		<module>simulator</module>
 		<module>tip-purger</module>
-		<module>transfer-big-brother-is-pair</module>
-		<module>transfer-big-brother-is-processed</module>
 		<module>transfer-ingress</module>
 		<module>transfer-processor</module>
 		<module>transfer-splitter</module>
