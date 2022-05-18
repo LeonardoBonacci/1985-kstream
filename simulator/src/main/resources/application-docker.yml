@@ -1,2 +1,5 @@
 transfer.url: http://transfer-ingress:8080
-account.url: http://account-store:8081 # Warning: or annother 
+account.url: http://account-store:8081 # Warning: or another 
+
+redis:
+  host: cache

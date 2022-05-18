@@ -1,4 +1,4 @@
-# Sends a transfer every second
+# Sends a transfer every second and prints some insights
 
 ```
 ./bin/kafka-console-consumer \

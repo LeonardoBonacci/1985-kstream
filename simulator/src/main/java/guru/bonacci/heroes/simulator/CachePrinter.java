@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.tippurger;
+package guru.bonacci.heroes.simulator;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;

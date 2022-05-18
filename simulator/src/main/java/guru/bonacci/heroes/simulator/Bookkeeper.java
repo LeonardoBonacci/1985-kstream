@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.integrationtest;
+package guru.bonacci.heroes.simulator;
 
 import java.math.BigDecimal;
 

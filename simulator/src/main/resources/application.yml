@@ -6,3 +6,5 @@ transfer.url: http://localhost:8080
 account.url: http://localhost:8081
 
 fixed.rate: 1000
+
+redis.host: localhost

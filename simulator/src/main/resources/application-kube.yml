@@ -2,3 +2,5 @@ transfer.url: http://transfer-ingress-service:8080
 account.url: http://account-store-service:8081
 
 fixed.rate: 1000
+
+redis.host: redis
