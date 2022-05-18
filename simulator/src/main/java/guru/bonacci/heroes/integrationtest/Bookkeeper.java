@@ -44,15 +44,15 @@ public class Bookkeeper {
 
       var account = response.getBody();
       account.getTransfers().forEach(t -> log.debug("{}", t.getAmount()));
-      var balance = determineBalance(account);
+      var computedBalance = determineBalance(account);
 
-      if (!balance.equals(account.getBalance())) {
-        log.error("account {} balance out of sync {} vs {}", account.getAccountId(), balance, account.getBalance());
+      if (!computedBalance.equals(account.getBalance())) {
+        log.error("account {} balance out of sync {} vs {}", account.getAccountId(), computedBalance, account.getBalance());
         System.exit(1);
       }
       
-      log.info("balance for {} is {}", account.getAccountId(), balance);
-      totalBalance = totalBalance.add(balance);
+      log.info("balance for {} is {}", account.getAccountId(), computedBalance);
+      totalBalance = totalBalance.add(computedBalance);
     }
 
     log.warn("TOTAL BALANCE IS {}", totalBalance);

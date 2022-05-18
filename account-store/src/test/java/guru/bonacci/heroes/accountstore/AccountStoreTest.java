@@ -21,7 +21,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import guru.bonacci.heroes.accountstore.BootstrAppAccountStore;
+import guru.bonacci.heroes.accountstore.AppAccountStore;
 import guru.bonacci.heroes.accountstore.validation.TransferValidationService;
 import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
@@ -45,7 +45,7 @@ public class AccountStoreTest {
     var builder = new StreamsBuilder();
     
     validator = Mockito.mock(TransferValidationService.class);
-    var app = new BootstrAppAccountStore(validator);
+    var app = new AppAccountStore(validator);
     app.topology(builder);
     var topology = builder.build();
 

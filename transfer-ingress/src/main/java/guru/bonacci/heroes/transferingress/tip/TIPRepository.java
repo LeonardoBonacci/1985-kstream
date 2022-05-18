@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.Maps;
 
-import guru.bonacci.heroes.domain.TransferInProgress;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,8 +35,8 @@ public class TIPRepository {
     return readTemplate.hasKey(id);
   }
   
-  public Map<String, TransferInProgress> saveAll(Map<String, TransferInProgress> tips) {
-    var tipsAsString = Maps.transformValues(tips, tip -> tip.getTransferId());
+  public Map<String, Pair<String, String>> saveAll(Map<String, Pair<String, String>> tips) {
+    var tipsAsString = Maps.transformValues(tips, tip -> tip.getSecond());
     writeTemplate.opsForValue().multiSet(tipsAsString);
     return tips;
   }

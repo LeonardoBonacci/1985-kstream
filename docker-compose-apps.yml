@@ -71,18 +71,9 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
 
-  transfer-pairer:
-    image: leonardobonacci/heroes-transfer-pairer
-    build: transfer-pairer
-    depends_on:
-      - broker
-    environment:
-      - SPRING_PROFILES_ACTIVE=${PROFILE:-docker}
-
-  transfer-repairer:
-    image: leonardobonacci/heroes-transfer-repairer
-    build: transfer-repairer
-    container_name: transfer-repairer
+  transfer-splitter:
+    image: leonardobonacci/heroes-transfer-splitter
+    build: transfer-splitter
     depends_on:
       - broker
     environment:

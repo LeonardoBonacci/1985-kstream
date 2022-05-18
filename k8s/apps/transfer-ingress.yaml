@@ -28,7 +28,7 @@ spec:
       containers:
         - name: transfer-ingress-app
           image: leonardobonacci/heroes-transfer-ingress
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:

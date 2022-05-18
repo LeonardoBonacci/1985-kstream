@@ -1,6 +1,6 @@
 package guru.bonacci.heroes.accountstore.validation;
 
-import static guru.bonacci.heroes.accountstore.BootstrAppAccountStore.STORE;
+import static guru.bonacci.heroes.accountstore.AppAccountStore.STORE;
 import static guru.bonacci.heroes.domain.Account.identifier;
 
 import org.apache.kafka.common.serialization.StringSerializer;

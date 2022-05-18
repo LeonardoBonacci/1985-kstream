@@ -1,6 +1,6 @@
 package guru.bonacci.heroes.accountstore.account;
 
-import static guru.bonacci.heroes.accountstore.BootstrAppAccountStore.STORE;
+import static guru.bonacci.heroes.accountstore.AppAccountStore.STORE;
 
 import java.math.BigDecimal;
 import java.net.URI;

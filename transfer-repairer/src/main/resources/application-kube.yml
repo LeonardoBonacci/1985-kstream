@@ -1,4 +1,0 @@
-spring:
-  kafka:
-    bootstrap-servers: my-cluster-kafka-bootstrap:9092
-    

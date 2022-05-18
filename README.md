@@ -9,6 +9,14 @@ https://monneta.org/en/sardex/
 
 Sardex - The credits are denominated in Euro but cannot be exchanged for Euro or bought with Euro
 
+## Interesting for...
+
+Local communities
+Social initiatives
+Anyone who wants to create a local currency
+Any game/virual... that uses a currency
+A token value can represent hours too
+
 ## Basic concepts
 
 an administrator creates an empty pool

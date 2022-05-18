@@ -63,19 +63,12 @@ public class KafkaTopicConfig {
   }
 
   @Bean
-  public NewTopic transferEventual() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC)
+  public NewTopic transferProcessed() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_PROCESSED_TOPIC)
       .partitions(2)
       .build();
   }
 
-  @Bean
-  public NewTopic transferConsistent() {
-    return TopicBuilder.name(KafkaTopicNames.TRANSFER_CONSISTENT_TOPIC)
-      .partitions(2)
-      .build();
-  }
-  
   @Bean
   public NewTopic transferHouston() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_HOUSTON_TOPIC)

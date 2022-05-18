@@ -8,10 +8,7 @@ import lombok.Value;
 public class TransferDto {
 
   private String poolId;
-
   private String from;
-
   private String to;
-
   private BigDecimal amount;
 }

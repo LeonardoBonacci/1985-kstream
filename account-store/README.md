@@ -37,23 +37,21 @@ docker-compose -f docker-compose.yml -f docker-compose-apps.yml scale account-st
 ### k8s
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose-apps.yml build account-store
+gcloud container clusters resize hello-cluster --node-pool default-pool --num-nodes 5 --zone us-central1-a
 
 kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
-kubectl apply -f  k8s/kafka/kafka-persistent-single.yaml -n kafka
+kubectl apply -f k8s/infra -n kafka
 kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka 
 
-kubectl apply -f k8s/redis
 kubectl apply -f k8s/topics -n kafka
-kubectl apply -f k8s -n kafka
+kubectl apply -f k8s/apps -n kafka
 
-kubectl apply -f k8s/account-store.yaml -n kafka
-kubectl apply -f k8s/account-cdc.yaml -n kafka
-
+kubectl config set-context --current --namespace=kafka
+kubectl logs -f deploy/simulator-app
 
 kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic account-transfer --property parse.key=true --property key.separator=":"
 
-kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic transfer-houston --from-beginning
+kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.28.0-kafka-3.1.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic transfer --from-beginning
 
 coro.a:{"accountId":"a", "poolId":"coro", "transfers":[], "balance" = 0.0}
 coro.b:{"accountId":"b", "poolId":"coro", "transfers":[], "balance" = 0.0}

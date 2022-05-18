@@ -1,6 +1,6 @@
 package guru.bonacci.heroes.accountstore.rpc;
 
-import static guru.bonacci.heroes.accountstore.BootstrAppAccountStore.STORE;
+import static guru.bonacci.heroes.accountstore.AppAccountStore.STORE;
 import static guru.bonacci.heroes.domain.Account.*;
 
 import java.util.List;

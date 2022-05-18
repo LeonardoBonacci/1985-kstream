@@ -15,7 +15,7 @@ spec:
       containers:
         - name: transfer-pairer-app
           image: leonardobonacci/heroes-transfer-pairer
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kube

@@ -15,8 +15,4 @@ public class TransferValidationResponse {
   private Account fromAccount;
   
   private String errorMessage; // could become error code?
-  
-//  public static TransferValidationResult from(Account account) {
-//      return new TransferValidationResult(true, true, true, true);
-//  }
 }

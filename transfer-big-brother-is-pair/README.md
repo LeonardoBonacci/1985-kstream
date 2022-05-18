@@ -3,7 +3,7 @@
 ```
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
-	--topic transfer-eventual \
+	--topic transfer-processed \
 	--property parse.key=true \
  	--property key.separator=":"
 

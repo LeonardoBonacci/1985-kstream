@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-big-brother-is-processed-app
+spec:
+  selector:
+    matchLabels:
+      app: transfer-big-brother-is-processed-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: transfer-big-brother-is-processed-app
+    spec:
+      containers:
+        - name: transfer-big-brother-is-processed-app
+          image: leonardobonacci/heroes-transfer-big-brother-is-processed
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube

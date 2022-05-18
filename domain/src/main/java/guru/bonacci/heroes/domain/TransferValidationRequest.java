@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransferValidationRequest {
 
-  private String poolId;
-  private String from;
-  private String to;
+  private String poolId; //required
+  private String from; //required
+  private String to; //required
 }

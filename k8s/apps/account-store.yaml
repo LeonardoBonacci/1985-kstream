@@ -28,7 +28,7 @@ spec:
       containers:
         - name: account-store-app
           image: leonardobonacci/heroes-account-store
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:

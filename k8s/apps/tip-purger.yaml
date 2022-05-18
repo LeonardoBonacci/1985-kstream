@@ -15,7 +15,7 @@ spec:
       containers:
         - name: tip-purger-app
           image: leonardobonacci/heroes-tip-purger
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kube

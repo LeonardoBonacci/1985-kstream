@@ -8,21 +8,27 @@ import com.google.common.collect.Iterables;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString(exclude = { "transfers" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
 
-  private String poolId;
-  private String accountId;
+  private String poolId; //required
+  private String accountId; //required
 
   @Builder.Default
   private final List<Transfer> transfers = new ArrayList<>();
-  private BigDecimal balance;
+  private BigDecimal balance; //required
 
   
   // utilities follow below

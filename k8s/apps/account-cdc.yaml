@@ -6,7 +6,7 @@ spec:
   containers:
     - name: account-cdc-app
       image: leonardobonacci/heroes-account-cdc
-      imagePullPolicy: IfNotPresent
+      imagePullPolicy: Always
       ports:
         - containerPort: 8080
       env:

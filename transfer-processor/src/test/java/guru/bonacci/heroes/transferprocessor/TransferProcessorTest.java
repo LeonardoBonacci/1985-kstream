@@ -31,12 +31,12 @@ public class TransferProcessorTest {
   private TopologyTestDriver testDriver;
 
   private TestInputTopic<String, Account> accountTransfersTopicIn;
-  private TestOutputTopic<String, Transfer> transferEventualTopicOut;
+  private TestOutputTopic<String, Transfer> transferProcessedTopicOut;
 
   @BeforeEach
   void init() throws Exception {
     var builder = new StreamsBuilder();
-    var app = new BootstrAppTransferProcessor();
+    var app = new AppTransferProcessor();
     app.topology(builder);
     var topology = builder.build();
 
@@ -51,8 +51,8 @@ public class TransferProcessorTest {
     accountTransfersTopicIn = 
         testDriver.createInputTopic(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC, new StringSerializer(), new JsonSerializer<Account>());
 
-    transferEventualTopicOut = 
-        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_EVENTUAL_TOPIC, new StringDeserializer(), new JsonDeserializer<Transfer>(Transfer.class));
+    transferProcessedTopicOut = 
+        testDriver.createOutputTopic(KafkaTopicNames.TRANSFER_PROCESSED_TOPIC, new StringDeserializer(), new JsonDeserializer<Transfer>(Transfer.class));
   }
   
   @AfterEach
@@ -62,7 +62,7 @@ public class TransferProcessorTest {
 
   @Test
   void shouldPickLast() throws Exception {
-    var account = Account.builder().poolId("foo").accountId("foo").build();
+    var account = Account.builder().poolId("foo").accountId("foo").balance(BigDecimal.ZERO).build();
     var transfer = Transfer.builder().transferId("tid").poolId("foo").from("foo").to("bar").amount(BigDecimal.TEN).build();
     account.addTransfer(transfer);
     var transfer2 = Transfer.builder().transferId("tid2").poolId("foo").from("foo").to("bar").amount(BigDecimal.ONE).build();
@@ -72,7 +72,7 @@ public class TransferProcessorTest {
     
     Thread.sleep(1000);
 
-    var transferProcessed = transferEventualTopicOut.readValue();
+    var transferProcessed = transferProcessedTopicOut.readValue();
     assertThat(transferProcessed).isEqualTo(transfer2);
   }
   
@@ -84,6 +84,6 @@ public class TransferProcessorTest {
     
     Thread.sleep(1000);
 
-    assertThat(transferEventualTopicOut.isEmpty()).isTrue();
+    assertThat(transferProcessedTopicOut.isEmpty()).isTrue();
   }
 }

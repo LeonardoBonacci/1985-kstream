@@ -35,7 +35,7 @@ public class AccountInitializerTest {
   @BeforeEach
   void init() throws Exception {
     var builder = new StreamsBuilder();
-    var app = new BootstrAppAccountInitializer();
+    var app = new AppAccountInitializer();
     app.topology(builder);
     var topology = builder.build();
 

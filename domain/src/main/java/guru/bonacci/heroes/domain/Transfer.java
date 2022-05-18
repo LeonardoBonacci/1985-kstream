@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Transfer implements Cloneable {
 
-  private String transferId;
-  private String poolId;
-  private String from;
-  private String to;
-  private BigDecimal amount;
-  private long when;
+  private String transferId; //required
+  private String poolId; //required
+  private String from; //required
+  private String to; //required
+  private BigDecimal amount; //required
+  private long when; //required
   
   
   public String poolAccountId() {

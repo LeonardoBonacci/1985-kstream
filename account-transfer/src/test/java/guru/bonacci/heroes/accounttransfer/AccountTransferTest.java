@@ -39,7 +39,7 @@ public class AccountTransferTest {
   @BeforeEach
   void init() throws Exception {
     var builder = new StreamsBuilder();
-    var app = new BootstrAppAccountTransfer();
+    var app = new AppAccountTransfer();
     app.topology(builder);
     var topology = builder.build();
 
@@ -68,7 +68,7 @@ public class AccountTransferTest {
 
   @RepeatedTest(1)
   void shouldWork(TestInfo info) throws Exception {
-    var accountWrite = Account.builder().poolId("foo").accountId("foo").build();
+    var accountWrite = Account.builder().poolId("foo").accountId("foo").balance(BigDecimal.ZERO).build();
     this.accountTransferTopicIn.pipeInput(accountWrite.identifier(), accountWrite);
     
     Thread.sleep(1000);
