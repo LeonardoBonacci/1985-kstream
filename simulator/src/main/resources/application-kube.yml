@@ -4,3 +4,8 @@ account.url: http://account-store-service:8081
 fixed.rate: 1000
 
 redis.host: redis
+
+spring:
+  kafka:
+    bootstrap-servers: my-cluster-kafka-bootstrap:9092
+    

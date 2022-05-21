@@ -29,7 +29,6 @@ import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
-import guru.bonacci.heroes.domain.Account;
 import guru.bonacci.heroes.domain.Transfer;
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
@@ -129,7 +128,7 @@ public class TransactionConfig {
     Properties props = new Properties();
     props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
     props.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
-    props.setProperty(JsonDeserializer.VALUE_DEFAULT_TYPE, Account.class.getName());
+    props.setProperty(JsonDeserializer.VALUE_DEFAULT_TYPE, TransferValidationResponse.class.getName());
     repliesContainer.getContainerProperties().setKafkaConsumerProperties(props);
     return repliesContainer;
   }

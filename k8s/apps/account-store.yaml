@@ -19,7 +19,7 @@ spec:
   selector:
     matchLabels:
       app: account-store-app
-  replicas: 2
+  replicas: 5
   template:
     metadata:
       labels:

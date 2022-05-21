@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AppSimulator {
 
-  private final MockOrStub mockOrStub;
+  private final AccountStub mockOrStub;
 
   @Value("${transfer.url}")
   private String clientHostAndPort;
@@ -34,7 +34,7 @@ public class AppSimulator {
 	public void showMeTheMoney() {
 	  RestTemplate restTemplate = new RestTemplate();
 
-	  var pool = MockOrStub.ONLY_BUT_NOT_LONELY_TEST_POOL;
+	  var pool = AccountStub.ONLY_BUT_NOT_LONELY_TEST_POOL;
     var from = mockOrStub.getRandomAccount();
     var to = mockOrStub.getRandomAccount();
     var amount = mockOrStub.getRandomAmount(100);

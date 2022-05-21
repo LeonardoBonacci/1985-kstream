@@ -61,7 +61,7 @@ public class AccountInitializerTest {
 
   @Test
   void shouldInsert() throws Exception {
-    var cdc = AccountCDC.builder().poolId("foo").accountId("foo").accountName("foo").build();
+    var cdc = AccountCDC.builder().poolId("foo").accountId("foo").build();
     this.accountTopicIn.pipeInput(cdc.identifier(), cdc); // insert
     
     var expected = Account.builder().poolId(cdc.getPoolId()).accountId(cdc.getAccountId()).build();
@@ -74,7 +74,7 @@ public class AccountInitializerTest {
 
   @Test
   void shouldNotUpdateInsert() throws Exception {
-    var cdc = AccountCDC.builder().poolId("foo").accountId("foo").accountName("foo").build();
+    var cdc = AccountCDC.builder().poolId("foo").accountId("foo").build();
     this.accountTopicIn.pipeInput(cdc.identifier(), cdc); // insert
     
     Thread.sleep(1000);
@@ -84,7 +84,6 @@ public class AccountInitializerTest {
 
     Thread.sleep(1000);
 
-    cdc.setAccountName("foo2");
     this.accountTopicIn.pipeInput(cdc.identifier(), cdc); // update
     
     assertThat(accountTransferTopicOut.isEmpty()).isTrue();

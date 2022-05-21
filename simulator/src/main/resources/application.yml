@@ -8,3 +8,14 @@ account.url: http://localhost:8081
 fixed.rate: 1000
 
 redis.host: localhost
+
+
+spring.kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        auto-offset-reset: earliest
+        spring.json.trusted.packages: '*'

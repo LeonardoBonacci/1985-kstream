@@ -3,3 +3,8 @@ account.url: http://account-store:8081 # Warning: or another
 
 redis:
   host: cache
+
+  
+spring:
+  kafka:
+    bootstrap-servers: broker:29092

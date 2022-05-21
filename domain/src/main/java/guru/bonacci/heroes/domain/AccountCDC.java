@@ -13,12 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountCDC {
 
-  private String accountId; //required
-  private String poolId; //required
-  private BigDecimal startAmount; //required
-
-  private String accountName;
-  // and some more fields...
+  private String accountId; 
+  private String poolId;
+  private BigDecimal startAmount; 
 
   public String identifier() {
     return this.poolId + "." + this.accountId;

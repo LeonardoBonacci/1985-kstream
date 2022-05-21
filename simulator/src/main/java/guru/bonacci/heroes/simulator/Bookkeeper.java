@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class Bookkeeper {
 
-  private final MockOrStub mockOrStub;
+  private final AccountStub mockOrStub;
   
   @Value("${account.url}")
   private String clientHostAndPort;
