@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcdc;
+package guru.bonacci.heroes.cdc;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
@@ -16,13 +16,21 @@ import guru.bonacci.heroes.kafka.KafkaTopicNames;
 public class KafkaTopicConfig {
 
   @Bean
+  public NewTopic pools() {
+    return TopicBuilder.name(KafkaTopicNames.POOL_TOPIC)
+      .partitions(2)
+      .config(TopicConfig.RETENTION_MS_CONFIG, "100000") // -1
+      .build();
+  }
+
+  @Bean
   public NewTopic accounts() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TOPIC)
       .partitions(2)
-      .config(TopicConfig.RETENTION_MS_CONFIG, "-1")
+      .config(TopicConfig.RETENTION_MS_CONFIG, "100000") // -1
       .build();
   }
-  
+
   @Bean
   public NewTopic accountTransfers() {
     return TopicBuilder.name(KafkaTopicNames.ACCOUNT_TRANSFER_TOPIC)

@@ -7,8 +7,8 @@
 		<artifactId>parent</artifactId>
 		<version>4.2</version>
 	</parent>
-	<artifactId>account-cdc</artifactId>
-	<name>heroes-account-cdc</name>
+	<artifactId>cdc</artifactId>
+	<name>heroes-cdc</name>
 	<description>Back in business</description>
 
 	<properties>

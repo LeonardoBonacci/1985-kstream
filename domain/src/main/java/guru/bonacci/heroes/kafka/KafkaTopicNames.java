@@ -13,4 +13,6 @@ public class KafkaTopicNames {
   public static final String TRANSFER_PROCESSED_TOPIC = "transfer-processed"; // key: transferId
 
   public static final String TRANSFER_HOUSTON_TOPIC = "transfer-houston"; // key: transferId
+  
+  public static final String POOL_TOPIC = "pool"; // key: poolId
 }

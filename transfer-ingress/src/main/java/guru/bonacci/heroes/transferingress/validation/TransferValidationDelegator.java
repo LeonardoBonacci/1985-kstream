@@ -19,7 +19,7 @@ import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 
 import guru.bonacci.heroes.domain.TransferValidationRequest;
 import guru.bonacci.heroes.domain.TransferValidationResponse;
-import guru.bonacci.heroes.transferingress.pool.PoolRepository;
+import guru.bonacci.heroes.transferingress.pool.PoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TransferValidationDelegator implements ConstraintValidator<TransferConstraint, Object>  {
 
-  private final PoolRepository poolRepo;
+  private final PoolService poolService;
   private final ApplicationContext appContext;
   private final ReplyingKafkaTemplate<String, TransferValidationRequest, TransferValidationResponse> kafkaTemplate;
   
@@ -63,13 +63,13 @@ public class TransferValidationDelegator implements ConstraintValidator<Transfer
       var consumerRecord = replyFuture.get(3, TimeUnit.SECONDS);
       log.info("Return value: {} on partition {}", consumerRecord.value(), consumerRecord.partition());
 
-      if (poolRepo.getType(poolId) == null) {
+      if (poolService.getType(poolId) == null) {
         context.unwrap(HibernateConstraintValidatorContext.class)
             .addExpressionVariable("errorMessage", "pool " + poolId + " does not exist");
         return false;
       }
 
-      var poolType = poolRepo.getType(poolId).getName();
+      var poolType = poolService.getType(poolId).toString().toLowerCase(); // maps uppercase enum on lowercase bean name
       var validator = appContext.getBean(poolType, PoolTypeBasedValidator.class);
 
       TransferValidationResult validationResult = validator.validate(consumerRecord.value(), amount);

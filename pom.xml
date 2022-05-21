@@ -18,12 +18,12 @@
 	</properties>
 
 	<modules>
-		<module>account-cdc</module>
 		<module>account-initializer</module>
 		<module>account-store</module>
 		<module>account-transfer</module>
 		<module>bigbrother-transfer-is-pair</module>
 		<module>bigbrother-transfer-is-processed</module>
+		<module>cdc</module>
 		<module>domain</module>
 		<module>simulator</module>
 		<module>tip-purger</module>

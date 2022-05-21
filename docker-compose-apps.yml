@@ -1,9 +1,9 @@
 ---
 version: '2'
 services:
-  account-cdc:
-   image: leonardobonacci/heroes-account-cdc
-   build: account-cdc
+  cdc:
+   image: leonardobonacci/heroes-cdc
+   build: cdc
    depends_on:
      - broker
    environment:

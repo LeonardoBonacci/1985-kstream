@@ -1,6 +1,7 @@
 package guru.bonacci.heroes.simulator;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -34,18 +35,25 @@ public class Bookkeeper {
  
   @Scheduled(fixedRate = 10000)
   public void print() {
+    for (String pool : mockOrStub.pools) {
+      printPool(mockOrStub.accounts.get(pool), pool);
+    }
+  }    
+  
+  private void printPool(Set<String> accountNames, final String poolId) {
     BigDecimal totalBalance = BigDecimal.ZERO;
     
     RestTemplate restTemplate = new RestTemplate();
- 
-    for (String accountId : mockOrStub.accounts) {
-//      log.info("hitting {}", clientHostAndPort + "/pools/coro/accounts/" + accountId);
-      ResponseEntity<Account> response = restTemplate.getForEntity(clientHostAndPort + "/pools/coro/accounts/" + accountId, Account.class);
 
+    for (String accountId : accountNames) {
+      var url = clientHostAndPort + "/pools/" + poolId + "/accounts/" + accountId;
+      log.info("hitting {}", url);
+      ResponseEntity<Account> response = restTemplate.getForEntity(url, Account.class);
+  
       var account = response.getBody();
       account.getTransfers().forEach(t -> log.debug("{}", t.getAmount()));
       var computedBalance = determineBalance(account);
-
+  
       if (!computedBalance.equals(account.getBalance())) {
         log.error("account {} balance out of sync {} vs {}", account.getAccountId(), computedBalance, account.getBalance());
         System.exit(1);
@@ -58,7 +66,6 @@ public class Bookkeeper {
     log.warn("TOTAL BALANCE IS {}", totalBalance);
     if (totalBalance.compareTo(BigDecimal.ZERO) != 0) {
         log.error("TOTAL BALANCE IS {}", totalBalance);
-//        System.exit(1);
     }
-  }    
+  }
 }

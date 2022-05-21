@@ -1,4 +1,4 @@
-package guru.bonacci.heroes.accountcdc;
+package guru.bonacci.heroes.cdc;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import lombok.Setter;
 
 @Configuration
 @Setter @Getter
-@ConfigurationProperties(prefix = "account") 
-public class AccountProperties {
+@ConfigurationProperties(prefix = "coro") 
+public class CoroProperties {
 
   private List<String> accounts;
 }

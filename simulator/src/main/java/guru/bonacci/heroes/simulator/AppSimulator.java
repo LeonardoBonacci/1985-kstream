@@ -34,15 +34,20 @@ public class AppSimulator {
 	public void showMeTheMoney() {
 	  RestTemplate restTemplate = new RestTemplate();
 
-	  var pool = AccountStub.ONLY_BUT_NOT_LONELY_TEST_POOL;
-    var from = mockOrStub.getRandomAccount();
-    var to = mockOrStub.getRandomAccount();
+	  var pool = mockOrStub.getRandomPool();
+	  if (pool == null) {
+	    log.warn("no pools initialized yet");
+	    return;
+	  }
+    var from = mockOrStub.getRandomAccount(pool);
+    var to = mockOrStub.getRandomAccount(pool);
     var amount = mockOrStub.getRandomAmount(100);
 
     var transfer = new TransferDto(pool, from, to, amount);
+    log.info(transfer.toString());
 
 	  HttpEntity<TransferDto> request = new HttpEntity<>(transfer);
-    log.info("hitting {}", clientHostAndPort + "/transfers");
+    log.debug("hitting {}", clientHostAndPort + "/transfers");
     var response = restTemplate.postForEntity(clientHostAndPort + "/transfers", request, Transfer.class);
 
     if (!response.getStatusCode().is2xxSuccessful()) {

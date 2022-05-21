@@ -1,0 +1,40 @@
+spring.application.name: heroes-cdc-app
+       
+spring.kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+#demo accounts
+coro:
+  accounts[0]: aaa
+  accounts[1]: bbb
+  accounts[2]: ccc
+  accounts[3]: ddd
+  accounts[4]: eee
+  accounts[5]: fff
+  accounts[6]: ggg
+  accounts[7]: hhh
+  accounts[8]: iii
+  accounts[9]: jjj
+  accounts[10]: kkk
+  accounts[11]: lll
+  accounts[12]: mmm
+
+coro2:  
+  accounts[0]: nnn
+  accounts[1]: ooo
+  accounts[2]: ppp
+  accounts[3]: qqq
+  accounts[4]: rrr
+  accounts[5]: sss
+  accounts[6]: ttt
+  accounts[7]: uuu
+  accounts[8]: vvv
+  accounts[9]: www
+  accounts[10]: xxx
+  accounts[11]: yyy
+  accounts[12]: zzz
+  
