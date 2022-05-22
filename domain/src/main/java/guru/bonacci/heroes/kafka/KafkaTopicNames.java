@@ -11,6 +11,7 @@ public class KafkaTopicNames {
   public static final String TRANSFER_TOPIC = "transfer"; // key: poolId.from
   public static final String TRANSFER_PAIR_TOPIC = "transfer-pair"; // key: poolId.from / poolId.to
   public static final String TRANSFER_PROCESSED_TOPIC = "transfer-processed"; // key: transferId
+  public static final String TRANSFER_COMPRESSED_TOPIC = "transfer-compressed"; // key: poolId.accountId
 
   public static final String TRANSFER_HOUSTON_TOPIC = "transfer-houston"; // key: transferId
   

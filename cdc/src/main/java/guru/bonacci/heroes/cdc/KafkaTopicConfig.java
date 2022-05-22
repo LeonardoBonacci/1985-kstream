@@ -78,6 +78,13 @@ public class KafkaTopicConfig {
   }
 
   @Bean
+  public NewTopic transferCompressed() {
+    return TopicBuilder.name(KafkaTopicNames.TRANSFER_COMPRESSED_TOPIC)
+      .partitions(2)
+      .build();
+  }
+
+  @Bean
   public NewTopic transferHouston() {
     return TopicBuilder.name(KafkaTopicNames.TRANSFER_HOUSTON_TOPIC)
       .partitions(2)

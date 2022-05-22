@@ -3,23 +3,33 @@
 ```
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
-	--topic account \
+	--topic account-transfer \
 	--property parse.key=true \
  	--property key.separator=":"
 
-coro.a:{"accountId":"a", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"init", "to":"a", "amount":100}], "balance" = 100}
-coro.b:{"accountId":"b", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"init", "to":"b", "amount":100}], "balance" = 100}
+ private String transferId; //required
+  private String poolId; //required
+  private String from; //required
+  private String to; //required
+  private BigDecimal amount; //required
+  private long when; //required
+  
+  
+coro.a:{"accountId":"a", "poolId":"coro", "transfers":[], "balance": 0}
+coro.j:{"accountId":"g", "poolId":"coro", "transfers":[], "balance": 0}
 
-
-a:{"accountId":"a", "poolId":"coro", "transfers":[{"poolId": "coro", "from":"init", "to":"a", "amount":100}], "balance" = 100}
 
 ./bin/kafka-console-producer \
 	--bootstrap-server localhost:9092 \
-	--topic account \
+	--topic transfer-pair \
 	--property parse.key=true \
  	--property key.separator=":"
 
-coro.foo:{"transferId":"abc","poolId": "coro", "from":"foo", "to":"bar", "amount":-10.10, "when":1651078126344}
-coro.bar:{"transferId":"abc","poolId": "coro", "from":"foo", "to":"bar", "amount":10.10, "when":1651078126344}
+coro.j:{"transferId":"abc1","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.j:{"transferId":"abc2","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.j:{"transferId":"abc3","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.j:{"transferId":"abc4","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.j:{"transferId":"abc5","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.j:{"transferId":"abc6","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
 ```
 

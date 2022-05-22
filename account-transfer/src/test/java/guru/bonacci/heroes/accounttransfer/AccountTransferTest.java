@@ -40,7 +40,7 @@ public class AccountTransferTest {
   void init() throws Exception {
     var builder = new StreamsBuilder();
     var app = new AppAccountTransfer();
-    app.topology(builder);
+    app.topology(builder, 5);
     var topology = builder.build();
 
     var props = new Properties();

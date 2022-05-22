@@ -2,7 +2,6 @@ package guru.bonacci.heroes.domain;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.common.collect.Iterables;
 
@@ -26,8 +25,9 @@ public class Account {
   private String poolId; //required
   private String accountId; //required
 
+  // transfer list is reversed, meaning most recent transfer first
   @Builder.Default
-  private final List<Transfer> transfers = new ArrayList<>();
+  private ArrayList<Transfer> transfers = new ArrayList<>(); // required
   private BigDecimal balance; //required
 
   
@@ -41,16 +41,16 @@ public class Account {
   }
 
   public Account addTransfer(Transfer transfer) {
-    transfers.add(transfer);
+    transfers.add(0, transfer); // add at the beginning
     balance = balance.add(transfer.getAmount());
     return this;
   }
-
+  
   public boolean hasTransfer() {
     return !transfers.isEmpty();
   }
 
   public Transfer latestTransfer() {
-    return hasTransfer() ? Iterables.getLast(transfers) : null;
+    return Iterables.getFirst(transfers, null);
   }
 }
