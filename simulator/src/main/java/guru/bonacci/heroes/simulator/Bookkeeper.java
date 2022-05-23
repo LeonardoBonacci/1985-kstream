@@ -35,7 +35,7 @@ public class Bookkeeper {
  
   @Scheduled(fixedRate = 10000)
   public void print() {
-    for (String pool : mockOrStub.pools) {
+    for (String pool : mockOrStub.accounts.keySet()) {
       printPool(mockOrStub.accounts.get(pool), pool);
     }
   }    

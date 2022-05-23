@@ -10,36 +10,26 @@ import java.util.stream.Collectors;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import guru.bonacci.heroes.domain.AccountCDC;
-import guru.bonacci.heroes.domain.PoolCDC;
 import guru.bonacci.heroes.kafka.KafkaTopicNames;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@EnableScheduling
 @RequiredArgsConstructor
 public class AccountStub {
 
-  public List<String> pools = Lists.newArrayList();
   public Map<String, Set<String>> accounts = Maps.newHashMap();
 
-
-  @KafkaListener(topics = KafkaTopicNames.POOL_TOPIC, groupId = "simulator")
-  public void listen(@Payload PoolCDC pool) {
-    log.info("receiving pool {}", pool);
-    pools.add(pool.getPoolId());
-
-    if (!accounts.containsKey(pool.getPoolId())) {
-      accounts.put(pool.getPoolId(), Sets.newHashSet());
-    }  
-  }
 
   @KafkaListener(topics = KafkaTopicNames.ACCOUNT_TOPIC, groupId = "simulator")
   public void listen2(@Payload AccountCDC account) {
@@ -47,10 +37,9 @@ public class AccountStub {
     
     var poolId = account.getPoolId();
 
-    if (!pools.contains(poolId)) {
+    if (!accounts.containsKey(poolId)) {
       log.warn("pool missing {}", poolId);
-      log.warn(pools.toString());
-      return;
+      accounts.put(poolId, Sets.newHashSet());
     } 
     
     accounts.get(poolId).add(account.getAccountId());
@@ -59,7 +48,9 @@ public class AccountStub {
   
   String getRandomPool() {
     var random = new Random();
-    return pools.get(random.nextInt(pools.size()));
+    List<String> asList
+        = accounts.keySet().stream().collect(Collectors.toList());
+    return asList.get(random.nextInt(asList.size()));
   }
 
   String getRandomAccount(String poolId) {
@@ -74,5 +65,16 @@ public class AccountStub {
     BigDecimal actualRandomDec = randFromDouble.multiply(max);
     actualRandomDec = actualRandomDec.setScale(2, RoundingMode.DOWN);
     return actualRandomDec;
+  }
+  
+  
+  @Scheduled(fixedRateString =  "10000")
+  public void accounts() {
+    for (String pool : accounts.keySet()) {
+      log.info("!!!!!!!!!!!!!!!!!!");
+      log.info("pool {}", pool);
+      accounts.get(pool).forEach(account -> log.info("account {}", account));
+      log.info("------------------");
+    }
   }
 }

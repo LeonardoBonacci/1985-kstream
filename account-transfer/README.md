@@ -16,7 +16,7 @@
   
   
 coro.a:{"accountId":"a", "poolId":"coro", "transfers":[], "balance": 0}
-coro.j:{"accountId":"g", "poolId":"coro", "transfers":[], "balance": 0}
+coro.k:{"accountId":"g", "poolId":"coro", "transfers":[], "balance": 0}
 
 
 ./bin/kafka-console-producer \
@@ -25,11 +25,11 @@ coro.j:{"accountId":"g", "poolId":"coro", "transfers":[], "balance": 0}
 	--property parse.key=true \
  	--property key.separator=":"
 
-coro.j:{"transferId":"abc1","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
-coro.j:{"transferId":"abc2","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
-coro.j:{"transferId":"abc3","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
-coro.j:{"transferId":"abc4","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
-coro.j:{"transferId":"abc5","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
-coro.j:{"transferId":"abc6","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.k:{"transferId":"abc1","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.k:{"transferId":"abc2","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.k:{"transferId":"abc3","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.k:{"transferId":"abc4","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.k:{"transferId":"abc5","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
+coro.k:{"transferId":"abc6","poolId": "coro", "from":"d", "to":"b", "amount":-1.00, "when":1651078126344}
 ```
 

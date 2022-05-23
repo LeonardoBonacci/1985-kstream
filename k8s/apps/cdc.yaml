@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cdc-app
-          image: leonardobonacci/cdc
+          image: leonardobonacci/heroes-cdc
           imagePullPolicy: Always
           env:
             - name: SPRING_PROFILES_ACTIVE
