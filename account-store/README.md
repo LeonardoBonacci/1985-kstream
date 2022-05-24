@@ -63,6 +63,7 @@ coro.b:{"accountId":"b", "poolId":"coro", "transfers":[], "balance" = 0.0}
 
 https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
 
+kubectl port-forward service/connect-service 8083:8083
 kubectl port-forward service/account-store-service 8080:8080
 kubectl port-forward pod/account-store-app-5d5665d55c-56m79 -n kafka 8080:8080
 
